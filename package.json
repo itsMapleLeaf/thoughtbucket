@@ -4,9 +4,9 @@
   "description": "",
   "license": "",
   "scripts": {
-    "prepare": "remix setup && prisma generate",
+    "prepare": "remix setup && prisma generate && npm run postcss",
     "postcss": "postcss styles --base styles --dir app/styles",
-    "dev": "npm run build:postcss && run-p dev:*",
+    "dev": "run-p dev:*",
     "dev:postcss": "npm run postcss -- -w",
     "dev:remix": "remix run",
     "build": "run-s build:*",
