@@ -1,10 +1,10 @@
 import { Outlet } from "react-router-dom"
 import type { LinksFunction, LoaderFunction } from "remix"
 import { Links, LiveReload, Meta, Scripts, useRouteData } from "remix"
-import stylesUrl from "./styles/global.css"
+import tailwindCss from "./styles/tailwind.css"
 
 export let links: LinksFunction = () => {
-  return [{ rel: "stylesheet", href: stylesUrl }]
+  return [{ rel: "stylesheet", href: tailwindCss }]
 }
 
 export let loader: LoaderFunction = async () => {
