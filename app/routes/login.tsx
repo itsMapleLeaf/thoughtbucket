@@ -5,24 +5,32 @@ import {
 } from "@remix-run/server-runtime"
 import bcrypt from "bcryptjs"
 import { Link } from "react-router-dom"
-import { raise } from "~/helpers"
+import { z } from "zod"
+import { createFormModuleWithSchema } from "~/form"
 import { prisma } from "~/prisma"
 import { createSession, getSession } from "~/session"
+
+const loginForm = createFormModuleWithSchema(
+  z.object({
+    email: z.string().email(),
+    password: z.string().min(8),
+  }),
+)
 
 export const loader: LoaderFunction = async (args) => {
   const session = await getSession(args.request)
   if (session) {
     return redirect("/")
   }
+  return {}
 }
 
 export const action: ActionFunction = async (args) => {
-  const request = args.request.clone()
-  const body = new URLSearchParams(await request.text())
+  const body = await loginForm.getBody(args.request)
 
   const user = await prisma.user.findUnique({
     where: {
-      email: body.get("email") ?? raise("email not provided"),
+      email: body.email,
     },
   })
 
@@ -33,11 +41,7 @@ export const action: ActionFunction = async (args) => {
     })
   }
 
-  const valid = await bcrypt.compare(
-    body.get("password") ?? raise("password not provided"),
-    user.passwordHash,
-  )
-
+  const valid = await bcrypt.compare(body.password, user.passwordHash)
   if (!valid) {
     return new Response(undefined, {
       status: 401,
@@ -59,11 +63,16 @@ export default function LoginPage() {
       <form method="post">
         <label>
           email
-          <input name="email" type="email" autoComplete="email" required />
+          <loginForm.Input
+            name="email"
+            type="email"
+            autoComplete="email"
+            required
+          />
         </label>
         <label>
           password
-          <input
+          <loginForm.Input
             name="password"
             type="password"
             autoComplete="current-password"

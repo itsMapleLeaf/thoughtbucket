@@ -2,28 +2,35 @@ import { ActionFunction, redirect } from "@remix-run/server-runtime"
 import bcrypt from "bcryptjs"
 import { Link } from "react-router-dom"
 import { LoaderFunction } from "remix"
-import { raise } from "~/helpers"
+import { z } from "zod"
+import { createFormModuleWithSchema } from "~/form"
 import { prisma } from "~/prisma"
 import { createSession, getSession } from "~/session"
+
+const { Input, getBody } = createFormModuleWithSchema(
+  z.object({
+    name: z.string(),
+    email: z.string().email(),
+    password: z.string().min(8),
+  }),
+)
 
 export const loader: LoaderFunction = async (args) => {
   const session = await getSession(args.request)
   if (session) {
     return redirect("/")
   }
+  return {}
 }
 
 export const action: ActionFunction = async ({ request }) => {
-  const body = new URLSearchParams(await request.text())
+  const body = await getBody(request)
 
   const user = await prisma.user.create({
     data: {
-      name: body.get("name") ?? raise("name not provided"),
-      email: body.get("email") ?? raise("email not provided"),
-      passwordHash: await bcrypt.hash(
-        body.get("password") ?? raise("password not provided"),
-        10,
-      ),
+      name: body.name,
+      email: body.email,
+      passwordHash: await bcrypt.hash(body.password, 10),
     },
   })
 
@@ -41,7 +48,7 @@ export default function SignupPage() {
       <form method="post">
         <label>
           username
-          <input
+          <Input
             name="name"
             type="text"
             autoComplete="username"
@@ -51,11 +58,11 @@ export default function SignupPage() {
         </label>
         <label>
           email
-          <input name="email" type="email" autoComplete="email" required />
+          <Input name="email" type="email" autoComplete="email" required />
         </label>
         <label>
           password
-          <input
+          <Input
             name="password"
             type="password"
             autoComplete="new-password"
