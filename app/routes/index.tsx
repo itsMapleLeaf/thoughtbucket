@@ -1,15 +1,12 @@
-import type { LoaderFunction, MetaFunction } from "remix"
-import { useRouteData } from "remix"
+import { Link, LoaderFunction, redirect, useRouteData } from "remix"
+import { getSession } from "~/session"
 
-export let meta: MetaFunction = () => {
-  return {
-    title: "Remix Starter",
-    description: "Welcome to remix!",
+export let loader: LoaderFunction = async ({ request }) => {
+  const session = await getSession(request)
+  if (!session) {
+    return redirect("/login")
   }
-}
-
-export let loader: LoaderFunction = async () => {
-  return { message: "this is awesome 😎" }
+  return { name: session.user.name }
 }
 
 export default function Index() {
@@ -17,12 +14,8 @@ export default function Index() {
 
   return (
     <div style={{ textAlign: "center", padding: 20 }}>
-      <h2>Welcome to Remix!</h2>
-      <p>
-        <a href="https://remix.run/dashboard/docs">Check out the docs</a> to get
-        started.
-      </p>
-      <p>Message from the loader: {data.message}</p>
+      <h1>hi {data.name}</h1>
+      <Link to="/logout">log out</Link>
     </div>
   )
 }

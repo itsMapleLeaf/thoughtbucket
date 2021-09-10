@@ -1,15 +1,16 @@
 import { Outlet } from "react-router-dom"
-import type { LinksFunction, LoaderFunction } from "remix"
-import { Links, LiveReload, Meta, Scripts, useRouteData } from "remix"
+import type { LinksFunction, MetaFunction } from "remix"
+import { Links, LiveReload, Meta, Scripts } from "remix"
 import tailwindCss from "./styles/tailwind.css"
 
-export let links: LinksFunction = () => {
-  return [{ rel: "stylesheet", href: tailwindCss }]
-}
+export const meta: MetaFunction = () => ({
+  title: "thoughtbucket",
+  description: "put your thoughts in a bucket",
+})
 
-export let loader: LoaderFunction = async () => {
-  return { date: new Date() }
-}
+export let links: LinksFunction = () => [
+  { rel: "stylesheet", href: tailwindCss },
+]
 
 function Document({ children }: { children: React.ReactNode }) {
   return (
@@ -30,13 +31,9 @@ function Document({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  let data = useRouteData()
   return (
     <Document>
       <Outlet />
-      <footer>
-        <p>This page was rendered at {data.date.toLocaleString()}</p>
-      </footer>
     </Document>
   )
 }
@@ -46,10 +43,6 @@ export function ErrorBoundary({ error }: { error: Error }) {
     <Document>
       <h1>App Error</h1>
       <pre>{error.message}</pre>
-      <p>
-        Replace this UI with what you want users to see when your app throws
-        uncaught errors.
-      </p>
     </Document>
   )
 }
