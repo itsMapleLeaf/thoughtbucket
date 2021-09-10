@@ -1,10 +1,6 @@
-import { Session, User } from "@prisma/client"
+import { Session } from "@prisma/client"
 import { createCookie } from "remix"
 import { prisma } from "~/prisma"
-
-export type SessionWithUser = Session & {
-  user: User
-}
 
 const sessionCookie = createCookie("session", {
   path: "/",
@@ -15,13 +11,12 @@ const sessionCookie = createCookie("session", {
 
 export async function getSession(
   request: Request,
-): Promise<SessionWithUser | undefined> {
+): Promise<Session | undefined> {
   const id: unknown = await sessionCookie.parse(request.headers.get("Cookie"))
   if (typeof id !== "string") return
 
   const session = await prisma.session.findUnique({
     where: { id },
-    include: { user: true },
   })
   return session ?? undefined
 }
