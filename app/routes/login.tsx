@@ -1,14 +1,9 @@
-import {
-  ActionFunction,
-  LoaderFunction,
-  redirect,
-} from "@remix-run/server-runtime"
-import bcrypt from "bcryptjs"
 import { Link } from "react-router-dom"
+import { ActionFunction, LoaderFunction, redirect } from "remix"
 import { z } from "zod"
 import { createFormModuleWithSchema } from "~/form"
-import { prisma } from "~/prisma"
 import { createSession, getSession } from "~/session"
+import { loginUser } from "~/user"
 
 const loginForm = createFormModuleWithSchema(
   z.object({
@@ -27,22 +22,9 @@ export const loader: LoaderFunction = async (args) => {
 
 export const action: ActionFunction = async (args) => {
   const body = await loginForm.getBody(args.request)
-
-  const user = await prisma.user.findUnique({
-    where: {
-      email: body.email,
-    },
-  })
+  const user = await loginUser(body)
 
   if (!user) {
-    return new Response(undefined, {
-      status: 401,
-      statusText: "invalid email or password",
-    })
-  }
-
-  const valid = await bcrypt.compare(body.password, user.passwordHash)
-  if (!valid) {
     return new Response(undefined, {
       status: 401,
       statusText: "invalid email or password",

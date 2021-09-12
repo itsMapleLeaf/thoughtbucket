@@ -1,5 +1,5 @@
 import { Link, useRouteData } from "remix"
-import { prisma } from "~/prisma"
+import { db } from "~/db"
 import { TypedLoaderFunction, typedRedirect } from "~/remix-types"
 import { getSession } from "~/session"
 
@@ -13,7 +13,7 @@ export let loader: TypedLoaderFunction<Data> = async ({ request }) => {
     return typedRedirect("/login")
   }
 
-  const user = await prisma.user.findUnique({
+  const user = await db.user.findUnique({
     where: { id: session.userId },
     select: { name: true },
   })

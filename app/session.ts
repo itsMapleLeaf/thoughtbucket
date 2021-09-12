@@ -1,6 +1,6 @@
 import { Session } from "@prisma/client"
 import { createCookie } from "remix"
-import { prisma } from "~/prisma"
+import { db } from "./db"
 
 const sessionCookie = createCookie("session", {
   path: "/",
@@ -15,14 +15,14 @@ export async function getSession(
   const id: unknown = await sessionCookie.parse(request.headers.get("Cookie"))
   if (typeof id !== "string") return
 
-  const session = await prisma.session.findUnique({
+  const session = await db.session.findUnique({
     where: { id },
   })
   return session ?? undefined
 }
 
 export async function createSession(user: { id: string }): Promise<string> {
-  const session = await prisma.session.upsert({
+  const session = await db.session.upsert({
     where: { userId: user.id },
     update: { userId: user.id },
     create: { userId: user.id },
@@ -35,7 +35,7 @@ export async function createSession(user: { id: string }): Promise<string> {
 export async function deleteSession(request: Request): Promise<string> {
   const session = await getSession(request)
   if (session) {
-    await prisma.session.delete({ where: { id: session.id } })
+    await db.session.delete({ where: { id: session.id } })
   }
   return await sessionCookie.serialize("")
 }

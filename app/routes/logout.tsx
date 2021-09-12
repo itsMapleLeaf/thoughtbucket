@@ -1,4 +1,4 @@
-import { LoaderFunction, redirect } from "@remix-run/server-runtime"
+import { LoaderFunction, redirect } from "remix"
 import { deleteSession } from "~/session"
 
 export const loader: LoaderFunction = async (args) => {

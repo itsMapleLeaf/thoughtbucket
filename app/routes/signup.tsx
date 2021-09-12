@@ -1,11 +1,10 @@
 import { ActionFunction, redirect } from "@remix-run/server-runtime"
-import bcrypt from "bcryptjs"
 import { Link } from "react-router-dom"
 import { LoaderFunction } from "remix"
 import { z } from "zod"
 import { createFormModuleWithSchema } from "~/form"
-import { prisma } from "~/prisma"
 import { createSession, getSession } from "~/session"
+import { createUser } from "../user"
 
 const { Input, getBody } = createFormModuleWithSchema(
   z.object({
@@ -26,13 +25,7 @@ export const loader: LoaderFunction = async (args) => {
 export const action: ActionFunction = async ({ request }) => {
   const body = await getBody(request)
 
-  const user = await prisma.user.create({
-    data: {
-      name: body.name,
-      email: body.email,
-      passwordHash: await bcrypt.hash(body.password, 10),
-    },
-  })
+  const user = await createUser(body)
 
   return redirect("/", {
     headers: {
