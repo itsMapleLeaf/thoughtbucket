@@ -1,6 +1,6 @@
 import { Session } from "@prisma/client"
 import { createCookie } from "remix"
-import { db } from "./db"
+import { db } from "./client"
 
 const sessionCookie = createCookie("session", {
   secure: process.env.NODE_ENV === "production",

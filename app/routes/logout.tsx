@@ -1,5 +1,5 @@
 import { LoaderFunction, redirect } from "remix"
-import { deleteSession } from "~/session"
+import { deleteSession } from "~/db/session"
 
 export const loader: LoaderFunction = async (args) => {
   return redirect("/login", {

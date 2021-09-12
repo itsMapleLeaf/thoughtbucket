@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom"
 import { ActionFunction, LoaderFunction, redirect } from "remix"
 import { z } from "zod"
+import { createSessionCookie, getSession } from "~/db/session"
 import { createFormModuleWithSchema } from "~/form"
-import { createSessionCookie, getSession } from "~/session"
-import { createUser } from "../user"
+import { createUser } from "../db/user"
 
 const { Input, getBody } = createFormModuleWithSchema(
   z.object({

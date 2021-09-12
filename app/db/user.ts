@@ -1,6 +1,6 @@
 import { User } from "@prisma/client"
 import bcrypt from "bcryptjs"
-import { db } from "./db"
+import { db } from "./client"
 
 export async function createUser({
   name,

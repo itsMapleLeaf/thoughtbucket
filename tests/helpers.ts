@@ -1,8 +1,8 @@
 import { BrowserContext } from "@playwright/test"
 import { User } from "@prisma/client"
 import { parse } from "cookie"
-import { createSessionCookie } from "../app/session"
-import { createUser } from "../app/user"
+import { createSessionCookie } from "../app/db/session"
+import { createUser } from "../app/db/user"
 
 export async function createTestUser(): Promise<User> {
   return await createUser({

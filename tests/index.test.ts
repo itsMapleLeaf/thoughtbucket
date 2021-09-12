@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test"
-import { db } from "../app/db"
+import { db } from "../app/db/client"
 import { loginTestUser } from "./helpers"
 
 test.beforeEach(async ({ context }) => {
