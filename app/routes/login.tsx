@@ -25,7 +25,7 @@ export const action: ActionFunction = async (args) => {
   const user = await loginUser(body)
 
   if (!user) {
-    return new Response(undefined, {
+    return redirect("/login", {
       status: 401,
       statusText: "invalid email or password",
     })
