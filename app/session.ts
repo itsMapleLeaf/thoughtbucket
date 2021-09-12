@@ -3,7 +3,6 @@ import { createCookie } from "remix"
 import { db } from "./db"
 
 const sessionCookie = createCookie("session", {
-  path: "/",
   secure: process.env.NODE_ENV === "production",
   httpOnly: true,
   maxAge: 60 * 60 * 24 * 30, // 30 days
@@ -21,15 +20,20 @@ export async function getSession(
   return session ?? undefined
 }
 
-export async function createSession(user: { id: string }): Promise<string> {
-  const session = await db.session.upsert({
+export async function createSessionCookie(user: {
+  id: string
+}): Promise<string> {
+  const session = await createSession(user)
+  return await sessionCookie.serialize(session.id)
+}
+
+export async function createSession(user: { id: string }) {
+  return await db.session.upsert({
     where: { userId: user.id },
     update: { userId: user.id },
     create: { userId: user.id },
     select: { id: true },
   })
-
-  return await sessionCookie.serialize(session.id)
 }
 
 export async function deleteSession(request: Request): Promise<string> {

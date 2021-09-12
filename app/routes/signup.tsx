@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 import { ActionFunction, LoaderFunction, redirect } from "remix"
 import { z } from "zod"
 import { createFormModuleWithSchema } from "~/form"
-import { createSession, getSession } from "~/session"
+import { createSessionCookie, getSession } from "~/session"
 import { createUser } from "../user"
 
 const { Input, getBody } = createFormModuleWithSchema(
@@ -28,7 +28,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   return redirect("/", {
     headers: {
-      "Set-Cookie": await createSession(user),
+      "Set-Cookie": await createSessionCookie(user),
     },
   })
 }
