@@ -1,7 +1,7 @@
 import { Link, useRouteData } from "remix"
-import { db } from "~/db/client"
-import { getSession } from "~/db/session"
-import { TypedLoaderFunction, typedRedirect } from "~/remix-types"
+import { db } from "../../db/client"
+import { getSession } from "../../db/session"
+import { TypedLoaderFunction, typedRedirect } from "../../remix-types"
 
 type Data = {
   name: string

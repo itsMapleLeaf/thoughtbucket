@@ -1,16 +1,4 @@
 {
-  "compilerOptions": {
-    "lib": ["DOM", "DOM.Iterable", "ES2019"],
-    "esModuleInterop": true,
-    "jsx": "react-jsx",
-    "moduleResolution": "node",
-    "target": "ES2019",
-    "strict": true,
-    "paths": {
-      "~/*": ["./*"]
-    },
-
-    // Remix takes care of building everything in `remix build`.
-    "noEmit": true
-  }
+  "extends": "../tsconfig.base",
+  "include": ["."]
 }

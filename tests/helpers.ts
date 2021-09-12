@@ -20,7 +20,7 @@ export async function loginTestUser(context: BrowserContext) {
   await context.addCookies([
     {
       name: "session",
-      value: session,
+      value: session as string,
       domain: "localhost",
       path: "/",
       httpOnly: true,
