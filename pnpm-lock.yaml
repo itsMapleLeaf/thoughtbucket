@@ -8,8 +8,8 @@ specifiers:
   '@types/bcryptjs': 2.4.2
   '@types/cookies': 0.7.7
   '@types/node': 16.9.1
-  '@types/react': ^17.0.4
-  '@types/react-dom': ^17.0.4
+  '@types/react': ^17.0.20
+  '@types/react-dom': ^17.0.9
   '@types/wait-on': 5.3.1
   autoprefixer: 10.3.4
   bcryptjs: 2.4.3
@@ -21,11 +21,11 @@ specifiers:
   next: 11.1.2
   postcss: 8.3.6
   prisma: 3.0.2
-  react: ^17.0.1
-  react-dom: ^17.0.1
-  tailwindcss: 2.2.14
+  react: ^17.0.2
+  react-dom: ^17.0.2
+  tailwindcss: 2.2.15
   ts-node: 10.2.1
-  typescript: ^4.1.2
+  typescript: ~4.4.3
   wait-on: 6.0.0
   zod: 3.8.2
 
@@ -41,7 +41,7 @@ dependencies:
 devDependencies:
   '@heroicons/react': 1.0.4_react@17.0.2
   '@playwright/test': 1.14.1
-  '@tailwindcss/line-clamp': 0.2.1_tailwindcss@2.2.14
+  '@tailwindcss/line-clamp': 0.2.1_tailwindcss@2.2.15
   '@types/bcryptjs': 2.4.2
   '@types/cookies': 0.7.7
   '@types/node': 16.9.1
@@ -55,7 +55,7 @@ devDependencies:
   execa: 5.1.1
   postcss: 8.3.6
   prisma: 3.0.2
-  tailwindcss: 2.2.14_dc78e7f376224e686a37b2113facd53c
+  tailwindcss: 2.2.15_dc78e7f376224e686a37b2113facd53c
   ts-node: 10.2.1_c51a13cfa2c3195bf611f1652e33c9c1
   typescript: 4.4.3
   wait-on: 6.0.0
@@ -847,12 +847,12 @@ packages:
     resolution: {integrity: sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==}
     dev: true
 
-  /@tailwindcss/line-clamp/0.2.1_tailwindcss@2.2.14:
+  /@tailwindcss/line-clamp/0.2.1_tailwindcss@2.2.15:
     resolution: {integrity: sha512-Hq2KJY1+T2v7jw/mnT3mnC7CKbp5kj1XTqzSb2xbEt1j+JkxIR6N3ijsN/WevZtsKJfVE1KOejA/3IRKuhZEsQ==}
     peerDependencies:
       tailwindcss: '>=2.0.0'
     dependencies:
-      tailwindcss: 2.2.14_dc78e7f376224e686a37b2113facd53c
+      tailwindcss: 2.2.15_dc78e7f376224e686a37b2113facd53c
     dev: true
 
   /@tsconfig/node10/1.0.8:
@@ -972,7 +972,7 @@ packages:
     dependencies:
       '@types/prop-types': 15.7.4
       '@types/scheduler': 0.16.2
-      csstype: 3.0.8
+      csstype: 3.0.9
     dev: true
 
   /@types/scheduler/0.16.2:
@@ -1126,7 +1126,7 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.17.0
-      caniuse-lite: 1.0.30001256
+      caniuse-lite: 1.0.30001257
       colorette: 1.4.0
       fraction.js: 4.1.1
       normalize-range: 0.1.2
@@ -1258,7 +1258,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001256
+      caniuse-lite: 1.0.30001257
       colorette: 1.4.0
       electron-to-chromium: 1.3.836
       escalade: 3.1.1
@@ -1270,7 +1270,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001256
+      caniuse-lite: 1.0.30001257
       colorette: 1.4.0
       electron-to-chromium: 1.3.836
       escalade: 3.1.1
@@ -1324,8 +1324,8 @@ packages:
     engines: {node: '>= 6'}
     dev: true
 
-  /caniuse-lite/1.0.30001256:
-    resolution: {integrity: sha512-QirrvMLmB4txNnxiaG/xbm6FSzv9LqOZ3Jp9VtCYb3oPIfCHpr/oGn38pFq0udwlkctvXQgPthaXqJ76DaYGnA==}
+  /caniuse-lite/1.0.30001257:
+    resolution: {integrity: sha512-JN49KplOgHSXpIsVSF+LUyhD8PUp6xPpAXeRrrcBh4KBeP7W864jHn6RvzJgDlrReyeVjMFJL3PLpPvKIxlIHA==}
 
   /chalk/2.4.2:
     resolution: {integrity: sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==}
@@ -1596,7 +1596,7 @@ packages:
     peerDependencies:
       postcss: ^8.2.15
     dependencies:
-      caniuse-lite: 1.0.30001256
+      caniuse-lite: 1.0.30001257
       postcss: 8.2.15
     dev: false
 
@@ -1612,8 +1612,8 @@ packages:
       postcss: 8.2.15
     dev: false
 
-  /csstype/3.0.8:
-    resolution: {integrity: sha512-jXKhWqXPmlUeoQnF/EhTtTl4C9SnrxSH/jZUih3jmO6lBKr99rP3/+FmrMj4EFpOXzMtXHAZkd3x0E6h6Fgflw==}
+  /csstype/3.0.9:
+    resolution: {integrity: sha512-rpw6JPxK6Rfg1zLOYCSwle2GFOOsnjmDYDaBwEcwoOg4qlsIVCN789VkBZDJAGi4T07gI4YSutR43t9Zz4Lzuw==}
     dev: true
 
   /data-uri-to-buffer/3.0.1:
@@ -2663,7 +2663,7 @@ packages:
       browserify-zlib: 0.2.0
       browserslist: 4.16.6
       buffer: 5.6.0
-      caniuse-lite: 1.0.30001256
+      caniuse-lite: 1.0.30001257
       chalk: 2.4.2
       chokidar: 3.5.1
       constants-browserify: 1.0.0
@@ -3665,8 +3665,8 @@ packages:
     dependencies:
       has-flag: 4.0.0
 
-  /tailwindcss/2.2.14_dc78e7f376224e686a37b2113facd53c:
-    resolution: {integrity: sha512-gQQPKbV8qb8GthGhJGbRR+lKluSpFq+L78CJZLmqumEBKPMDkD+l5wFlOTzlOhWozG4S1I9AUSaPkD1EfnNsug==}
+  /tailwindcss/2.2.15_dc78e7f376224e686a37b2113facd53c:
+    resolution: {integrity: sha512-WgV41xTMbnSoTNMNnJvShQZ+8GmY86DmXTrCgnsveNZJdlybfwCItV8kAqjYmU49YiFr+ofzmT1JlAKajBZboQ==}
     engines: {node: '>=12.13.0'}
     hasBin: true
     peerDependencies:
