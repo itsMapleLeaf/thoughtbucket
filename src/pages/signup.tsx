@@ -25,17 +25,36 @@ export default function SignupPage() {
       <form action="/api/signup" method="post">
         <label>
           username
-          <input name="name" type="text" autoComplete="name" required />
+          <input
+            data-testid="signup-name"
+            name="name"
+            type="text"
+            autoComplete="name"
+            required
+          />
         </label>
         <label>
           email
-          <input name="email" type="email" autoComplete="email" required />
+          <input
+            data-testid="signup-email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            required
+          />
         </label>
         <label>
           password
-          <input name="password" type="password" autoComplete="new-password" />
+          <input
+            data-testid="signup-password"
+            name="password"
+            type="password"
+            autoComplete="new-password"
+          />
         </label>
-        <button type="submit">sign up</button>
+        <button data-testid="signup-submit" type="submit">
+          sign up
+        </button>
       </form>
       {query.error && <p>{query.error}</p>}
       <p>

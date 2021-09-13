@@ -7,6 +7,8 @@ export const sessionCookieName = "session"
 const cookieOptions = {
   httpOnly: true,
   maxAge: 60 * 60 * 24 * 30, // 30 days
+  secure: process.env.NODE_ENV === "production",
+  signed: false,
 }
 
 const db = new PrismaClient()
@@ -18,12 +20,10 @@ export function createSessionManager({
   req: IncomingMessage
   res: ServerResponse
 }) {
-  const cookies = new Cookies(req, res, {
-    secure: process.env.NODE_ENV === "production",
-  })
+  const cookies = new Cookies(req, res, cookieOptions)
 
   async function getSession(): Promise<Session | undefined> {
-    const id = cookies.get(sessionCookieName)
+    const id = cookies.get(sessionCookieName, cookieOptions)
     if (!id) return
 
     const session = await db.session.findUnique({
@@ -47,6 +47,7 @@ export function createSessionManager({
     if (session) {
       await db.session.delete({ where: { id: session.id } })
     }
+    cookies.set(sessionCookieName, null, cookieOptions)
   }
 
   return {

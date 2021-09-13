@@ -25,17 +25,26 @@ export default function LoginPage() {
       <form action="/api/login" method="post">
         <label>
           email
-          <input name="email" type="email" autoComplete="email" required />
+          <input
+            data-testid="login-email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            required
+          />
         </label>
         <label>
           password
           <input
+            data-testid="login-password"
             name="password"
             type="password"
             autoComplete="current-password"
           />
         </label>
-        <button type="submit">log in</button>
+        <button data-testid="login-submit" type="submit">
+          log in
+        </button>
       </form>
       {query.error && <p>{query.error}</p>}
       <p>

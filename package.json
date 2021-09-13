@@ -4,12 +4,12 @@
   "scripts": {
     "prepare": "prisma generate",
     "dev": "next dev",
-    "dev-test": "ts-node scripts/dev-test",
+    "dev-test": "trash .next && dotenv -e .env.test -- concurrently --kill-others npm:dev npm:cypress-open",
     "build": "next build",
     "start": "next start",
-    "test": "ts-node scripts/test",
+    "test": "dotenv -e .env.test -- ts-node ./scripts/test.ts",
     "typecheck": "tsc --noEmit",
-    "playwright-test": "playwright test"
+    "cypress-open": "cypress open"
   },
   "dependencies": {
     "@prisma/client": "3.0.2",
@@ -22,9 +22,10 @@
   },
   "devDependencies": {
     "@heroicons/react": "1.0.4",
-    "@playwright/test": "1.14.1",
     "@tailwindcss/line-clamp": "0.2.1",
+    "@testing-library/cypress": "8.0.1",
     "@types/bcryptjs": "2.4.2",
+    "@types/concurrently": "6.2.1",
     "@types/cookies": "0.7.7",
     "@types/node": "16.9.1",
     "@types/react": "^17.0.20",
@@ -33,11 +34,15 @@
     "autoprefixer": "10.3.4",
     "clsx": "1.1.1",
     "concurrently": "6.2.1",
+    "cross-env": "7.0.3",
+    "cypress": "8.3.1",
     "dotenv": "10.0.0",
+    "dotenv-cli": "4.0.0",
     "execa": "5.1.1",
     "postcss": "8.3.6",
     "prisma": "3.0.2",
     "tailwindcss": "2.2.15",
+    "trash-cli": "4.0.0",
     "ts-node": "10.2.1",
     "typescript": "~4.4.3",
     "wait-on": "6.0.0"

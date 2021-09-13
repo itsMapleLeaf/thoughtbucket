@@ -1,34 +1,30 @@
-import * as dotenv from "dotenv"
+import cypress from "cypress"
 import execa from "execa"
+import next from "next"
+import { createServer } from "node:http"
 import { join } from "node:path"
-import waitOn from "wait-on"
 
-const configResult = dotenv.config({ path: join(__dirname, "../.env.test") })
-
-const env = {
-  ...configResult.parsed,
-  NODE_ENV: "test" as const,
+if (process.env.NODE_ENV !== "test") {
+  console.error("Script should only be run in test mode, exiting")
+  process.exit(1)
 }
 
 void (async function () {
-  console.log("Reseting prisma database...")
-  await execa("npx prisma migrate reset --force", { env, stdio: "inherit" })
-
-  console.log("Building...")
-  await execa("npm run build", { env, stdio: "inherit" })
+  console.log("Resetting prisma database...")
+  await execa("npx prisma migrate reset --force")
 
   console.log("Starting app...")
-  const app = execa("npm start", { env, stdio: "inherit" })
-  await waitOn({ resources: ["tcp:localhost:3000"] })
+  const app = next({ dir: join(__dirname, ".."), dev: true, quiet: true })
+  await app.prepare()
+
+  const server = createServer(app.getRequestHandler())
+  await new Promise<void>((resolve) => server.listen(3000, resolve))
 
   console.log("Running tests...")
-  await execa("npm run playwright-test", {
-    env,
-    stdio: "inherit",
-    reject: false,
-  })
+  await cypress.run()
 
-  app.kill()
+  await app.close()
+  await new Promise((resolve) => server.close(resolve))
 
   console.log("Done")
 })()
