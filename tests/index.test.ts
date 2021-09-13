@@ -2,12 +2,12 @@ import { expect, test } from "@playwright/test"
 import { PrismaClient } from "@prisma/client"
 import { loginTestUser } from "./helpers"
 
-const db = new PrismaClient()
-
 test.beforeEach(async ({ context }) => {
+  const db = new PrismaClient()
   await db.session.deleteMany()
   await db.user.deleteMany()
   await context.clearCookies()
+  await db.$disconnect()
 })
 
 test("redirects to login when logged out", async ({ page }) => {
