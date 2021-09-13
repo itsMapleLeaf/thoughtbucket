@@ -1,4 +1,5 @@
 node_modules
+.next
 
 /.cache
 /build
@@ -6,3 +7,6 @@ node_modules
 
 .env
 /prisma/data
+/src/generated/prisma
+
+.vscode
