@@ -14,7 +14,7 @@ const env = {
 
 void (async function () {
   console.log("Reseting prisma database...")
-  await execa("pnpx prisma migrate reset --force", { env, stdio: "inherit" })
+  await execa("pnpx prisma migrate reset --force", { env })
 
   const dev = execa("pnpm run dev", { env, stdio: "inherit" })
 
