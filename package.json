@@ -1,6 +1,6 @@
 {
+  "name": "thoughtbucket",
   "private": true,
-  "name": "remix-app-template",
   "scripts": {
     "prepare": "prisma generate",
     "dev": "next dev",
@@ -9,8 +9,7 @@
     "start": "next start",
     "test": "ts-node scripts/test",
     "typecheck": "tsc --noEmit",
-    "playwright-test": "playwright test",
-    "playwright-watch": "chokidar \"./{app,tests}/**/*.{ts,tsx}\" --command \"npm run playwright-run\" --initial"
+    "playwright-test": "playwright test"
   },
   "dependencies": {
     "@prisma/client": "3.0.2",
