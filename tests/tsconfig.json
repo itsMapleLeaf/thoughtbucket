@@ -3,5 +3,5 @@
   "compilerOptions": {
     "module": "commonjs"
   },
-  "include": [".", "../app"]
+  "include": [".", "../src", "../next-env.d.ts"]
 }

@@ -15,7 +15,6 @@ specifiers:
   bcryptjs: 2.4.3
   clsx: 1.1.1
   concurrently: 6.2.1
-  cookie: 0.4.1
   cookies: 0.8.0
   dotenv: 10.0.0
   execa: 5.1.1
@@ -52,7 +51,6 @@ devDependencies:
   autoprefixer: 10.3.4_postcss@8.3.6
   clsx: 1.1.1
   concurrently: 6.2.1
-  cookie: 0.4.1
   dotenv: 10.0.0
   execa: 5.1.1
   postcss: 8.3.6
@@ -1493,11 +1491,6 @@ packages:
     resolution: {integrity: sha512-+OQdjP49zViI/6i7nIJpA8rAl4sV/JdPfU9nZs3VqOwGIgizICvuN2ru6fMd+4llL0tar18UYJXfZ/TWtmhUjA==}
     dependencies:
       safe-buffer: 5.1.2
-    dev: true
-
-  /cookie/0.4.1:
-    resolution: {integrity: sha512-ZwrFkGJxUR3EIoXtO+yVE69Eb7KlixbaeAWfBQB9vVsNn/o+Yw69gBWSSDK825hQNdN+wF8zELf3dFNl/kxkUA==}
-    engines: {node: '>= 0.6'}
     dev: true
 
   /cookies/0.8.0:

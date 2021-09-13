@@ -1,8 +1,9 @@
 import { BrowserContext } from "@playwright/test"
-import { User } from "@prisma/client"
-import { parse } from "cookie"
-import { createSessionCookie } from "../app/db/session"
-import { createUser } from "../app/db/user"
+import { PrismaClient, User } from "@prisma/client"
+import { sessionCookieName } from "../src/db/session"
+import { createUser } from "../src/db/user"
+
+const db = new PrismaClient()
 
 export async function createTestUser(): Promise<User> {
   return await createUser({
@@ -13,14 +14,19 @@ export async function createTestUser(): Promise<User> {
 }
 
 export async function loginTestUser(context: BrowserContext) {
-  const cookieHeader = await createSessionCookie(await createTestUser())
+  const user = await createTestUser()
 
-  const { session } = parse(cookieHeader)
+  const session = await db.session.upsert({
+    where: { userId: user.id },
+    update: { userId: user.id },
+    create: { userId: user.id },
+    select: { id: true },
+  })
 
   await context.addCookies([
     {
-      name: "session",
-      value: session as string,
+      name: sessionCookieName,
+      value: session.id,
       domain: "localhost",
       path: "/",
       httpOnly: true,

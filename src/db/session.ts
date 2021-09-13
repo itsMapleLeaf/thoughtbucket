@@ -2,7 +2,7 @@ import { PrismaClient, Session } from "@prisma/client"
 import Cookies from "cookies"
 import { IncomingMessage, ServerResponse } from "http"
 
-const sessionCookieName = "session"
+export const sessionCookieName = "session"
 
 const cookieOptions = {
   httpOnly: true,
