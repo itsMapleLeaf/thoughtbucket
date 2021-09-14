@@ -1,7 +1,7 @@
 import { NextApiHandler } from "next"
 import { z } from "zod"
-import { createSessionManager } from "../../db/session"
-import { createUser } from "../../db/user"
+import { createSessionHelpers } from "../../../db/session"
+import { createUser } from "../../../db/user"
 
 const signupBodySchema = z.object({
   name: z.string(),
@@ -14,7 +14,7 @@ const handler: NextApiHandler = async (req, res) => {
 
   const user = await createUser(body)
 
-  const session = createSessionManager({ req, res })
+  const session = createSessionHelpers({ req, res })
   await session.createSession(user)
 
   res.redirect("/buckets")

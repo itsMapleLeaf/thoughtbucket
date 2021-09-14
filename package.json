@@ -18,10 +18,11 @@
     "next": "11.1.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "zod": "3.8.2"
+    "zod": "3.8.2",
+    "clsx": "1.1.1",
+    "@heroicons/react": "1.0.4"
   },
   "devDependencies": {
-    "@heroicons/react": "1.0.4",
     "@tailwindcss/line-clamp": "0.2.1",
     "@testing-library/cypress": "8.0.1",
     "@types/bcryptjs": "2.4.2",
@@ -32,7 +33,6 @@
     "@types/react-dom": "^17.0.9",
     "@types/wait-on": "5.3.1",
     "autoprefixer": "10.3.4",
-    "clsx": "1.1.1",
     "concurrently": "6.2.1",
     "cross-env": "7.0.3",
     "cypress": "8.3.1",

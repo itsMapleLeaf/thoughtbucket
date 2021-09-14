@@ -1,4 +1,4 @@
-import { PrismaClient, Session } from "@prisma/client"
+import { PrismaClient, Session, User } from "@prisma/client"
 import Cookies from "cookies"
 import { IncomingMessage, ServerResponse } from "http"
 
@@ -13,7 +13,7 @@ const cookieOptions = {
 
 const db = new PrismaClient()
 
-export function createSessionManager({
+export function createSessionHelpers({
   req,
   res,
 }: {
@@ -50,9 +50,20 @@ export function createSessionManager({
     cookies.set(sessionCookieName, null, cookieOptions)
   }
 
+  async function getUser(): Promise<User | undefined> {
+    const session = await getSession()
+    if (!session) return
+
+    const user = await db.user.findUnique({
+      where: { id: session.userId },
+    })
+    return user ?? undefined
+  }
+
   return {
     getSession,
     createSession,
     deleteSession,
+    getUser,
   }
 }

@@ -1,8 +1,8 @@
 import { GetServerSideProps } from "next"
-import { createSessionManager } from "../db/session"
+import { createSessionHelpers } from "../db/session"
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = createSessionManager(context)
+  const session = createSessionHelpers(context)
 
   if (await session.getSession()) {
     return {

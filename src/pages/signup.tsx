@@ -1,10 +1,10 @@
 import { GetServerSideProps } from "next"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { createSessionManager } from "../db/session"
+import { createSessionHelpers } from "../db/session"
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = createSessionManager(context)
+  const session = createSessionHelpers(context)
 
   if (await session.getSession()) {
     return {
@@ -22,7 +22,7 @@ export default function SignupPage() {
   return (
     <div>
       <h1>sign up</h1>
-      <form action="/api/signup" method="post">
+      <form action="/api/auth/signup" method="post">
         <label>
           username
           <input

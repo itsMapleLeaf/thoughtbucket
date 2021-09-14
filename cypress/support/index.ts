@@ -5,6 +5,6 @@ before(() => {
 })
 
 beforeEach(() => {
-  cy.request("POST", "/api/logout")
+  cy.request("POST", "/api/auth/logout")
   cy.clearCookies()
 })

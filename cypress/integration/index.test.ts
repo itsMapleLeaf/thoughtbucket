@@ -7,7 +7,7 @@ describe("/", () => {
   })
 
   it("redirects to buckets when logged in", () => {
-    cy.request("POST", "/api/signup", createTestUserCredentials())
+    cy.request("POST", "/api/auth/signup", createTestUserCredentials())
     cy.visit("/")
     cy.url().should("include", "/buckets")
   })

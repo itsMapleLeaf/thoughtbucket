@@ -1,12 +1,12 @@
 import { PrismaClient } from "@prisma/client"
 import { GetServerSideProps } from "next"
 import Link from "next/link"
-import { createSessionManager } from "../../db/session"
+import { createSessionHelpers } from "../../db/session"
 
 const db = new PrismaClient()
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await createSessionManager(context).getSession()
+  const session = await createSessionHelpers(context).getSession()
   if (!session) {
     return {
       redirect: {
@@ -39,7 +39,7 @@ export default function BucketListPage(props: { name: string }) {
   return (
     <main>
       <h1>hi {props.name}</h1>
-      <Link href="/api/logout">log out</Link>
+      <Link href="/api/auth/logout">log out</Link>
     </main>
   )
 }

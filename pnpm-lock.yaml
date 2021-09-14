@@ -35,8 +35,10 @@ specifiers:
   zod: 3.8.2
 
 dependencies:
+  '@heroicons/react': 1.0.4_react@17.0.2
   '@prisma/client': 3.0.2_prisma@3.0.2
   bcryptjs: 2.4.3
+  clsx: 1.1.1
   cookies: 0.8.0
   next: 11.1.2_bd7797d63db473de6e2318609a63c933
   react: 17.0.2
@@ -44,7 +46,6 @@ dependencies:
   zod: 3.8.2
 
 devDependencies:
-  '@heroicons/react': 1.0.4_react@17.0.2
   '@tailwindcss/line-clamp': 0.2.1_tailwindcss@2.2.15
   '@testing-library/cypress': 8.0.1_cypress@8.3.1
   '@types/bcryptjs': 2.4.2
@@ -55,7 +56,6 @@ devDependencies:
   '@types/react-dom': 17.0.9
   '@types/wait-on': 5.3.1
   autoprefixer: 10.3.4_postcss@8.3.6
-  clsx: 1.1.1
   concurrently: 6.2.1
   cross-env: 7.0.3
   cypress: 8.3.1
@@ -205,7 +205,7 @@ packages:
       react: '>= 16'
     dependencies:
       react: 17.0.2
-    dev: true
+    dev: false
 
   /@jest/types/27.1.1:
     resolution: {integrity: sha512-yqJPDDseb0mXgKqmNqypCsb85C22K1aY5+LUxh7syIM9n/b0AsaltxNy+o6tt29VcfGDpYEve175bm3uOhcehA==}
@@ -1145,7 +1145,7 @@ packages:
   /clsx/1.1.1:
     resolution: {integrity: sha512-6/bPho624p3S2pMyvP5kKBPXnI3ufHLObBFCfgx+LkeR5lg2XYy2hqZqUf45ypD8COn2bhgGJSUE+l5dhNBieA==}
     engines: {node: '>=6'}
-    dev: true
+    dev: false
 
   /color-convert/1.9.3:
     resolution: {integrity: sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg==}
