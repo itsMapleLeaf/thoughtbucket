@@ -30,16 +30,18 @@ export function AppHeader({ user }: { user: { name: string } | undefined }) {
         </h1>
 
         {user && (
-          <nav className="flex flex-wrap items-baseline gap-5">
-            <p>logged in as {user.name}</p>
-            <Link href="/api/auth/logout">
-              <a className={fadedButtonClass}>
-                <LogoutIcon className={inlineIconClass} /> log out
-              </a>
-            </Link>
-            <CreateBucketButton className={solidButtonClass}>
-              <ViewGridAddIcon className={leftButtonIconClass} /> new bucket
-            </CreateBucketButton>
+          <nav className="flex flex-wrap items-baseline gap-x-5 gap-y-2">
+            <p>hi, {user.name}!</p>
+            <div className="flex flex-wrap items-baseline gap-x-5 gap-y-2">
+              <Link href="/api/auth/logout">
+                <a className={fadedButtonClass}>
+                  <LogoutIcon className={inlineIconClass} /> log out
+                </a>
+              </Link>
+              <CreateBucketButton className={solidButtonClass}>
+                <ViewGridAddIcon className={leftButtonIconClass} /> new bucket
+              </CreateBucketButton>
+            </div>
           </nav>
         )}
       </header>

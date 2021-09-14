@@ -1,45 +1,28 @@
-import { PrismaClient } from "@prisma/client"
 import { GetServerSideProps } from "next"
-import Link from "next/link"
 import { createSessionHelpers } from "../../db/session"
-
-const db = new PrismaClient()
+import { AppLayout } from "../../modules/app/AppLayout"
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await createSessionHelpers(context).getSession()
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
-    }
-  }
-
-  const user = await db.user.findUnique({
-    where: { id: session.userId },
-  })
+  const user = await createSessionHelpers(context).getUser()
   if (!user) {
     return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
+      redirect: { destination: "/login", permanent: false },
     }
   }
 
   return {
     props: {
-      name: user.name,
+      user: {
+        name: user.name,
+      },
     },
   }
 }
 
-export default function BucketListPage(props: { name: string }) {
+export default function BucketListPage(props: { user: { name: string } }) {
   return (
-    <main>
-      <h1>hi {props.name}</h1>
-      <Link href="/api/auth/logout">log out</Link>
-    </main>
+    <AppLayout user={props.user}>
+      <p>h</p>
+    </AppLayout>
   )
 }
