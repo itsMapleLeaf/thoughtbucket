@@ -1,9 +1,14 @@
+const colors = require("tailwindcss/colors")
+
 module.exports = {
   mode: "jit",
   purge: ["./src/**/*.{ts,tsx}"],
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
+      colors: {
+        gray: colors.blueGray,
+      },
       fontFamily: {
         sans: `'Nunito', sans-serif`,
       },
