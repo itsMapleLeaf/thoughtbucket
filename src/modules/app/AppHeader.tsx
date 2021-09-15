@@ -33,7 +33,7 @@ export function AppHeader({ user }: { user: { name: string } | undefined }) {
           <nav className="flex flex-wrap items-baseline gap-x-5 gap-y-2">
             <p>hi, {user.name}!</p>
             <div className="flex flex-wrap items-baseline gap-x-5 gap-y-2">
-              <Link href="/api/auth/logout">
+              <Link href="/logout">
                 <a className={fadedButtonClass}>
                   <LogoutIcon className={inlineIconClass} /> log out
                 </a>
