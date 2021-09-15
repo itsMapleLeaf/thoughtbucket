@@ -9,7 +9,7 @@ type TextInputFieldProps = ComponentPropsWithoutRef<"input"> & {
 export function TextInputField({ label, ...props }: TextInputFieldProps) {
   return (
     <label className="block w-full">
-      <div className="text-sm font-semibold">{label}</div>
+      <div className="mb-0.5 text-sm font-semibold">{label}</div>
       <input className={textInputClass} {...props} />
     </label>
   )
