@@ -12,4 +12,11 @@ describe("/login", () => {
     cy.findByTestId("login-submit").click()
     cy.url().should("include", "/buckets")
   })
+
+  it("redirects to buckets when logged in", () => {
+    const user = createTestUserCredentials()
+    cy.request("POST", "/api/auth/signup", user)
+    cy.visit("/login")
+    cy.url().should("include", "/buckets")
+  })
 })
