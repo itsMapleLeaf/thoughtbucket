@@ -1,5 +1,5 @@
 import clsx from "clsx"
-import { ComponentPropsWithoutRef, ReactNode } from "react"
+import { ComponentPropsWithoutRef, forwardRef, ReactNode } from "react"
 import { AppLayout } from "../app/AppLayout"
 import { cardClass } from "../ui/card"
 import { containerSmallClass } from "../ui/container"
@@ -33,8 +33,9 @@ AuthPageLayout.Paragraph = function AuthPageParagraph(
   return <p className="mt-4" {...props} />
 }
 
-AuthPageLayout.Anchor = function AuthPageAnchor(
+AuthPageLayout.Anchor = forwardRef(function AuthPageAnchor(
   props: ComponentPropsWithoutRef<"a">,
+  ref: React.Ref<HTMLAnchorElement>,
 ) {
-  return <a className="underline" {...props} />
-}
+  return <a className="underline" {...props} ref={ref} />
+})
