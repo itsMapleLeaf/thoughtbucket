@@ -3,7 +3,7 @@ import { activePressClass } from "./effects"
 
 export const solidButtonClass = clsx`
   px-3 py-2 rounded leading-none shadow transition font-semibold text-shadow
-  text-white bg-green-600 hover:bg-green-700
+  text-white bg-green-700 hover:bg-green-800
   ${activePressClass}
 `
 
