@@ -1,22 +1,19 @@
 import { createTestUserCredentials } from "../support/helpers"
 
-describe("bucket list page", () => {
-  it("has a button to create a bucket", () => {
+describe("feature: buckets", () => {
+  it.only("allows managing buckets", () => {
     const bucketName = `testbucket-${String(Math.random())}`
 
+    // bucket creation requires auth
     cy.request("POST", "/api/auth/signup", createTestUserCredentials())
-    cy.visit("/")
+    cy.visit("/buckets")
+
+    // creation flow
     cy.findByRole(/button|link/, { name: /new bucket/i }).click()
     cy.findByLabelText(/name/i).type(bucketName)
-    cy.findByRole(/button/, { name: /create/i }).click()
-    cy.findByText(bucketName).should("exist")
-  })
+    cy.findByRole("button", { name: /create/i }).click()
 
-  it("has a logout button", () => {
-    cy.request("POST", "/api/auth/signup", createTestUserCredentials())
-    cy.visit("/")
-    cy.findByRole(/button|link/, { name: /log\s*out/i }).click()
-    cy.url().should("include", "/login")
-    cy.getCookie("session").should("not.exist")
+    // need to show the bucket name in a heading
+    cy.findByRole("heading", { name: bucketName }).should("exist")
   })
 })
