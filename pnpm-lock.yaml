@@ -1,6 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@headlessui/react': 1.4.1
   '@heroicons/react': 1.0.4
   '@prisma/client': 3.0.2
   '@tailwindcss/line-clamp': 0.2.1
@@ -35,6 +36,7 @@ specifiers:
   zod: 3.8.2
 
 dependencies:
+  '@headlessui/react': 1.4.1_react-dom@17.0.2+react@17.0.2
   '@heroicons/react': 1.0.4_react@17.0.2
   '@prisma/client': 3.0.2_prisma@3.0.2
   bcryptjs: 2.4.3
@@ -198,6 +200,17 @@ packages:
     dependencies:
       '@hapi/hoek': 9.2.0
     dev: true
+
+  /@headlessui/react/1.4.1_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-gL6Ns5xQM57cZBzX6IVv6L7nsam8rDEpRhs5fg28SN64ikfmuuMgunc+Rw5C1cMScnvFM+cz32ueVrlSFEVlSg==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: ^16 || ^17 || ^18
+      react-dom: ^16 || ^17 || ^18
+    dependencies:
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+    dev: false
 
   /@heroicons/react/1.0.4_react@17.0.2:
     resolution: {integrity: sha512-3kOrTmo8+Z8o6AL0rzN82MOf8J5CuxhRLFhpI8mrn+3OqekA6d5eb1GYO3EYYo1Vn6mYQSMNTzCWbEwUInb0cQ==}
