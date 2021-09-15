@@ -16,10 +16,34 @@ model User {
   email        String   @unique
   passwordHash String
   session      Session?
+  Bucket       Bucket[]
 }
 
 model Session {
   id     String @id @default(cuid())
   user   User   @relation(fields: [userId], references: [id])
   userId String @unique
+}
+
+model Bucket {
+  id      String   @id @default(cuid())
+  name    String
+  owner   User     @relation(fields: [ownerId], references: [id])
+  ownerId String
+  columns Column[]
+}
+
+model Column {
+  id       String    @id @default(cuid())
+  name     String
+  bucket   Bucket    @relation(fields: [bucketId], references: [id])
+  bucketId String
+  thoughts Thought[]
+}
+
+model Thought {
+  id       String @id @default(cuid())
+  text     String
+  column   Column @relation(fields: [columnId], references: [id])
+  columnId String
 }
