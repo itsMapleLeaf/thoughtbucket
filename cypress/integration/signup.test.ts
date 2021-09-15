@@ -7,7 +7,7 @@ describe("/signup", () => {
     cy.findByLabelText(/username/i).type(user.name)
     cy.findByLabelText(/email/i).type(user.email)
     cy.findByLabelText(/password/i).type(user.password)
-    cy.findByTestId("signup-submit").click()
+    cy.findByRole("button", { name: /sign\s*up/i }).click()
     cy.url().should("include", "/buckets")
   })
 
@@ -16,5 +16,11 @@ describe("/signup", () => {
     cy.request("POST", "/api/auth/signup", user)
     cy.visit("/signup")
     cy.url().should("include", "/buckets")
+  })
+
+  it("has a link to login", () => {
+    cy.visit("/signup")
+    cy.findByRole("link", { name: /log in/i }).click()
+    cy.url().should("include", "/login")
   })
 })

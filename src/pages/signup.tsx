@@ -2,6 +2,10 @@ import { GetServerSideProps } from "next"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { createSessionHelpers } from "../db/session"
+import { AuthPageLayout } from "../modules/auth/AuthPageLayout"
+import { Button } from "../modules/dom/Button"
+import { solidButtonClass } from "../modules/ui/button"
+import { TextInputField } from "../modules/ui/TextInputField"
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = createSessionHelpers(context)
@@ -20,46 +24,26 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 export default function SignupPage() {
   const { query } = useRouter()
   return (
-    <div>
-      <h1>sign up</h1>
-      <form action="/api/auth/signup" method="post">
-        <label>
-          username
-          <input
-            data-testid="signup-name"
-            name="name"
-            type="text"
-            autoComplete="name"
-            required
-          />
-        </label>
-        <label>
-          email
-          <input
-            data-testid="signup-email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            required
-          />
-        </label>
-        <label>
-          password
-          <input
-            data-testid="signup-password"
-            name="password"
-            type="password"
-            autoComplete="new-password"
-          />
-        </label>
-        <button data-testid="signup-submit" type="submit">
+    <AuthPageLayout title="sign up">
+      <AuthPageLayout.Form action="/api/auth/signup" method="post">
+        <TextInputField.Username name="name" required />
+        <TextInputField.Email name="email" required />
+        <TextInputField.Password name="password" isNewPassword required />
+        <Button className={solidButtonClass} type="submit">
           sign up
-        </button>
-      </form>
-      {query.error && <p>{query.error}</p>}
-      <p>
-        already have an account? <Link href="/login">log in</Link>
-      </p>
-    </div>
+        </Button>
+      </AuthPageLayout.Form>
+
+      {query.error && (
+        <AuthPageLayout.Paragraph>{query.error}</AuthPageLayout.Paragraph>
+      )}
+
+      <AuthPageLayout.Paragraph>
+        already have an account?{" "}
+        <Link href="/login" passHref>
+          <AuthPageLayout.Anchor>log in</AuthPageLayout.Anchor>
+        </Link>
+      </AuthPageLayout.Paragraph>
+    </AuthPageLayout>
   )
 }

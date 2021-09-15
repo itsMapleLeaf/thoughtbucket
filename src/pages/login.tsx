@@ -2,10 +2,9 @@ import { GetServerSideProps } from "next"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { createSessionHelpers } from "../db/session"
-import { AppLayout } from "../modules/app/AppLayout"
+import { AuthPageLayout } from "../modules/auth/AuthPageLayout"
 import { Button } from "../modules/dom/Button"
 import { solidButtonClass } from "../modules/ui/button"
-import { containerSmallClass } from "../modules/ui/container"
 import { TextInputField } from "../modules/ui/TextInputField"
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -24,45 +23,29 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 export default function LoginPage() {
   const { query } = useRouter()
   return (
-    <AppLayout user={undefined}>
-      <div
-        className={`${containerSmallClass} bg-gray-800 p-4 rounded-md shadow`}
-      >
-        <h1 className="text-3xl font-light">log in</h1>
-        <form
-          action="/api/auth/login"
-          method="post"
-          className="grid gap-3 mt-4 justify-items-start"
-        >
-          <TextInputField.Email
-            name="email"
-            required
-            data-testid="login-email"
-          />
-          <TextInputField.Password
-            name="password"
-            required
-            isNewPassword={false}
-            data-testid="login-password"
-          />
-          <Button
-            className={solidButtonClass}
-            data-testid="login-submit"
-            type="submit"
-          >
-            log in
-          </Button>
-        </form>
+    <AuthPageLayout title="log in">
+      <AuthPageLayout.Form action="/api/auth/login" method="post">
+        <TextInputField.Email name="email" required />
+        <TextInputField.Password
+          name="password"
+          required
+          isNewPassword={false}
+        />
+        <Button className={solidButtonClass} type="submit">
+          log in
+        </Button>
+      </AuthPageLayout.Form>
 
-        {query.error && <p className="mt-4">{query.error}</p>}
+      {query.error && (
+        <AuthPageLayout.Paragraph>{query.error}</AuthPageLayout.Paragraph>
+      )}
 
-        <p className="mt-4">
-          don't have an account?{" "}
-          <Link href="/signup">
-            <a className="underline">sign up</a>
-          </Link>
-        </p>
-      </div>
-    </AppLayout>
+      <AuthPageLayout.Paragraph>
+        don't have an account?{" "}
+        <Link href="/signup" passHref>
+          <AuthPageLayout.Anchor>sign up</AuthPageLayout.Anchor>
+        </Link>
+      </AuthPageLayout.Paragraph>
+    </AuthPageLayout>
   )
 }
