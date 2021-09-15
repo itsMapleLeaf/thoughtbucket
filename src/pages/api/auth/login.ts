@@ -4,15 +4,19 @@ import { createSessionHelpers } from "../../../db/session"
 import { loginUser } from "../../../db/user"
 
 const loginBodySchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
+  email: z.string().email(`Must be a valid email`),
+  password: z.string(),
 })
 
 const handler: NextApiHandler = async (req, res) => {
-  const body = loginBodySchema.parse(req.body)
-  const session = createSessionHelpers({ req, res })
+  const result = loginBodySchema.safeParse(req.body)
+  if (!result.success) {
+    res.status(400).redirect(`/login?error=${result.error.message}`)
+    return
+  }
 
-  const user = await loginUser(body)
+  const session = createSessionHelpers({ req, res })
+  const user = await loginUser(result.data)
   if (!user) {
     res.redirect(`/login?error=Invalid username or password`)
   } else {

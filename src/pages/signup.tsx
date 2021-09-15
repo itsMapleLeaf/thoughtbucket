@@ -28,7 +28,13 @@ export default function SignupPage() {
       <AuthPageLayout.Form action="/api/auth/signup" method="post">
         <TextInputField.Username name="name" required />
         <TextInputField.Email name="email" required />
-        <TextInputField.Password name="password" isNewPassword required />
+        <TextInputField.Password
+          name="password"
+          isNewPassword
+          required
+          pattern=".{8,}"
+          title="Must be at least 8 characters long"
+        />
         <Button className={solidButtonClass} type="submit">
           sign up
         </Button>
