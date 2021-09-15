@@ -15,14 +15,13 @@ export function CreateBucketButton({ ...props }: ButtonProps) {
       <Button {...props} onClick={() => setOpen(true)} />
 
       <Dialog open={open} onClose={setOpen}>
-        <Dialog.Overlay className="fixed inset-0 bg-black/50" />
-
-        <div className="fixed inset-0 flex flex-col pointer-events-none">
+        <Dialog.Overlay className="fixed inset-0 flex flex-col p-4 overflow-y-auto bg-black/50">
           <div
             className={clsx(
               cardClass,
               "m-auto w-full max-w-md p-4 grid gap-4 pointer-events-auto",
             )}
+            onClick={(event) => event.stopPropagation()}
           >
             <Dialog.Title className="text-2xl font-light">
               create a bucket!
@@ -54,7 +53,7 @@ export function CreateBucketButton({ ...props }: ButtonProps) {
               </div>
             </form>
           </div>
-        </div>
+        </Dialog.Overlay>
       </Dialog>
     </>
   )
