@@ -1,13 +1,13 @@
-import { PrismaClient } from "@prisma/client"
 import { NextApiHandler } from "next"
 import { z } from "zod"
+import { getClient } from "../../../db/client"
 import { createSessionHelpers } from "../../../db/session"
 
 const bodySchema = z.object({
   name: z.string(),
 })
 
-const db = new PrismaClient()
+const db = getClient()
 
 const handler: NextApiHandler = async (req, res) => {
   const body = bodySchema.parse(req.body)

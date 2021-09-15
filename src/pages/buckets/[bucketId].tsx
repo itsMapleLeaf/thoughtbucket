@@ -1,9 +1,9 @@
-import { PrismaClient } from "@prisma/client"
 import { GetServerSideProps } from "next"
+import { getClient } from "../../db/client"
 import { createSessionHelpers } from "../../db/session"
 import { AppLayout } from "../../modules/app/AppLayout"
 
-const db = new PrismaClient()
+const db = getClient()
 
 type Props = {
   user: { name: string }

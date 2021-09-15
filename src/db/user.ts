@@ -1,7 +1,8 @@
-import { PrismaClient, User } from "@prisma/client"
+import { User } from "@prisma/client"
 import bcrypt from "bcryptjs"
+import { getClient } from "./client"
 
-const db = new PrismaClient()
+const db = getClient()
 
 export async function createUser({
   name,

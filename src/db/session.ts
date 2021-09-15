@@ -1,6 +1,7 @@
-import { PrismaClient, Session, User } from "@prisma/client"
+import { Session, User } from "@prisma/client"
 import Cookies from "cookies"
 import { IncomingMessage, ServerResponse } from "http"
+import { getClient } from "./client"
 
 export const sessionCookieName = "session"
 
@@ -11,8 +12,6 @@ const cookieOptions = {
   signed: false,
 }
 
-const db = new PrismaClient()
-
 export function createSessionHelpers({
   req,
   res,
@@ -20,6 +19,7 @@ export function createSessionHelpers({
   req: IncomingMessage
   res: ServerResponse
 }) {
+  const db = getClient()
   const cookies = new Cookies(req, res, cookieOptions)
 
   async function getSession(): Promise<Session | undefined> {
