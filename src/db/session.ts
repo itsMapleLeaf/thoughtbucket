@@ -8,7 +8,11 @@ export const sessionCookieName = "session"
 const cookieOptions = {
   httpOnly: true,
   maxAge: 60 * 60 * 24 * 30, // 30 days
-  secure: process.env.NODE_ENV === "production",
+  secure:
+    process.env.NODE_ENV === "production" &&
+    // the app is built with production even when setting the node env to test,
+    // so we need this extra env variable to explicitly disable https cookies during tests
+    process.env.COOKIE_SECURE !== "false",
   signed: false,
 }
 

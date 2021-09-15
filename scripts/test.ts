@@ -10,11 +10,11 @@ if (process.env.NODE_ENV !== "test") {
 }
 
 void (async function () {
-  console.log("Resetting prisma database...")
-  await execa("npx prisma migrate reset --force")
+  console.log("Building app...")
+  await execa("pnpm run build", { stdio: "inherit" })
 
   console.log("Starting app...")
-  const app = next({ dir: join(__dirname, ".."), dev: true, quiet: true })
+  const app = next({ dir: join(__dirname, ".."), quiet: true })
   await app.prepare()
 
   const server = createServer(app.getRequestHandler())

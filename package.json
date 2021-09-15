@@ -7,7 +7,7 @@
     "dev-test": "trash .next && dotenv -e .env.test -- concurrently --kill-others npm:dev npm:cypress-open",
     "build": "next build",
     "start": "next start",
-    "test": "dotenv -e .env.test -- ts-node ./scripts/test.ts",
+    "test": "dotenv -e .env.test -- ts-node --transpile-only ./scripts/test.ts",
     "typecheck": "tsc --noEmit",
     "cypress-open": "cypress open"
   },
