@@ -15,6 +15,20 @@ export function TextInputField({ label, ...props }: TextInputFieldProps) {
   )
 }
 
+TextInputField.Username = function UsernameField(
+  props: Partial<TextInputFieldProps>,
+) {
+  return (
+    <TextInputField
+      label="username"
+      type="text"
+      placeholder="supercooluser123"
+      autoComplete="name"
+      {...props}
+    />
+  )
+}
+
 TextInputField.Email = function EmailField(
   props: Partial<TextInputFieldProps>,
 ) {
@@ -22,7 +36,7 @@ TextInputField.Email = function EmailField(
     <TextInputField
       label="email"
       type="email"
-      placeholder="Email"
+      placeholder="me@email.com"
       autoComplete="email"
       {...props}
     />
@@ -37,7 +51,7 @@ TextInputField.Password = function PasswordField({
     <TextInputField
       label="password"
       type="password"
-      placeholder="Password"
+      placeholder="••••••••"
       autoComplete={isNewPassword ? "new-password" : "current-password"}
       {...props}
     />
