@@ -2,16 +2,18 @@ import React from "react"
 import { DateTime } from "../dom/DateTime"
 
 export function BucketPageSummary({
-  bucket,
+  name,
+  createdAt,
 }: {
-  bucket: { name: string; createdAt: string }
+  name: string
+  createdAt: string
 }) {
   return (
     <div>
-      <h1 className="text-2xl font-light">{bucket.name}</h1>
+      <h1 className="text-2xl font-light">{name}</h1>
       <p className="text-sm italic lowercase opacity-60">
         created on{" "}
-        <DateTime date={bucket.createdAt} dateStyle="long" timeStyle="short" />
+        <DateTime date={createdAt} dateStyle="long" timeStyle="short" />
       </p>
     </div>
   )
