@@ -10,7 +10,7 @@ specifiers:
   '@types/concurrently': 6.2.1
   '@types/cookies': 0.7.7
   '@types/node': 16.9.1
-  '@types/react': ^17.0.20
+  '@types/react': ^17.0.21
   '@types/react-dom': ^17.0.9
   '@types/wait-on': 5.3.1
   autoprefixer: 10.3.4
@@ -19,12 +19,12 @@ specifiers:
   concurrently: 6.2.1
   cookies: 0.8.0
   cross-env: 7.0.3
-  cypress: 8.3.1
+  cypress: 8.4.0
   dotenv: 10.0.0
   dotenv-cli: 4.0.0
   execa: 5.1.1
   next: 11.1.2
-  next-runtime: 1.0.0
+  next-runtime: 1.1.0
   postcss: 8.3.6
   prisma: 3.0.2
   react: ^17.0.2
@@ -45,26 +45,26 @@ dependencies:
   clsx: 1.1.1
   cookies: 0.8.0
   next: 11.1.2_bd7797d63db473de6e2318609a63c933
-  next-runtime: 1.0.0_6fbf59523517da779df50d355b375324
+  next-runtime: 1.1.0_6fbf59523517da779df50d355b375324
   react: 17.0.2
   react-dom: 17.0.2_react@17.0.2
-  react-focus-on: 3.5.2_6e44cfea672f844fe365824ce49901bd
+  react-focus-on: 3.5.2_ff4c499fe654e4edeee30199f4db039d
   zod: 3.8.2
 
 devDependencies:
   '@tailwindcss/line-clamp': 0.2.1_tailwindcss@2.2.15
-  '@testing-library/cypress': 8.0.1_cypress@8.3.1
+  '@testing-library/cypress': 8.0.1_cypress@8.4.0
   '@types/bcryptjs': 2.4.2
   '@types/concurrently': 6.2.1
   '@types/cookies': 0.7.7
   '@types/node': 16.9.1
-  '@types/react': 17.0.20
+  '@types/react': 17.0.21
   '@types/react-dom': 17.0.9
   '@types/wait-on': 5.3.1
   autoprefixer: 10.3.4_postcss@8.3.6
   concurrently: 6.2.1
   cross-env: 7.0.3
-  cypress: 8.3.1
+  cypress: 8.4.0
   dotenv: 10.0.0
   dotenv-cli: 4.0.0
   execa: 5.1.1
@@ -405,7 +405,7 @@ packages:
       tailwindcss: 2.2.15_dc78e7f376224e686a37b2113facd53c
     dev: true
 
-  /@testing-library/cypress/8.0.1_cypress@8.3.1:
+  /@testing-library/cypress/8.0.1_cypress@8.4.0:
     resolution: {integrity: sha512-JCGy8u4ia+OQQJxVqKqjqpb0i4kmHQhu5jKFVBp+v/YSICnf52fil2MWIJqO+tH9ZQXtp3aF7uKHsVipWaI0BQ==}
     engines: {node: '>=12', npm: '>=6'}
     peerDependencies:
@@ -413,7 +413,7 @@ packages:
     dependencies:
       '@babel/runtime': 7.15.3
       '@testing-library/dom': 8.5.0
-      cypress: 8.3.1
+      cypress: 8.4.0
     dev: true
 
   /@testing-library/dom/8.5.0:
@@ -562,6 +562,14 @@ packages:
 
   /@types/react/17.0.20:
     resolution: {integrity: sha512-wWZrPlihslrPpcKyCSlmIlruakxr57/buQN1RjlIeaaTWDLtJkTtRW429MoQJergvVKc4IWBpRhWw7YNh/7GVA==}
+    dependencies:
+      '@types/prop-types': 15.7.4
+      '@types/scheduler': 0.16.2
+      csstype: 3.0.9
+    dev: true
+
+  /@types/react/17.0.21:
+    resolution: {integrity: sha512-GzzXCpOthOjXvrAUFQwU/svyxu658cwu00Q9ugujS4qc1zXgLFaO0kS2SLOaMWLt2Jik781yuHCWB7UcYdGAeQ==}
     dependencies:
       '@types/prop-types': 15.7.4
       '@types/scheduler': 0.16.2
@@ -1453,8 +1461,8 @@ packages:
     resolution: {integrity: sha512-rpw6JPxK6Rfg1zLOYCSwle2GFOOsnjmDYDaBwEcwoOg4qlsIVCN789VkBZDJAGi4T07gI4YSutR43t9Zz4Lzuw==}
     dev: true
 
-  /cypress/8.3.1:
-    resolution: {integrity: sha512-1v6pfx+/5cXhaT5T6QKOvnkawmEHWHLiVzm3MYMoQN1fkX2Ma1C32STd3jBStE9qT5qPSTILjGzypVRxCBi40g==}
+  /cypress/8.4.0:
+    resolution: {integrity: sha512-RtVgGFR06ikyMaq/VqapeqOjGaIA42PpK7F0qe1MCiFArfUuJECsLmeYaOA+1TlmNUgJNMSF5fWKkZIJr5Uc7w==}
     engines: {node: '>=12.0.0'}
     hasBin: true
     requiresBuild: true
@@ -2915,8 +2923,8 @@ packages:
     engines: {node: '>= 0.6'}
     dev: false
 
-  /next-runtime/1.0.0_6fbf59523517da779df50d355b375324:
-    resolution: {integrity: sha512-Mqi05vSRFgt+vzNycCz9Wt59Rv1jIPeWAN9CBqo78W4zJ1A5OJzRcgxOpY56MzWpOvMIUaz8ci09b1LcgxYp2A==}
+  /next-runtime/1.1.0_6fbf59523517da779df50d355b375324:
+    resolution: {integrity: sha512-8O7IGm0Ak4uPZ76CQtrxD+Cnt7Y6Gv7u4ODi0oV4q9KzL9f334meeS/AwfOcQ7ag5o+9B3v7T/Lw85l4/WOVCg==}
     peerDependencies:
       next: '>=11.1.2'
       react: '>=17.0.2'
@@ -3609,7 +3617,7 @@ packages:
       scheduler: 0.20.2
     dev: false
 
-  /react-focus-lock/2.5.2_6e44cfea672f844fe365824ce49901bd:
+  /react-focus-lock/2.5.2_ff4c499fe654e4edeee30199f4db039d:
     resolution: {integrity: sha512-WzpdOnEqjf+/A3EH9opMZWauag7gV0BxFl+EY4ElA4qFqYsUsBLnmo2sELbN5OC30S16GAWMy16B9DLPpdJKAQ==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0
@@ -3619,13 +3627,13 @@ packages:
       prop-types: 15.7.2
       react: 17.0.2
       react-clientside-effect: 1.2.5_react@17.0.2
-      use-callback-ref: 1.2.5_6e44cfea672f844fe365824ce49901bd
+      use-callback-ref: 1.2.5_ff4c499fe654e4edeee30199f4db039d
       use-sidecar: 1.0.5_react@17.0.2
     transitivePeerDependencies:
       - '@types/react'
     dev: false
 
-  /react-focus-on/3.5.2_6e44cfea672f844fe365824ce49901bd:
+  /react-focus-on/3.5.2_ff4c499fe654e4edeee30199f4db039d:
     resolution: {integrity: sha512-tpPxLqw9tEuElWmcr5jqw/ULfJjdHEnom0nBW9p6y75Zsa0wOfwQNqCHqCoJcHUqSBtKXqTuYduZoSTfTOTdJw==}
     engines: {node: '>=8.5.0'}
     peerDependencies:
@@ -3635,13 +3643,13 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@types/react': 17.0.20
+      '@types/react': 17.0.21
       aria-hidden: 1.1.3
       react: 17.0.2
-      react-focus-lock: 2.5.2_6e44cfea672f844fe365824ce49901bd
-      react-remove-scroll: 2.4.3_6e44cfea672f844fe365824ce49901bd
-      react-style-singleton: 2.1.1_6e44cfea672f844fe365824ce49901bd
-      use-callback-ref: 1.2.5_6e44cfea672f844fe365824ce49901bd
+      react-focus-lock: 2.5.2_ff4c499fe654e4edeee30199f4db039d
+      react-remove-scroll: 2.4.3_ff4c499fe654e4edeee30199f4db039d
+      react-style-singleton: 2.1.1_ff4c499fe654e4edeee30199f4db039d
+      use-callback-ref: 1.2.5_ff4c499fe654e4edeee30199f4db039d
       use-sidecar: 1.0.5_react@17.0.2
     dev: false
 
@@ -3657,7 +3665,7 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: false
 
-  /react-remove-scroll-bar/2.2.0_6e44cfea672f844fe365824ce49901bd:
+  /react-remove-scroll-bar/2.2.0_ff4c499fe654e4edeee30199f4db039d:
     resolution: {integrity: sha512-UU9ZBP1wdMR8qoUs7owiVcpaPwsQxUDC2lypP6mmixaGlARZa7ZIBx1jcuObLdhMOvCsnZcvetOho0wzPa9PYg==}
     engines: {node: '>=8.5.0'}
     peerDependencies:
@@ -3667,13 +3675,13 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@types/react': 17.0.20
+      '@types/react': 17.0.21
       react: 17.0.2
-      react-style-singleton: 2.1.1_6e44cfea672f844fe365824ce49901bd
+      react-style-singleton: 2.1.1_ff4c499fe654e4edeee30199f4db039d
       tslib: 1.14.1
     dev: false
 
-  /react-remove-scroll/2.4.3_6e44cfea672f844fe365824ce49901bd:
+  /react-remove-scroll/2.4.3_ff4c499fe654e4edeee30199f4db039d:
     resolution: {integrity: sha512-lGWYXfV6jykJwbFpsuPdexKKzp96f3RbvGapDSIdcyGvHb7/eqyn46C7/6h+rUzYar1j5mdU+XECITHXCKBk9Q==}
     engines: {node: '>=8.5.0'}
     peerDependencies:
@@ -3683,16 +3691,16 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@types/react': 17.0.20
+      '@types/react': 17.0.21
       react: 17.0.2
-      react-remove-scroll-bar: 2.2.0_6e44cfea672f844fe365824ce49901bd
-      react-style-singleton: 2.1.1_6e44cfea672f844fe365824ce49901bd
+      react-remove-scroll-bar: 2.2.0_ff4c499fe654e4edeee30199f4db039d
+      react-style-singleton: 2.1.1_ff4c499fe654e4edeee30199f4db039d
       tslib: 1.14.1
-      use-callback-ref: 1.2.5_6e44cfea672f844fe365824ce49901bd
+      use-callback-ref: 1.2.5_ff4c499fe654e4edeee30199f4db039d
       use-sidecar: 1.0.5_react@17.0.2
     dev: false
 
-  /react-style-singleton/2.1.1_6e44cfea672f844fe365824ce49901bd:
+  /react-style-singleton/2.1.1_ff4c499fe654e4edeee30199f4db039d:
     resolution: {integrity: sha512-jNRp07Jza6CBqdRKNgGhT3u9umWvils1xsuMOjZlghBDH2MU0PL2WZor4PGYjXpnRCa9DQSlHMs/xnABWOwYbA==}
     engines: {node: '>=8.5.0'}
     peerDependencies:
@@ -3702,7 +3710,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@types/react': 17.0.20
+      '@types/react': 17.0.21
       get-nonce: 1.0.1
       invariant: 2.2.4
       react: 17.0.2
@@ -4501,7 +4509,7 @@ packages:
       punycode: 1.3.2
       querystring: 0.2.0
 
-  /use-callback-ref/1.2.5_6e44cfea672f844fe365824ce49901bd:
+  /use-callback-ref/1.2.5_ff4c499fe654e4edeee30199f4db039d:
     resolution: {integrity: sha512-gN3vgMISAgacF7sqsLPByqoePooY3n2emTH59Ur5d/M8eg4WTWu1xp8i8DHjohftIyEx0S08RiYxbffr4j8Peg==}
     engines: {node: '>=8.5.0'}
     peerDependencies:
@@ -4511,7 +4519,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@types/react': 17.0.20
+      '@types/react': 17.0.21
       react: 17.0.2
     dev: false
 
