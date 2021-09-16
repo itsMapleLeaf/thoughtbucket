@@ -21,6 +21,8 @@ export function AuthPageLayout({
   )
 }
 
+AuthPageLayout.formClass = "grid gap-3 mt-4 justify-items-start"
+
 AuthPageLayout.Form = function AuthPageForm(
   props: ComponentPropsWithoutRef<"form">,
 ) {
