@@ -1,11 +1,13 @@
 import { handle, json, redirect } from "next-runtime"
 import { Form } from "next-runtime/form"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import { z } from "zod"
 import { createSessionHelpers } from "../db/session"
 import { loginUser } from "../db/user"
 import { AuthPageLayout } from "../modules/auth/AuthPageLayout"
 import { Button } from "../modules/dom/Button"
+import { usePendingNavigation } from "../modules/routing/usePendingNavigation"
 import { solidButtonClass } from "../modules/ui/button"
 import { TextInputField } from "../modules/ui/TextInputField"
 
@@ -40,17 +42,20 @@ export const getServerSideProps = handle<Props>({
     }
 
     await session.createSession(user)
-    return redirect("/")
+    return json({})
   },
 })
 
 export default function LoginPage(props: Props) {
+  const navigating = usePendingNavigation()
+  const router = useRouter()
+
   return (
     <AuthPageLayout title="log in">
       <Form
-        // @ts-expect-error
         className={AuthPageLayout.formClass}
         method="post"
+        onSuccess={() => router.replace("/")}
       >
         <TextInputField.Email name="email" required />
         <TextInputField.Password
@@ -58,7 +63,7 @@ export default function LoginPage(props: Props) {
           required
           isNewPassword={false}
         />
-        <Button className={solidButtonClass} type="submit">
+        <Button className={solidButtonClass} type="submit" loading={navigating}>
           log in
         </Button>
       </Form>
