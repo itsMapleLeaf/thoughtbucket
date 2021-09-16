@@ -45,7 +45,13 @@ export const getServerSideProps = handle<Props>({
   },
 
   post: async (context) => {
-    const body = bodySchema.parse(context.req.body)
+    const result = bodySchema.safeParse(context.req.body)
+    if (!result.success) {
+      const message = result.error.issues
+        .map((issue) => issue.message)
+        .join(", ")
+      return json({ errorMessage: message })
+    }
 
     const user = await createSessionHelpers(context).getUser()
     if (!user) {
@@ -54,7 +60,7 @@ export const getServerSideProps = handle<Props>({
 
     const bucket = await db.bucket.create({
       data: {
-        name: body.name,
+        name: result.data.name,
         ownerId: user.id,
       },
     })
