@@ -1,0 +1,21 @@
+@keyframes spin {
+  0% {
+    transform: rotate(0);
+  }
+  25% {
+    transform: rotate(0.75turn);
+  }
+  50% {
+    transform: rotate(1.5turn);
+  }
+  75% {
+    transform: rotate(2.25turn);
+  }
+  100% {
+    transform: rotate(3turn);
+  }
+}
+
+.spin {
+  animation: spin 4s ease infinite;
+}
