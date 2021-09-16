@@ -1,31 +1,52 @@
-import { GetServerSideProps } from "next"
+import { handle, json, redirect } from "next-runtime"
+import { Form } from "next-runtime/form"
 import Link from "next/link"
 import { useRouter } from "next/router"
+import { z } from "zod"
 import { createSessionHelpers } from "../db/session"
+import { createUser } from "../db/user"
 import { AuthPageLayout } from "../modules/auth/AuthPageLayout"
 import { Button } from "../modules/dom/Button"
 import { solidButtonClass } from "../modules/ui/button"
 import { TextInputField } from "../modules/ui/TextInputField"
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = createSessionHelpers(context)
+const signupBodySchema = z.object({
+  name: z.string(),
+  email: z.string().email(`Please enter a valid email`),
+  password: z.string().min(8, `Password must be at least 8 characters long`),
+})
 
-  if (await session.getSession()) {
-    return {
-      redirect: { destination: "/", permanent: false },
+export const getServerSideProps = handle({
+  async get(context) {
+    const user = await createSessionHelpers(context).getUser()
+    return user ? redirect("/") : json({})
+  },
+
+  async post(context) {
+    const body = signupBodySchema.safeParse(context.req.body)
+    if (!body.success) {
+      const message = body.error.issues.map((error) => error.message).join("\n")
+      return redirect(`/signup?error=${message}`)
     }
-  }
 
-  return {
-    props: {},
-  }
-}
+    const user = await createUser(body.data)
+
+    const session = createSessionHelpers(context)
+    await session.createSession(user)
+
+    return redirect("/")
+  },
+})
 
 export default function SignupPage() {
   const { query } = useRouter()
   return (
     <AuthPageLayout title="sign up">
-      <AuthPageLayout.Form action="/api/auth/signup" method="post">
+      <Form
+        // @ts-expect-error
+        className={AuthPageLayout.formClass}
+        method="post"
+      >
         <TextInputField.Username name="name" required />
         <TextInputField.Email name="email" required />
         <TextInputField.Password
@@ -38,7 +59,7 @@ export default function SignupPage() {
         <Button className={solidButtonClass} type="submit">
           sign up
         </Button>
-      </AuthPageLayout.Form>
+      </Form>
 
       {query.error && (
         <AuthPageLayout.Paragraph>{query.error}</AuthPageLayout.Paragraph>

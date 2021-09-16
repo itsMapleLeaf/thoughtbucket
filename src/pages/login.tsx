@@ -1,30 +1,57 @@
-import { GetServerSideProps } from "next"
+import { handle, json, redirect } from "next-runtime"
+import { Form } from "next-runtime/form"
 import Link from "next/link"
-import { useRouter } from "next/router"
+import { z } from "zod"
 import { createSessionHelpers } from "../db/session"
+import { loginUser } from "../db/user"
 import { AuthPageLayout } from "../modules/auth/AuthPageLayout"
 import { Button } from "../modules/dom/Button"
 import { solidButtonClass } from "../modules/ui/button"
 import { TextInputField } from "../modules/ui/TextInputField"
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const user = await createSessionHelpers(context).getUser()
-  if (user) {
-    return {
-      redirect: { destination: "/", permanent: false },
-    }
-  }
-
-  return {
-    props: {},
-  }
+type Props = {
+  errorMessage?: string
 }
 
-export default function LoginPage() {
-  const { query } = useRouter()
+const loginBodySchema = z.object({
+  email: z.string().email(`Must be a valid email`),
+  password: z.string(),
+})
+
+export const getServerSideProps = handle<Props>({
+  async get(context) {
+    const user = await createSessionHelpers(context).getUser()
+    return user ? redirect("/") : json({})
+  },
+
+  async post(context) {
+    const result = loginBodySchema.safeParse(context.req.body)
+    if (!result.success) {
+      const message = result.error.issues
+        .map((error) => error.message)
+        .join("\n")
+      return json({ errorMessage: message })
+    }
+
+    const session = createSessionHelpers(context)
+    const user = await loginUser(result.data)
+    if (!user) {
+      return json({ errorMessage: "Invalid email or password" })
+    }
+
+    await session.createSession(user)
+    return redirect("/")
+  },
+})
+
+export default function LoginPage(props: Props) {
   return (
     <AuthPageLayout title="log in">
-      <AuthPageLayout.Form action="/api/auth/login" method="post">
+      <Form
+        // @ts-expect-error
+        className={AuthPageLayout.formClass}
+        method="post"
+      >
         <TextInputField.Email name="email" required />
         <TextInputField.Password
           name="password"
@@ -34,11 +61,13 @@ export default function LoginPage() {
         <Button className={solidButtonClass} type="submit">
           log in
         </Button>
-      </AuthPageLayout.Form>
+      </Form>
 
-      {query.error && (
-        <AuthPageLayout.Paragraph>{query.error}</AuthPageLayout.Paragraph>
-      )}
+      {props.errorMessage ? (
+        <AuthPageLayout.Paragraph>
+          {props.errorMessage}
+        </AuthPageLayout.Paragraph>
+      ) : null}
 
       <AuthPageLayout.Paragraph>
         don't have an account?{" "}

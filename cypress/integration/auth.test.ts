@@ -49,8 +49,8 @@ describe("feature: auth", () => {
       return cy.findByRole("button", { name: /log\s*in/i })
     }
 
-    cy.request("POST", "/api/auth/signup", user)
-    cy.request("POST", "/api/auth/logout") // ensure we're logged out
+    cy.request("POST", "/signup", user)
+    cy.request("POST", "/logout") // ensure we're logged out
 
     cy.visit("/login")
 
