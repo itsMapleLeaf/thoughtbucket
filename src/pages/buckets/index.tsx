@@ -1,10 +1,13 @@
-import { User } from "@prisma/client"
+import { Bucket, User } from "@prisma/client"
+import clsx from "clsx"
 import { handle, json, redirect } from "next-runtime"
 import { z } from "zod"
 import { getClient } from "../../db/client"
 import { createSessionHelpers } from "../../db/session"
 import { pick } from "../../helpers"
 import { AppLayout } from "../../modules/app/AppLayout"
+import { BucketSummaryCard } from "../../modules/bucket/BucketSummaryCard"
+import { containerClass } from "../../modules/ui/container"
 
 const db = getClient()
 
@@ -14,13 +17,31 @@ const bodySchema = z.object({
 
 type Props = {
   user?: Pick<User, "name">
+  buckets?: Array<Pick<Bucket, "name" | "id">>
   errorMessage?: string
 }
 
 export const getServerSideProps = handle<Props>({
   get: async (context) => {
     const user = await createSessionHelpers(context).getUser()
-    return user ? json({ user: pick(user, ["name"]) }) : redirect("/login")
+    if (!user) {
+      return redirect("/login")
+    }
+
+    const buckets = await db.bucket.findMany({
+      where: {
+        ownerId: user.id,
+      },
+      select: {
+        id: true,
+        name: true,
+      },
+    })
+
+    return json({
+      user: pick(user, ["name"]),
+      buckets,
+    })
   },
 
   post: async (context) => {
@@ -45,7 +66,16 @@ export const getServerSideProps = handle<Props>({
 export default function BucketListPage(props: Props) {
   return (
     <AppLayout user={props.user}>
-      <p>h</p>
+      <div
+        className={clsx(
+          containerClass,
+          "grid gap-4 grid-cols-[repeat(auto-fill,minmax(14rem,1fr))]",
+        )}
+      >
+        {props.buckets?.map((bucket) => (
+          <BucketSummaryCard key={bucket.id} bucket={bucket} />
+        ))}
+      </div>
     </AppLayout>
   )
 }
