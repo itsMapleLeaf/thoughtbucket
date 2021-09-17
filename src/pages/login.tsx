@@ -7,7 +7,7 @@ import { createSessionHelpers } from "../db/session"
 import { loginUser } from "../db/user"
 import { AuthPageLayout } from "../modules/auth/AuthPageLayout"
 import { Button } from "../modules/dom/Button"
-import { usePendingNavigation } from "../modules/routing/usePendingNavigation"
+import { usePendingFormNavigation } from "../modules/routing/usePendingFormNavigation"
 import { solidButtonClass } from "../modules/ui/button"
 import { TextInputField } from "../modules/ui/TextInputField"
 
@@ -47,7 +47,7 @@ export const getServerSideProps = handle<Props>({
 })
 
 export default function LoginPage(props: Props) {
-  const navigating = usePendingNavigation()
+  const navigating = usePendingFormNavigation()
   const router = useRouter()
 
   return (

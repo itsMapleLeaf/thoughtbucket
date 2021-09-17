@@ -7,7 +7,7 @@ import { createSessionHelpers } from "../db/session"
 import { createUser } from "../db/user"
 import { AuthPageLayout } from "../modules/auth/AuthPageLayout"
 import { Button } from "../modules/dom/Button"
-import { usePendingNavigation } from "../modules/routing/usePendingNavigation"
+import { usePendingFormNavigation } from "../modules/routing/usePendingFormNavigation"
 import { solidButtonClass } from "../modules/ui/button"
 import { TextInputField } from "../modules/ui/TextInputField"
 
@@ -44,7 +44,7 @@ export const getServerSideProps = handle<Props>({
 })
 
 export default function SignupPage(props: Props) {
-  const pending = usePendingNavigation()
+  const pending = usePendingFormNavigation()
   const router = useRouter()
   return (
     <AuthPageLayout title="sign up">

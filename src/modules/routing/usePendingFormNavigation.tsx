@@ -2,7 +2,7 @@ import { usePendingFormSubmit } from "next-runtime/form"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 
-export function usePendingNavigation() {
+export function usePendingFormNavigation() {
   const router = useRouter()
   const [navigating, setNavigating] = useState(false)
   const pending = usePendingFormSubmit()
