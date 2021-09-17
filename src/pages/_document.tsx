@@ -1,8 +1,9 @@
-// nextjs custom document
+// eslint-disable-next-line @next/next/no-document-import-in-page
 import Document, { Head, Html, Main, NextScript } from "next/document"
 import React from "react"
 
 export default class MyDocument extends Document {
+  // eslint-disable-next-line class-methods-use-this
   render() {
     return (
       <Html

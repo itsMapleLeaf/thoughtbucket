@@ -1,5 +1,6 @@
 import { TrashIcon } from "@heroicons/react/solid"
-import React, { ReactNode } from "react"
+import type { ReactNode } from "react"
+import React from "react"
 import { Button } from "../dom/Button"
 import { fadedButtonClass } from "../ui/button"
 

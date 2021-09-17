@@ -1,10 +1,11 @@
 import { PencilAltIcon, TrashIcon } from "@heroicons/react/solid"
-import { Bucket, Column, User } from "@prisma/client"
+import type { Bucket, Column, User } from "@prisma/client"
 import { handle, json, notFound, redirect } from "next-runtime"
 import { useRef } from "react"
 import { getClient } from "../../db/client"
 import { createSessionHelpers } from "../../db/session"
-import { pick, serialize, Serialized } from "../../helpers"
+import type { Serialized } from "../../helpers"
+import { pick, serialize } from "../../helpers"
 import { AppLayout } from "../../modules/app/AppLayout"
 import { BucketPageSummary } from "../../modules/bucket/BucketPageSummary"
 import { DeleteBucketButton } from "../../modules/bucket/DeleteBucketButton"
@@ -21,7 +22,7 @@ const db = getClient()
 type Props = {
   user: Pick<User, "name">
   bucket: Serialized<Pick<Bucket, "id" | "name" | "createdAt">>
-  columns: Pick<Column, "name" | "id">[]
+  columns: Array<Pick<Column, "name" | "id">>
   errorMessage?: string
 }
 

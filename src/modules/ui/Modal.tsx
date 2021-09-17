@@ -1,6 +1,9 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import { Portal } from "@headlessui/react"
 import clsx from "clsx"
-import { ReactNode, useState } from "react"
+import type { ReactNode } from "react"
+import { useState } from "react"
 import { FocusOn } from "react-focus-on"
 import { cardClass } from "./card"
 
@@ -23,11 +26,8 @@ export function Modal(props: {
               className="fixed inset-0 flex flex-col p-4 overflow-y-auto bg-black/50"
               onClick={onSelf(close)}
             >
-              <div
-                className={clsx(cardClass, "m-auto w-full max-w-md p-4")}
-                role="dialog"
-                aria-labelledby="dialog-title"
-              >
+              {/* TODO?: add close button to ensure it can always be closed */}
+              <div className={clsx(cardClass, "m-auto w-full max-w-md p-4")}>
                 <h2 id="dialog-title" className="mb-4 text-2xl font-light">
                   {props.title}
                 </h2>

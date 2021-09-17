@@ -1,6 +1,6 @@
-import { Session, User } from "@prisma/client"
+import type { Session, User } from "@prisma/client"
 import Cookies from "cookies"
-import { IncomingMessage, ServerResponse } from "http"
+import type { IncomingMessage, ServerResponse } from "http"
 import { getClient } from "./client"
 
 export const sessionCookieName = "session"

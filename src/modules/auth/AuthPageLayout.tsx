@@ -1,5 +1,6 @@
 import clsx from "clsx"
-import { ComponentPropsWithoutRef, forwardRef, ReactNode } from "react"
+import type { ComponentPropsWithoutRef, ReactNode } from "react"
+import { forwardRef } from "react"
 import { AppLayout } from "../app/AppLayout"
 import { cardClass } from "../ui/card"
 import { containerSmallClass } from "../ui/container"
@@ -36,8 +37,9 @@ AuthPageLayout.Paragraph = function AuthPageParagraph(
 }
 
 AuthPageLayout.Anchor = forwardRef(function AuthPageAnchor(
-  props: ComponentPropsWithoutRef<"a">,
+  props: ComponentPropsWithoutRef<"a"> & { children: ReactNode },
   ref: React.Ref<HTMLAnchorElement>,
 ) {
+  // eslint-disable-next-line jsx-a11y/anchor-has-content
   return <a className="underline" {...props} ref={ref} />
 })

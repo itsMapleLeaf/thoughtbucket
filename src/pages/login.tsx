@@ -75,7 +75,7 @@ export default function LoginPage(props: Props) {
       ) : null}
 
       <AuthPageLayout.Paragraph>
-        don't have an account?{" "}
+        {"don't have an account? "}
         <Link href="/signup" passHref>
           <AuthPageLayout.Anchor>sign up</AuthPageLayout.Anchor>
         </Link>

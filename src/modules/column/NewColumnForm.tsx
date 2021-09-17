@@ -5,7 +5,7 @@ import { fadedButtonClass } from "../ui/button"
 import { inlineIconClass } from "../ui/icon"
 import { textInputClass } from "../ui/input"
 
-export function NewColumnForm({}: {}) {
+export function NewColumnForm() {
   const [name, setName] = useState("")
 
   return (

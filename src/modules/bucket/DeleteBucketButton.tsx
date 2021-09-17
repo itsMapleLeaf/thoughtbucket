@@ -1,7 +1,8 @@
 import { TrashIcon } from "@heroicons/react/solid"
 import { Form } from "next-runtime/form"
 import { useRouter } from "next/router"
-import { Button, ButtonProps } from "../dom/Button"
+import type { ButtonProps } from "../dom/Button"
+import { Button } from "../dom/Button"
 import { usePendingFormNavigation } from "../routing/usePendingFormNavigation"
 import { fadedButtonClass, solidDangerButtonClass } from "../ui/button"
 import { leftButtonIconClass } from "../ui/icon"
@@ -25,13 +26,13 @@ export function DeleteBucketButton({
           className="grid gap-4"
           shallow
           onSuccess={() => {
-            router.push("/buckets")
+            void router.push("/buckets")
             close()
           }}
         >
           <p>
-            are you sure you want to delete the bucket "
-            <strong>{bucket.name}</strong>"?
+            are you sure you want to delete the bucket &quot;
+            <strong>{bucket.name}</strong>&quot;?
           </p>
           <div className={Modal.buttonGroupClass}>
             <Button className={fadedButtonClass} onClick={close}>

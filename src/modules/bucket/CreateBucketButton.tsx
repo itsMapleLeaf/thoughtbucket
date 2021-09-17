@@ -2,7 +2,8 @@ import { ViewGridAddIcon } from "@heroicons/react/solid"
 import { Form } from "next-runtime/form"
 import { useRouter } from "next/router"
 import React from "react"
-import { Button, ButtonProps } from "../dom/Button"
+import type { ButtonProps } from "../dom/Button"
+import { Button } from "../dom/Button"
 import { fadedButtonClass, solidButtonClass } from "../ui/button"
 import { leftButtonIconClass } from "../ui/icon"
 import { Modal } from "../ui/Modal"
@@ -21,7 +22,7 @@ export function CreateBucketButton(props: ButtonProps) {
           onSuccess={(data: { newBucket?: { id?: string } }) => {
             close()
             if (data.newBucket?.id) {
-              router.push(`/buckets/${data.newBucket.id}`)
+              void router.push(`/buckets/${data.newBucket.id}`)
             }
           }}
         >

@@ -16,6 +16,6 @@
     "noUncheckedIndexedAccess": true,
     "preserveSymlinks": false
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.*"],
   "exclude": ["node_modules", ".next", "cypress"]
 }

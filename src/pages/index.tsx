@@ -1,4 +1,4 @@
-import { GetServerSideProps } from "next"
+import type { GetServerSideProps } from "next"
 import { createSessionHelpers } from "../db/session"
 
 export const getServerSideProps: GetServerSideProps = async (context) => {

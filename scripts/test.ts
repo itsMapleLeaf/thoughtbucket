@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import cypress from "cypress"
 import execa from "execa"
 import next from "next"

@@ -1,4 +1,4 @@
-import { Bucket, User } from "@prisma/client"
+import type { Bucket, User } from "@prisma/client"
 import clsx from "clsx"
 import { handle, json, redirect } from "next-runtime"
 import { z } from "zod"
