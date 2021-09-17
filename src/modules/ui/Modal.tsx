@@ -41,6 +41,8 @@ export function Modal(props: {
   )
 }
 
+Modal.buttonGroupClass = clsx`flex items-baseline flex-wrap justify-end gap-4`
+
 type TargetProps = {
   target: unknown
   currentTarget: unknown
