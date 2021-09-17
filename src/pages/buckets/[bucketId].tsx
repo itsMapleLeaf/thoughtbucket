@@ -1,12 +1,13 @@
 import { PencilAltIcon, TrashIcon } from "@heroicons/react/solid"
 import { Bucket, Column, User } from "@prisma/client"
-import { GetServerSideProps } from "next"
+import { handle, json, notFound, redirect } from "next-runtime"
 import { useRef } from "react"
 import { getClient } from "../../db/client"
 import { createSessionHelpers } from "../../db/session"
 import { pick, serialize, Serialized } from "../../helpers"
 import { AppLayout } from "../../modules/app/AppLayout"
 import { BucketPageSummary } from "../../modules/bucket/BucketPageSummary"
+import { DeleteBucketButton } from "../../modules/bucket/DeleteBucketButton"
 import { ColumnHeader } from "../../modules/column/ColumnHeader"
 import { NewColumnForm } from "../../modules/column/NewColumnForm"
 import { Button } from "../../modules/dom/Button"
@@ -19,57 +20,89 @@ const db = getClient()
 
 type Props = {
   user: Pick<User, "name">
-  bucket: Serialized<Pick<Bucket, "name" | "createdAt">>
+  bucket: Serialized<Pick<Bucket, "id" | "name" | "createdAt">>
   columns: Pick<Column, "name" | "id">[]
+  errorMessage?: string
 }
 
-export const getServerSideProps: GetServerSideProps<Props> = async (
-  context,
-) => {
-  const user = await createSessionHelpers(context).getUser()
-  if (!user) {
-    return {
-      redirect: { destination: "/login", permanent: false },
+export const getServerSideProps = handle<Props>({
+  get: async (context) => {
+    const user = await createSessionHelpers(context).getUser()
+    if (!user) {
+      return redirect("/login")
     }
-  }
 
-  const id = context.params?.bucketId
-  if (!id) {
-    return { notFound: true }
-  }
+    const id = context.params?.bucketId
+    if (!id) {
+      return notFound()
+    }
 
-  const bucket = await db.bucket.findUnique({
-    where: {
-      id: String(id),
-    },
-    select: {
-      name: true,
-      createdAt: true,
-    },
-  })
+    const bucket = await db.bucket.findUnique({
+      where: {
+        id: String(id),
+      },
+      select: {
+        id: true,
+        name: true,
+        createdAt: true,
+      },
+    })
 
-  if (!bucket) {
-    return { notFound: true }
-  }
+    if (!bucket) {
+      return notFound()
+    }
 
-  const columns = await db.column.findMany({
-    where: {
-      bucketId: String(id),
-    },
-    select: {
-      id: true,
-      name: true,
-    },
-  })
+    const columns = await db.column.findMany({
+      where: {
+        bucketId: String(id),
+      },
+      select: {
+        id: true,
+        name: true,
+      },
+    })
 
-  return {
-    props: {
+    return json({
       user: pick(user, ["name"]),
       bucket: serialize(bucket),
       columns,
-    },
-  }
-}
+    })
+  },
+
+  delete: async (context) => {
+    const { bucketId } = context.query
+    if (!bucketId) {
+      return notFound()
+    }
+
+    const user = await createSessionHelpers(context).getUser()
+    if (!user) {
+      throw new Error("not logged in")
+    }
+
+    const bucket = await db.bucket.findUnique({
+      where: {
+        id: String(bucketId),
+      },
+    })
+
+    if (!bucket) {
+      return notFound()
+    }
+
+    if (bucket.ownerId !== user.id) {
+      throw new Error("you don't own this bucket!")
+    }
+
+    await db.bucket.delete({
+      where: {
+        id: bucket.id,
+      },
+    })
+
+    return redirect("/")
+  },
+})
 
 export default function BucketPage({ user, bucket, columns }: Props) {
   const columnScrollContainerRef = useRef<HTMLDivElement>(null)
@@ -88,9 +121,9 @@ export default function BucketPage({ user, bucket, columns }: Props) {
             <Button className={fadedButtonClass}>
               <PencilAltIcon className={leftButtonIconClass} /> rename
             </Button>
-            <Button className={fadedButtonClass}>
+            <DeleteBucketButton bucket={bucket} className={fadedButtonClass}>
               <TrashIcon className={leftButtonIconClass} /> delete
-            </Button>
+            </DeleteBucketButton>
           </div>
         </section>
 
