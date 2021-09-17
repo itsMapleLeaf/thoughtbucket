@@ -5,6 +5,7 @@
     "prepare": "prisma generate",
     "dev": "next dev",
     "dev-test": "trash .next && dotenv -e .env.test -- concurrently --kill-others npm:dev npm:cypress-open",
+    "test-dev": "pnpm run dev-test",
     "build": "tsc --noEmit && next build",
     "build-yolo": "next build",
     "start": "next start",
