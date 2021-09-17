@@ -36,23 +36,27 @@ describe("feature: buckets", () => {
     for (const name of bucketNames) {
       cy.visit("/buckets")
       cy.findByRole("link", { name: (n) => n.includes(name) }).click()
-      cy.url().should((u) => {
-        expect(u).to.match(/\/buckets\/\w+$/)
-      })
+      cy.location("pathname").should("match", /\/buckets\/\w+$/)
     }
   })
 
-  it.skip("supports deletion from detail page", () => {
+  it("supports deletion from detail page", () => {
     const bucketName = `testbucket-${String(Math.random())}`
-
     cy.request("POST", "/signup", createTestUserCredentials())
 
-    cy.visit({ url: `/buckets`, method: "POST", body: { name: bucketName } })
+    // ideally, we should just make a bucket in the backend,
+    // but this is the best i could come up with
+    cy.request({ method: "POST", url: "/buckets", body: { name: bucketName } })
+    cy.visit("/buckets")
+    cy.findByRole("link", { name: (n) => n.includes(bucketName) }).click()
 
-    cy.findByRole(/button|link/, { name: /delete/i }).click()
+    cy.findByTestId("bucket-page-delete")
+      .click()
+      .its("contents")
+      .should("include", /delete/i)
 
-    cy.location().then(({ pathname }) => {
-      expect(pathname).to.equal("/buckets")
-    })
+    cy.findByRole("button", { name: /delete/i }).click()
+    cy.location("pathname").should("eq", "/buckets")
+    cy.findByText(bucketName).should("not.exist")
   })
 })

@@ -121,7 +121,11 @@ export default function BucketPage({ user, bucket, columns }: Props) {
             <Button className={fadedButtonClass}>
               <PencilAltIcon className={leftButtonIconClass} /> rename
             </Button>
-            <DeleteBucketButton bucket={bucket} className={fadedButtonClass}>
+            <DeleteBucketButton
+              bucket={bucket}
+              className={fadedButtonClass}
+              data-testid="bucket-page-delete"
+            >
               <TrashIcon className={leftButtonIconClass} /> delete
             </DeleteBucketButton>
           </div>
