@@ -19,7 +19,7 @@
     "clsx": "1.1.1",
     "cookies": "0.8.0",
     "next": "11.1.2",
-    "next-runtime": "1.1.0",
+    "next-runtime": "link:..\\next-runtime\\lib",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-focus-on": "3.5.2",
