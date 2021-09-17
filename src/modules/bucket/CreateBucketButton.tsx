@@ -1,4 +1,7 @@
 import { ViewGridAddIcon } from "@heroicons/react/solid"
+import { Form } from "next-runtime/form"
+import { useRouter } from "next/router"
+import React from "react"
 import { Button, ButtonProps } from "../dom/Button"
 import { fadedButtonClass, solidButtonClass } from "../ui/button"
 import { leftButtonIconClass } from "../ui/icon"
@@ -6,12 +9,22 @@ import { Modal } from "../ui/Modal"
 import { TextInputField } from "../ui/TextInputField"
 
 export function CreateBucketButton(props: ButtonProps) {
+  const router = useRouter()
   return (
     <Modal
       title="create a bucket!"
       renderTrigger={(triggerProps) => <Button {...triggerProps} {...props} />}
       renderContent={({ close }) => (
-        <form action="/buckets" method="post">
+        <Form
+          action="/buckets"
+          method="post"
+          onSuccess={(data: { newBucket?: { id?: string } }) => {
+            close()
+            if (data.newBucket?.id) {
+              router.push(`/buckets/${data.newBucket.id}`)
+            }
+          }}
+        >
           <TextInputField
             label="bucket name"
             name="name"
@@ -25,7 +38,7 @@ export function CreateBucketButton(props: ButtonProps) {
               <ViewGridAddIcon className={leftButtonIconClass} /> create bucket
             </Button>
           </div>
-        </form>
+        </Form>
       )}
     />
   )

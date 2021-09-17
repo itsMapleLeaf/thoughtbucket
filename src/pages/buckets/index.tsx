@@ -11,13 +11,14 @@ import { containerClass } from "../../modules/ui/container"
 
 const db = getClient()
 
-const bodySchema = z.object({
+const postBodySchema = z.object({
   name: z.string(),
 })
 
 type Props = {
   user?: Pick<User, "name">
   buckets?: Array<Pick<Bucket, "name" | "id">>
+  newBucket?: Pick<Bucket, "id">
   errorMessage?: string
 }
 
@@ -45,17 +46,21 @@ export const getServerSideProps = handle<Props>({
   },
 
   post: async (context) => {
-    const result = bodySchema.safeParse(context.req.body)
+    const result = postBodySchema.safeParse(context.req.body)
     if (!result.success) {
       const message = result.error.issues
         .map((issue) => issue.message)
         .join(", ")
-      return json({ errorMessage: message })
+      return json({
+        errorMessage: message,
+      })
     }
 
     const user = await createSessionHelpers(context).getUser()
     if (!user) {
-      return json({ errorMessage: "You must be logged in to create a bucket" })
+      return json({
+        errorMessage: "You must be logged in to create a bucket",
+      })
     }
 
     const bucket = await db.bucket.create({
@@ -63,9 +68,12 @@ export const getServerSideProps = handle<Props>({
         name: result.data.name,
         ownerId: user.id,
       },
+      select: {
+        id: true,
+      },
     })
 
-    return redirect(`/buckets/${bucket.id}`)
+    return json({ newBucket: bucket })
   },
 })
 
