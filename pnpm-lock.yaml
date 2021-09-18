@@ -14,6 +14,7 @@ specifiers:
   '@types/node': 16.9.1
   '@types/react': ^17.0.21
   '@types/react-dom': ^17.0.9
+  '@types/tailwindcss': 2.2.1
   '@types/wait-on': 5.3.1
   '@typescript-eslint/eslint-plugin': 4.31.1
   '@typescript-eslint/parser': 4.31.1
@@ -72,6 +73,7 @@ devDependencies:
   '@types/node': 16.9.1
   '@types/react': 17.0.21
   '@types/react-dom': 17.0.9
+  '@types/tailwindcss': 2.2.1
   '@types/wait-on': 5.3.1
   '@typescript-eslint/eslint-plugin': 4.31.1_e2d3c88d378335c4183365c112128ce9
   '@typescript-eslint/parser': 4.31.1_eslint@7.32.0+typescript@4.4.3
@@ -654,6 +656,10 @@ packages:
 
   /@types/sizzle/2.3.3:
     resolution: {integrity: sha512-JYM8x9EGF163bEyhdJBpR2QX1R5naCJHC8ucJylJ3w9/CVBaskdQ8WqBf8MmQrd1kRvp/a4TS8HJ+bxzR7ZJYQ==}
+    dev: true
+
+  /@types/tailwindcss/2.2.1:
+    resolution: {integrity: sha512-raLwtQF+uul9lsvs7+GUizeNrpxRqbnckIu/va5hzPPwZsImZunkyLFAS/1rwEHhhvFMNiMJmTiP5PPGa0oNJA==}
     dev: true
 
   /@types/wait-on/5.3.1:
