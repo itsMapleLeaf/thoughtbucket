@@ -73,7 +73,7 @@ export const getServerSideProps = handle<Props>({
       },
     })
 
-    return json({ newBucket: bucket })
+    return redirect(`/buckets/${bucket.id}`, 303)
   },
 })
 

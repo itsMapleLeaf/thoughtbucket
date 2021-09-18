@@ -1,6 +1,5 @@
 import { TrashIcon } from "@heroicons/react/solid"
 import { Form } from "next-runtime/form"
-import { useRouter } from "next/router"
 import type { ButtonProps } from "../dom/Button"
 import { Button } from "../dom/Button"
 import { usePendingFormNavigation } from "../routing/usePendingFormNavigation"
@@ -13,7 +12,6 @@ export function DeleteBucketButton({
   ...props
 }: ButtonProps & { bucket: { id: string; name: string } }) {
   const pending = usePendingFormNavigation()
-  const router = useRouter()
 
   return (
     <Modal
@@ -24,11 +22,6 @@ export function DeleteBucketButton({
           action={`/buckets/${bucket.id}`}
           method="delete"
           className="grid gap-4"
-          shallow
-          onSuccess={() => {
-            void router.push("/buckets")
-            close()
-          }}
         >
           <p>
             are you sure you want to delete the bucket &quot;

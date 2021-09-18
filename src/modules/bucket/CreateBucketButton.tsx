@@ -16,16 +16,7 @@ export function CreateBucketButton(props: ButtonProps) {
       title="create a bucket!"
       renderTrigger={(triggerProps) => <Button {...triggerProps} {...props} />}
       renderContent={({ close }) => (
-        <Form
-          action="/buckets"
-          method="post"
-          onSuccess={(data: { newBucket?: { id?: string } }) => {
-            close()
-            if (data.newBucket?.id) {
-              void router.push(`/buckets/${data.newBucket.id}`)
-            }
-          }}
-        >
+        <Form action="/buckets" method="post">
           <TextInputField
             label="bucket name"
             name="name"

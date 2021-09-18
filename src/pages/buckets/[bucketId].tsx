@@ -71,20 +71,18 @@ export const getServerSideProps = handle<Props>({
   },
 
   delete: async (context) => {
-    const { bucketId } = context.query
-    if (!bucketId) {
+    const id = context.params ? String(context.params?.bucketId) : undefined
+    if (!id) {
       return notFound()
     }
 
     const user = await createSessionHelpers(context).getUser()
     if (!user) {
-      throw new Error("not logged in")
+      return redirect("/buckets", 303)
     }
 
     const bucket = await db.bucket.findUnique({
-      where: {
-        id: String(bucketId),
-      },
+      where: { id },
     })
 
     if (!bucket) {
@@ -92,7 +90,7 @@ export const getServerSideProps = handle<Props>({
     }
 
     if (bucket.ownerId !== user.id) {
-      throw new Error("you don't own this bucket!")
+      return redirect("/buckets", 303)
     }
 
     await db.bucket.delete({
@@ -101,7 +99,7 @@ export const getServerSideProps = handle<Props>({
       },
     })
 
-    return redirect("/")
+    return redirect("/buckets", 303)
   },
 })
 

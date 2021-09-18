@@ -1,7 +1,6 @@
 import { handle, json, redirect } from "next-runtime"
 import { Form } from "next-runtime/form"
 import Link from "next/link"
-import { useRouter } from "next/router"
 import { z } from "zod"
 import { createSessionHelpers } from "../db/session"
 import { createUser } from "../db/user"
@@ -24,7 +23,7 @@ const signupBodySchema = z.object({
 export const getServerSideProps = handle<Props>({
   async get(context) {
     const user = await createSessionHelpers(context).getUser()
-    return user ? redirect("/") : json({})
+    return user ? redirect("/buckets") : json({})
   },
 
   async post(context) {
@@ -39,20 +38,15 @@ export const getServerSideProps = handle<Props>({
     const session = createSessionHelpers(context)
     await session.createSession(user)
 
-    return json({})
+    return redirect("/buckets", 303)
   },
 })
 
 export default function SignupPage(props: Props) {
   const pending = usePendingFormNavigation()
-  const router = useRouter()
   return (
     <AuthPageLayout title="sign up">
-      <Form
-        className={AuthPageLayout.formClass}
-        method="post"
-        onSuccess={() => router.replace("/")}
-      >
+      <Form className={AuthPageLayout.formClass} method="post">
         <TextInputField.Username name="name" required />
         <TextInputField.Email name="email" required />
         <TextInputField.Password
