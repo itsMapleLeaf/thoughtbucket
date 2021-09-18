@@ -7,6 +7,7 @@ import { createUser } from "../db/user"
 import { AuthPageLayout } from "../modules/auth/AuthPageLayout"
 import { Button } from "../modules/dom/Button"
 import { usePendingFormNavigation } from "../modules/routing/usePendingFormNavigation"
+import { anchorClass } from "../modules/ui/anchor"
 import { solidButtonClass } from "../modules/ui/button"
 import { TextInputField } from "../modules/ui/TextInputField"
 
@@ -69,8 +70,8 @@ export default function SignupPage(props: Props) {
 
       <AuthPageLayout.Paragraph>
         already have an account?{" "}
-        <Link href="/login" passHref>
-          <AuthPageLayout.Anchor>log in</AuthPageLayout.Anchor>
+        <Link href="/login">
+          <a className={anchorClass}>log in</a>
         </Link>
       </AuthPageLayout.Paragraph>
     </AuthPageLayout>
