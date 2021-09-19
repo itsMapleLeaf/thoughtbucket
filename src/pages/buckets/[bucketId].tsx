@@ -1,37 +1,31 @@
 import { PencilAltIcon, TrashIcon } from "@heroicons/react/solid"
 import type { User } from "@prisma/client"
-import clsx from "clsx"
 import type { RuntimeContext, RuntimeResponse } from "next-runtime"
 import { handle, json, notFound, redirect } from "next-runtime"
 import { usePendingFormSubmit } from "next-runtime/form"
 import type { ParsedUrlQuery } from "next-runtime/types/querystring"
-import type { ReactNode } from "react"
 import { useRef } from "react"
 import { z } from "zod"
 import { getClient } from "../../db/client"
-import { createSessionHelpers } from "../../db/session"
-import { pick, raise, serialize } from "../../helpers"
+import { pick, serialize } from "../../helpers"
 import { AppLayout } from "../../modules/app/AppLayout"
+import { usingSessionUser } from "../../modules/auth/usingSessionUser"
 import { BucketPageSummary } from "../../modules/bucket/BucketPageSummary"
+import type { ClientBucket } from "../../modules/bucket/ClientBucket"
+import {
+  clientBucketSelection,
+  usingClientBucket,
+} from "../../modules/bucket/ClientBucket"
 import { DeleteBucketButton } from "../../modules/bucket/DeleteBucketButton"
-import { ColumnHeader } from "../../modules/column/ColumnHeader"
+import { ColumnCard } from "../../modules/column/ColumnCard"
 import { DeleteColumnButton } from "../../modules/column/DeleteColumnButton"
 import { NewColumnForm } from "../../modules/column/NewColumnForm"
 import { Button } from "../../modules/dom/Button"
+import { getContextParam } from "../../modules/routing/getContextParam"
 import { ThoughtCard } from "../../modules/thought/ThoughtCard"
 import { fadedButtonClass } from "../../modules/ui/button"
-import { cardClass } from "../../modules/ui/card"
 import { containerClass } from "../../modules/ui/container"
 import { leftButtonIconClass } from "../../modules/ui/icon"
-import type { MaybePromise } from "../../types"
-
-type ClientBucket = {
-  name: string
-  id: string
-  createdAt: string
-  ownerId: string
-  columns: Array<{ id: string; name: string }>
-}
 
 type Props = {
   user: Pick<User, "name">
@@ -39,54 +33,11 @@ type Props = {
   errorMessage?: string
 }
 
-const db = getClient()
-
 const bucketUpdateSchema = z.object({
   name: z.string().optional(),
   createColumn: z.object({ name: z.string() }).optional(),
   deleteColumn: z.object({ id: z.string() }).optional(),
 })
-
-async function usingSessionUser<Result>(
-  context: RuntimeContext<ParsedUrlQuery>,
-  fn: (user: User) => MaybePromise<Result>,
-): Promise<Result | RuntimeResponse<never>> {
-  const user = await createSessionHelpers(context).getUser()
-  return user ? fn(user) : redirect("/login", 303)
-}
-
-function usingContextParam<Result>(
-  context: RuntimeContext<ParsedUrlQuery>,
-  name: string,
-  fn: (value: string) => Result,
-): Result {
-  const value = context.query[name]
-  return value ? fn(String(value)) : raise(`Missing params ${name}`)
-}
-
-async function usingClientBucket<Result>(
-  bucketId: string,
-  fn: (bucket: ClientBucket) => Result,
-): Promise<Result | RuntimeResponse<never>> {
-  const bucket = await db.bucket.findUnique({
-    where: {
-      id: bucketId,
-    },
-    select: {
-      id: true,
-      name: true,
-      createdAt: true,
-      ownerId: true,
-      columns: {
-        select: {
-          id: true,
-          name: true,
-        },
-      },
-    },
-  })
-  return bucket ? fn(serialize(bucket)) : notFound()
-}
 
 function usingOwnedBucket<Result>(
   context: RuntimeContext<ParsedUrlQuery>,
@@ -103,72 +54,63 @@ function usingOwnedBucket<Result>(
 export const getServerSideProps = handle<Props>({
   get: async (context) => {
     return usingSessionUser(context, (user) => {
-      return usingContextParam(context, "bucketId", async (bucketId) => {
-        return usingClientBucket(bucketId, async (bucket) => {
-          return json<Props>({
-            user: pick(user, ["name"]),
-            bucket: serialize(bucket),
-          })
+      const bucketId = getContextParam(context, "bucketId")
+      return usingClientBucket(bucketId, (bucket) => {
+        return json<Props>({
+          user: pick(user, ["name"]),
+          bucket: serialize(bucket),
         })
       })
     })
   },
 
   delete: async (context) => {
-    return usingContextParam(context, "bucketId", (bucketId) => {
-      return usingOwnedBucket(context, bucketId, async () => {
-        await db.bucket.delete({ where: { id: bucketId } })
-        return redirect("/buckets", 303)
-      })
+    const db = getClient()
+    const bucketId = getContextParam(context, "bucketId")
+    return usingOwnedBucket(context, bucketId, async () => {
+      await db.bucket.delete({ where: { id: bucketId } })
+      return redirect("/buckets", 303)
     })
   },
 
   patch: async (context) => {
-    return usingContextParam(context, "bucketId", (bucketId) => {
-      return usingOwnedBucket(context, bucketId, async (user, bucket) => {
-        const { name, createColumn, deleteColumn } = bucketUpdateSchema.parse(
-          context.req.body,
-        )
+    const db = getClient()
+    const bucketId = getContextParam(context, "bucketId")
 
-        try {
-          const newBucket = await db.bucket.update({
-            where: { id: bucketId },
-            data: {
-              name,
-              columns: {
-                create: createColumn,
-                delete: deleteColumn,
-              },
-            },
-            select: {
-              id: true,
-              name: true,
-              createdAt: true,
-              ownerId: true,
-              columns: {
-                select: {
-                  id: true,
-                  name: true,
-                },
-              },
-            },
-          })
-          return json({
-            user,
-            bucket: serialize(newBucket),
-          })
-        } catch (error) {
-          console.warn("update error", error)
+    return usingOwnedBucket(context, bucketId, async (user, bucket) => {
+      const { name, createColumn, deleteColumn } = bucketUpdateSchema.parse(
+        context.req.body,
+      )
 
-          // if something goes wrong during the update,
-          // just return the current bucket
-          return json({
-            user,
-            bucket: serialize(bucket),
-            errorMessage: "oops, something went wrong. try again",
-          })
-        }
-      })
+      try {
+        const newBucket = await db.bucket.update({
+          where: { id: bucketId },
+          data: {
+            name,
+            columns: {
+              create: createColumn,
+              delete: deleteColumn,
+            },
+          },
+          select: clientBucketSelection,
+        })
+
+        return json({
+          user,
+          bucket: serialize(newBucket),
+        })
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.warn("update error", error)
+
+        // if something goes wrong during the update,
+        // just return the current bucket
+        return json({
+          user,
+          bucket: serialize(bucket),
+          errorMessage: "oops, something went wrong. try again",
+        })
+      }
     })
   },
 })
@@ -211,26 +153,21 @@ export default function BucketPage({ user, bucket, errorMessage }: Props) {
         >
           {bucket.columns.map((column) => (
             <ColumnCard key={column.id} pending={column.id === deletedColumnId}>
-              <div className="p-3">
-                <ColumnHeader
-                  title={column.name}
-                  right={<DeleteColumnButton bucket={bucket} column={column} />}
-                />
-              </div>
-
-              <div className="grid items-start content-start flex-1 min-h-0 gap-3 px-3 pb-3 overflow-y-auto transform-gpu">
+              <ColumnCard.Header
+                title={column.name}
+                right={<DeleteColumnButton bucket={bucket} column={column} />}
+              />
+              <ColumnCard.Body>
                 <ThoughtCard />
                 <ThoughtCard />
                 <ThoughtCard />
-              </div>
+              </ColumnCard.Body>
             </ColumnCard>
           ))}
 
           {newColumnName && (
             <ColumnCard pending>
-              <div className="p-3">
-                <ColumnHeader title={newColumnName} />
-              </div>
+              <ColumnCard.Header title={newColumnName} />
             </ColumnCard>
           )}
 
@@ -240,25 +177,5 @@ export default function BucketPage({ user, bucket, errorMessage }: Props) {
         </section>
       </div>
     </AppLayout>
-  )
-}
-
-function ColumnCard({
-  children,
-  pending,
-}: {
-  children: ReactNode
-  pending?: boolean
-}) {
-  return (
-    <div
-      className={clsx(
-        cardClass,
-        "flex flex-col transition-opacity",
-        pending && "opacity-50",
-      )}
-    >
-      {children}
-    </div>
   )
 }
