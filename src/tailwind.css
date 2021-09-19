@@ -7,6 +7,10 @@ body {
   height: 100%;
 }
 
+#__next {
+  display: contents;
+}
+
 button {
   font-style: inherit;
   font-weight: inherit;
