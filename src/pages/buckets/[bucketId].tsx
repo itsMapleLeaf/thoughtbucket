@@ -7,7 +7,7 @@ import type { ParsedUrlQuery } from "next-runtime/types/querystring"
 import { useRef } from "react"
 import { z } from "zod"
 import { getClient } from "../../db/client"
-import { pick, serialize } from "../../helpers"
+import { isTruthy, pick, serialize } from "../../helpers"
 import { AppLayout } from "../../modules/app/AppLayout"
 import { usingSessionUser } from "../../modules/auth/usingSessionUser"
 import { BucketPageSummary } from "../../modules/bucket/BucketPageSummary"
@@ -26,6 +26,7 @@ import { ThoughtCard } from "../../modules/thought/ThoughtCard"
 import { fadedButtonClass } from "../../modules/ui/button"
 import { containerClass } from "../../modules/ui/container"
 import { leftButtonIconClass } from "../../modules/ui/icon"
+import { QuickInsertForm } from "../../modules/ui/QuickInsertForm"
 
 type Props = {
   user: Pick<User, "name">
@@ -37,6 +38,9 @@ const bucketUpdateSchema = z.object({
   name: z.string().optional(),
   createColumn: z.object({ name: z.string() }).optional(),
   deleteColumn: z.object({ id: z.string() }).optional(),
+  createThought: z
+    .object({ columnId: z.string(), text: z.string() })
+    .optional(),
 })
 
 function usingOwnedBucket<Result>(
@@ -76,20 +80,34 @@ export const getServerSideProps = handle<Props>({
   patch: async (context) => {
     const db = getClient()
     const bucketId = getContextParam(context, "bucketId")
+    const body = bucketUpdateSchema.parse(context.req.body)
+
+    const newThought =
+      body.createThought &&
+      (await db.thought.create({
+        data: { ...body.createThought, bucketId },
+      }))
 
     return usingOwnedBucket(context, bucketId, async (user, bucket) => {
-      const { name, createColumn, deleteColumn } = bucketUpdateSchema.parse(
-        context.req.body,
-      )
-
       try {
+        if (body.deleteColumn) {
+          await db.thought.deleteMany({
+            where: { columnId: body.deleteColumn.id },
+          })
+        }
+
         const newBucket = await db.bucket.update({
           where: { id: bucketId },
           data: {
-            name,
+            name: body.name,
             columns: {
-              create: createColumn,
-              delete: deleteColumn,
+              create: body.createColumn,
+              delete: body.deleteColumn,
+            },
+            thoughts: {
+              set: [newThought, ...bucket.thoughts]
+                .filter(isTruthy)
+                .map((entry) => ({ id: entry.id })),
             },
           },
           select: clientBucketSelection,
@@ -157,10 +175,11 @@ export default function BucketPage({ user, bucket, errorMessage }: Props) {
                 title={column.name}
                 right={<DeleteColumnButton bucket={bucket} column={column} />}
               />
+              <NewThoughtForm bucket={bucket} column={column} />
               <ColumnCard.Body>
-                <ThoughtCard />
-                <ThoughtCard />
-                <ThoughtCard />
+                {column.thoughts.map((thought) => (
+                  <ThoughtCard key={thought.id} thought={thought} />
+                ))}
               </ColumnCard.Body>
             </ColumnCard>
           ))}
@@ -177,5 +196,25 @@ export default function BucketPage({ user, bucket, errorMessage }: Props) {
         </section>
       </div>
     </AppLayout>
+  )
+}
+
+function NewThoughtForm({
+  bucket,
+  column,
+}: {
+  bucket: { id: string }
+  column: { id: string }
+}) {
+  return (
+    <QuickInsertForm action={`/buckets/${bucket.id}`} method="patch">
+      <input type="hidden" name="createThought.columnId" value={column.id} />
+      <QuickInsertForm.Input
+        name="createThought.text"
+        placeholder="add a new thought..."
+        label="thought text"
+      />
+      <QuickInsertForm.Button title="add thought" />
+    </QuickInsertForm>
   )
 }

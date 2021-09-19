@@ -8,7 +8,18 @@ export type ClientBucket = {
   id: string
   createdAt: string
   ownerId: string
-  columns: Array<{ id: string; name: string }>
+  columns: Array<{
+    id: string
+    name: string
+    thoughts: Array<{
+      id: string
+      text: string
+    }>
+  }>
+  thoughts: Array<{
+    id: string
+    text: string
+  }>
 }
 
 export const clientBucketSelection = {
@@ -20,6 +31,18 @@ export const clientBucketSelection = {
     select: {
       id: true,
       name: true,
+      thoughts: {
+        select: {
+          id: true,
+          text: true,
+        },
+      },
+    },
+  },
+  thoughts: {
+    select: {
+      id: true,
+      text: true,
     },
   },
 } as const

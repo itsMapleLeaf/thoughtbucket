@@ -1,3 +1,5 @@
+import type { Falsy } from "./types"
+
 export function raise(message: string): never {
   throw new Error(message)
 }
@@ -50,3 +52,7 @@ export const withPreventDefault =
     event.preventDefault()
     callback(event)
   }
+
+export function isTruthy<T>(value: T | Falsy): value is T {
+  return Boolean(value)
+}
