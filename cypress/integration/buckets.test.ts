@@ -41,14 +41,10 @@ describe("feature: buckets", () => {
   })
 
   it("supports deletion from detail page", () => {
-    const bucketName = `testbucket-${String(Math.random())}`
-    cy.request("POST", "/signup", createTestUserCredentials())
+    const bucketName = `bucket-${String(Math.random())}`
 
-    // ideally, we should just make a bucket in the backend,
-    // but this is the best i could come up with
-    cy.request({ method: "POST", url: "/buckets", body: { name: bucketName } })
-    cy.visit("/buckets")
-    cy.findByRole("link", { name: (n) => n.includes(bucketName) }).click()
+    cy.request("POST", "/signup", createTestUserCredentials())
+    cy.visit({ method: "POST", url: "/buckets", body: { name: bucketName } })
 
     cy.findByTestId("bucket-page-delete")
       .click()
@@ -58,5 +54,30 @@ describe("feature: buckets", () => {
     cy.findByRole("button", { name: /delete/i }).click()
     cy.location("pathname").should("eq", "/buckets")
     cy.findByText(bucketName).should("not.exist")
+  })
+
+  it("supports managing columns", () => {
+    const bucketName = `bucket-${String(Math.random())}`
+
+    cy.request("POST", "/signup", createTestUserCredentials())
+    cy.visit({ method: "POST", url: "/buckets", body: { name: bucketName } })
+
+    // submit by pressing enter
+    const columnName1 = `column-${String(Math.random())}`
+    cy.findByPlaceholderText(/new column/i).type(`${columnName1}{enter}`)
+    cy.findByRole("heading", { name: columnName1 }).should("exist")
+
+    // submit by clicking the submit button
+    const columnName2 = `column-${String(Math.random())}`
+    cy.findByPlaceholderText(/new column/i).type(`${columnName2}`)
+    cy.findByRole("button", { name: /add column/i }).click()
+    cy.findByRole("heading", { name: columnName2 }).should("exist")
+
+    // delete all columns
+    cy.findAllByRole("button", { name: /delete.*column/i }).click({
+      multiple: true,
+    })
+    cy.findByRole("heading", { name: columnName1 }).should("not.exist")
+    cy.findByRole("heading", { name: columnName2 }).should("not.exist")
   })
 })

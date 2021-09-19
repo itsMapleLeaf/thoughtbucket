@@ -1,22 +1,23 @@
 import { PlusIcon } from "@heroicons/react/solid"
+import { Form } from "next-runtime/form"
 import React, { useState } from "react"
 import { Button } from "../dom/Button"
 import { fadedButtonClass } from "../ui/button"
 import { inlineIconClass } from "../ui/icon"
 import { textInputClass } from "../ui/input"
 
-export function NewColumnForm() {
+export function NewColumnForm({ bucket }: { bucket: { id: string } }) {
   const [name, setName] = useState("")
-
   return (
-    <form
+    <Form
+      action={`/buckets/${bucket.id}`}
+      method="patch"
       className="flex gap-2"
-      onSubmit={(event) => {
-        event.preventDefault()
-        setName("")
-      }}
+      onSubmit={() => setName("")}
     >
       <input
+        type="text"
+        name="createColumn.name"
         aria-label="column name"
         placeholder="add a new column..."
         required
@@ -27,6 +28,6 @@ export function NewColumnForm() {
       <Button type="submit" title="add column" className={fadedButtonClass}>
         <PlusIcon className={inlineIconClass} />
       </Button>
-    </form>
+    </Form>
   )
 }
