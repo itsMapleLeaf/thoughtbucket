@@ -2,7 +2,6 @@
 
 ## tasks to become usable
 
-- creating columns
 - creating thought cards within columns
 - drag n drop thought cards between columns
 
@@ -10,6 +9,7 @@
 
 - empty state on bucket list
 - rename bucket on bucket page
+- focus the "new thought" input in columns after creating the column
 
 ## ideas / nice to have
 
