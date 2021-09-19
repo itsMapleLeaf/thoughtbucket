@@ -5,43 +5,36 @@ import { handle, json, notFound, redirect } from "next-runtime"
 import { usePendingFormSubmit } from "next-runtime/form"
 import type { ParsedUrlQuery } from "next-runtime/types/querystring"
 import { useRef } from "react"
-import { z } from "zod"
 import { getClient } from "../../db/client"
-import { isTruthy, pick, serialize } from "../../helpers"
+import { pick, serialize } from "../../helpers"
 import { AppLayout } from "../../modules/app/AppLayout"
 import { usingSessionUser } from "../../modules/auth/usingSessionUser"
-import { BucketPageSummary } from "../../modules/bucket/BucketPageSummary"
-import type { ClientBucket } from "../../modules/bucket/ClientBucket"
+import type { ClientBucket } from "../../modules/bucket/BucketData"
 import {
+  bucketUpdateSchema,
   clientBucketSelection,
+  createClientBucket,
+  updateBucketData,
   usingClientBucket,
-} from "../../modules/bucket/ClientBucket"
+} from "../../modules/bucket/BucketData"
+import { BucketPageSummary } from "../../modules/bucket/BucketPageSummary"
 import { DeleteBucketButton } from "../../modules/bucket/DeleteBucketButton"
 import { ColumnCard } from "../../modules/column/ColumnCard"
 import { DeleteColumnButton } from "../../modules/column/DeleteColumnButton"
 import { NewColumnForm } from "../../modules/column/NewColumnForm"
 import { Button } from "../../modules/dom/Button"
 import { getContextParam } from "../../modules/routing/getContextParam"
+import { NewThoughtForm } from "../../modules/thought/NewThoughtForm"
 import { ThoughtCard } from "../../modules/thought/ThoughtCard"
 import { fadedButtonClass } from "../../modules/ui/button"
 import { containerClass } from "../../modules/ui/container"
 import { leftButtonIconClass } from "../../modules/ui/icon"
-import { QuickInsertForm } from "../../modules/ui/QuickInsertForm"
 
 type Props = {
   user: Pick<User, "name">
   bucket: ClientBucket
   errorMessage?: string
 }
-
-const bucketUpdateSchema = z.object({
-  name: z.string().optional(),
-  createColumn: z.object({ name: z.string() }).optional(),
-  deleteColumn: z.object({ id: z.string() }).optional(),
-  createThought: z
-    .object({ columnId: z.string(), text: z.string() })
-    .optional(),
-})
 
 function usingOwnedBucket<Result>(
   context: RuntimeContext<ParsedUrlQuery>,
@@ -80,42 +73,24 @@ export const getServerSideProps = handle<Props>({
   patch: async (context) => {
     const db = getClient()
     const bucketId = getContextParam(context, "bucketId")
-    const body = bucketUpdateSchema.parse(context.req.body)
-
-    const newThought =
-      body.createThought &&
-      (await db.thought.create({
-        data: { ...body.createThought, bucketId },
-      }))
+    const updates = bucketUpdateSchema.parse(context.req.body)
 
     return usingOwnedBucket(context, bucketId, async (user, bucket) => {
       try {
-        if (body.deleteColumn) {
-          await db.thought.deleteMany({
-            where: { columnId: body.deleteColumn.id },
-          })
-        }
+        const newData = updateBucketData(bucket, updates)
 
         const newBucket = await db.bucket.update({
           where: { id: bucketId },
           data: {
-            name: body.name,
-            columns: {
-              create: body.createColumn,
-              delete: body.deleteColumn,
-            },
-            thoughts: {
-              set: [newThought, ...bucket.thoughts]
-                .filter(isTruthy)
-                .map((entry) => ({ id: entry.id })),
-            },
+            name: updates.name,
+            data: JSON.stringify(newData),
           },
           select: clientBucketSelection,
         })
 
         return json({
           user,
-          bucket: serialize(newBucket),
+          bucket: createClientBucket(newBucket),
         })
       } catch (error) {
         // eslint-disable-next-line no-console
@@ -125,7 +100,7 @@ export const getServerSideProps = handle<Props>({
         // just return the current bucket
         return json({
           user,
-          bucket: serialize(bucket),
+          bucket,
           errorMessage: "oops, something went wrong. try again",
         })
       }
@@ -169,18 +144,22 @@ export default function BucketPage({ user, bucket, errorMessage }: Props) {
           className="grid grid-flow-col gap-4 p-4 auto-cols-[18rem] grid-rows-1 mx-auto min-w-[min(1024px,100%)] max-w-full overflow-auto flex-1"
           ref={columnScrollContainerRef}
         >
-          {bucket.columns.map((column) => (
+          {bucket.data.columns.map((column) => (
             <ColumnCard key={column.id} pending={column.id === deletedColumnId}>
               <ColumnCard.Header
                 title={column.name}
                 right={<DeleteColumnButton bucket={bucket} column={column} />}
               />
-              <NewThoughtForm bucket={bucket} column={column} />
-              <ColumnCard.Body>
+              <ColumnCard.Section>
+                <NewThoughtForm bucket={bucket} column={column} />
+              </ColumnCard.Section>
+              <ColumnCard.CardList>
                 {column.thoughts.map((thought) => (
-                  <ThoughtCard key={thought.id} thought={thought} />
+                  <li key={thought.id}>
+                    <ThoughtCard thought={thought} />
+                  </li>
                 ))}
-              </ColumnCard.Body>
+              </ColumnCard.CardList>
             </ColumnCard>
           ))}
 
@@ -196,25 +175,5 @@ export default function BucketPage({ user, bucket, errorMessage }: Props) {
         </section>
       </div>
     </AppLayout>
-  )
-}
-
-function NewThoughtForm({
-  bucket,
-  column,
-}: {
-  bucket: { id: string }
-  column: { id: string }
-}) {
-  return (
-    <QuickInsertForm action={`/buckets/${bucket.id}`} method="patch">
-      <input type="hidden" name="createThought.columnId" value={column.id} />
-      <QuickInsertForm.Input
-        name="createThought.text"
-        placeholder="add a new thought..."
-        label="thought text"
-      />
-      <QuickInsertForm.Button title="add thought" />
-    </QuickInsertForm>
   )
 }

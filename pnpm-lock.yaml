@@ -33,6 +33,8 @@ specifiers:
   eslint-plugin-react: 7.25.2
   eslint-plugin-react-hooks: 4.2.0
   execa: 5.1.1
+  immer: 9.0.6
+  nanoid: 3.1.25
   next: 11.1.2
   next-runtime: 1.3.0
   node-fetch: 3.0.0
@@ -56,6 +58,8 @@ dependencies:
   bcryptjs: 2.4.3
   clsx: 1.1.1
   cookies: 0.8.0
+  immer: 9.0.6
+  nanoid: 3.1.25
   next: 11.1.2_bd7797d63db473de6e2318609a63c933
   next-runtime: 1.3.0_6fbf59523517da779df50d355b375324
   node-fetch: 3.0.0
@@ -2835,6 +2839,10 @@ packages:
     hasBin: true
     dependencies:
       queue: 6.0.2
+    dev: false
+
+  /immer/9.0.6:
+    resolution: {integrity: sha512-G95ivKpy+EvVAnAab4fVa4YGYn24J1SpEktnJX7JJ45Bd7xqME/SCplFzYFmTbrkwZbQ4xJK1xMTUYBkN6pWsQ==}
     dev: false
 
   /import-cwd/3.0.0:

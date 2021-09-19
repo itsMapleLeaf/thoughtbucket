@@ -14,7 +14,7 @@ export function ColumnCard({
   pending?: boolean
 }) {
   return (
-    <div
+    <section
       className={clsx(
         cardClass,
         "flex flex-col transition-opacity",
@@ -24,7 +24,7 @@ export function ColumnCard({
       <PendingContext.Provider value={pending}>
         {children}
       </PendingContext.Provider>
-    </div>
+    </section>
   )
 }
 
@@ -45,10 +45,14 @@ ColumnCard.Header = function Header({
   )
 }
 
-ColumnCard.Body = function Body({ children }: { children: ReactNode }) {
+ColumnCard.Section = function Section({ children }: { children: ReactNode }) {
+  return <section className="px-3 pb-3">{children}</section>
+}
+
+ColumnCard.CardList = function CardList({ children }: { children: ReactNode }) {
   return (
-    <div className="grid items-start content-start flex-1 min-h-0 gap-3 px-3 pb-3 overflow-y-auto transform-gpu">
+    <ul className="grid items-start content-start flex-1 min-h-0 gap-3 px-3 pb-3 overflow-y-auto transform-gpu">
       {children}
-    </div>
+    </ul>
   )
 }
