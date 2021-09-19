@@ -1,10 +1,16 @@
 import clsx from "clsx"
 import type { ComponentPropsWithoutRef } from "react"
-import React from "react"
+import { useState } from "react"
 import { LoadingIcon } from "../ui/LoadingIcon"
 
-export type ButtonProps = ComponentPropsWithoutRef<"button"> & {
+export type ButtonProps = Omit<
+  ComponentPropsWithoutRef<"button">,
+  "onClick"
+> & {
   loading?: unknown
+  onClick?: (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) => void | Promise<unknown>
 }
 
 export function Button({
@@ -12,8 +18,11 @@ export function Button({
   className,
   disabled,
   children,
+  onClick,
   ...props
 }: ButtonProps) {
+  const [clickPending, setClickPending] = useState(false)
+  const interactionDisabled = !!loading || disabled || clickPending
   return (
     <button
       type="button"
@@ -22,12 +31,24 @@ export function Button({
       disabled={false}
       className={clsx(
         className,
-        (Boolean(loading) || disabled) &&
+        interactionDisabled &&
           "opacity-75 pointer-events-none cursor-not-allowed",
       )}
-      onClick={(event) => {
-        if (disabled || loading) return
-        props.onClick?.(event)
+      onClick={async (event) => {
+        if (disabled || loading || clickPending) {
+          event.preventDefault()
+          return
+        }
+
+        setClickPending(true)
+
+        try {
+          await onClick?.(event)
+        } catch (error) {
+          console.warn("error from button click:", error)
+        }
+
+        setClickPending(false)
       }}
     >
       {loading ? <LoadingIcon size={2} /> : children}
