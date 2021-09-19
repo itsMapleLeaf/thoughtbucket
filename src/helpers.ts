@@ -25,6 +25,10 @@ export function serialize(value: unknown): any {
     return value.toISOString()
   }
 
+  if (Array.isArray(value)) {
+    return value.map(serialize)
+  }
+
   if (typeof value === "object" && value !== null) {
     const result: any = {}
     for (const key in value) {
