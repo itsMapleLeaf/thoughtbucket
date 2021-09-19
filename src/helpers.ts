@@ -39,3 +39,14 @@ export function serialize(value: unknown): any {
 
   return value
 }
+
+type HasPreventDefault = {
+  preventDefault: () => void
+}
+
+export const withPreventDefault =
+  <EventType extends HasPreventDefault>(callback: (event: EventType) => void) =>
+  (event: EventType) => {
+    event.preventDefault()
+    callback(event)
+  }
