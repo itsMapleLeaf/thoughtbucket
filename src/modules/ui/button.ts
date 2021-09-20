@@ -23,7 +23,7 @@ export const solidDangerButtonClass = clsx`
 `
 
 export const fadedButtonClass = clsx`
-  px-3 py-2 -mx-3 -my-2 opacity-60 text-shadow leading-none transition
+  px-2 py-1 -mx-2 -my-1 opacity-60 text-shadow leading-none transition
   hover:opacity-100
   ${activePressClass}
 `
