@@ -15,6 +15,14 @@ export function pick<Subject, Key extends keyof Subject>(
   return result
 }
 
+export function isTruthy<T>(value: T | Falsy): value is T {
+  return Boolean(value)
+}
+
+export function asError(value: unknown): Error {
+  return value instanceof Error ? value : new Error(String(value))
+}
+
 export type Serialized<Value> = Value extends Date
   ? string
   : Value extends object
@@ -52,7 +60,3 @@ export const withPreventDefault =
     event.preventDefault()
     callback(event)
   }
-
-export function isTruthy<T>(value: T | Falsy): value is T {
-  return Boolean(value)
-}

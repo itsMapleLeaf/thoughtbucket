@@ -45,6 +45,7 @@ specifiers:
   react-dom: ^17.0.2
   react-expanding-textarea: 2.3.2
   react-focus-on: 3.5.2
+  rxjs: 7.3.0
   tailwindcss: 2.2.15
   trash-cli: 4.0.0
   ts-node: 10.2.1
@@ -68,6 +69,7 @@ dependencies:
   react-dom: 17.0.2_react@17.0.2
   react-expanding-textarea: 2.3.2_react@17.0.2
   react-focus-on: 3.5.2_ff4c499fe654e4edeee30199f4db039d
+  rxjs: 7.3.0
   zod: 3.8.2
 
 devDependencies:
@@ -4585,7 +4587,6 @@ packages:
     resolution: {integrity: sha512-p2yuGIg9S1epc3vrjKf6iVb3RCaAYjYskkO+jHIaV0IjOPlJop4UnodOoFb2xeNwlguqLYvGw1b1McillYb5Gw==}
     dependencies:
       tslib: 2.1.0
-    dev: true
 
   /safe-buffer/5.1.2:
     resolution: {integrity: sha512-Gd2UZBJDkXlY7GbJxfsE8/nvKkUEU1G38c1siN6QP6a9PT9MmHB8GnpscSmMJSoF8LOIrt8ud/wPtojys4G6+g==}

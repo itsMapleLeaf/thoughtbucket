@@ -9,10 +9,10 @@ import { inlineIconClass } from "../ui/icon"
 
 export function ThoughtCard({
   thought,
-  column,
+  onDelete,
 }: {
   thought: { text: string }
-  column: { id: string }
+  onDelete: () => void
 }) {
   const [editing, setEditing] = React.useState(false)
   const textAreaRef = React.useRef<HTMLTextAreaElement>(null)
@@ -46,7 +46,7 @@ export function ThoughtCard({
       <div className="grid w-8 min-h-[4rem] grid-rows-[2rem,2rem] transition-opacity opacity-0 group-hover:opacity-100 group-focus-within:opacity-100">
         <Button
           className={fadedButtonClass}
-          title="edit thought"
+          title={editing ? "save" : "edit thought"}
           onClick={() => setEditing((e) => !e)}
         >
           {editing ? (
@@ -58,6 +58,7 @@ export function ThoughtCard({
         <DeleteThoughtButton
           className={fadedButtonClass}
           title="delete thought"
+          onClick={onDelete}
         >
           <TrashIcon className={inlineIconClass} />
         </DeleteThoughtButton>

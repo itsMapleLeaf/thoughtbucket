@@ -1,6 +1,4 @@
 import { PlusIcon } from "@heroicons/react/solid"
-import { Form } from "next-runtime/form"
-import type { HttpMethod } from "next-runtime/http-methods"
 import React, { useState } from "react"
 import { Button } from "../dom/Button"
 import { fadedButtonClass } from "../ui/button"
@@ -16,26 +14,26 @@ const Context = React.createContext<{
 })
 
 export function QuickInsertForm({
-  action,
-  method,
+  onSubmit,
   children,
 }: {
-  action: string
-  method: HttpMethod
+  onSubmit: (value: string) => void
   children: React.ReactNode
 }) {
   const [value, setValue] = useState("")
   return (
-    <Form
-      action={action}
-      method={method}
+    <form
       className="flex gap-2"
-      onSubmit={() => setValue("")}
+      onSubmit={(event) => {
+        event.preventDefault()
+        setValue("")
+        onSubmit(value)
+      }}
     >
       <Context.Provider value={{ value, onChange: setValue }}>
         {children}
       </Context.Provider>
-    </Form>
+    </form>
   )
 }
 
@@ -44,7 +42,7 @@ QuickInsertForm.Input = function QuickInsertFormInput({
   placeholder,
   label,
 }: {
-  name: string
+  name?: string
   placeholder: string
   label: string
 }) {
