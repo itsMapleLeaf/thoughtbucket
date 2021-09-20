@@ -1,7 +1,9 @@
 import { PrismaClient } from "@prisma/client"
 
-let db: PrismaClient | undefined
-
 export function getClient() {
-  return (db ??= new PrismaClient())
+  return (globalThis.prismaClient ??= new PrismaClient())
+}
+
+declare namespace globalThis {
+  let prismaClient: PrismaClient | undefined
 }
