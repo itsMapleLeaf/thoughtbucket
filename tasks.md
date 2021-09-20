@@ -2,7 +2,9 @@
 
 ## tasks to become usable
 
-- creating thought cards within columns
+- card interactions
+  - click card text to edit
+  - delete button on right, shows on hover
 - drag n drop thought cards between columns
 
 ## polish tasks
@@ -10,6 +12,7 @@
 - empty state on bucket list
 - rename bucket on bucket page
 - focus the "new thought" input in columns after creating the column
+- undo?
 
 ## ideas / nice to have
 
