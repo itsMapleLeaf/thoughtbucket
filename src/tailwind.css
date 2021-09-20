@@ -2,20 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body {
-  height: 100%;
+@layer base {
+  html,
+  body {
+    height: 100%;
+  }
+
+  #__next {
+    display: contents;
+  }
+
+  button {
+    font-style: inherit;
+    font-weight: inherit;
+  }
+
+  /* reset for edge */
+  button,
+  input,
+  textarea {
+    border-radius: 0;
+  }
 }
 
-#__next {
-  display: contents;
-}
-
-button {
-  font-style: inherit;
-  font-weight: inherit;
-}
-
-.text-shadow {
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+@layer utilities {
+  .text-shadow {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
 }
