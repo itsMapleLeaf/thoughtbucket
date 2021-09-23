@@ -45,6 +45,7 @@ export function Button({
         try {
           await onClick?.(event)
         } catch (error) {
+          // eslint-disable-next-line no-console
           console.warn("error from button click:", error)
         }
 

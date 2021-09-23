@@ -1,6 +1,5 @@
 import { ViewGridAddIcon } from "@heroicons/react/solid"
-import { Form } from "next-runtime/form"
-import { useRouter } from "next/router"
+import { Form, useFormSubmit } from "next-runtime/form"
 import React from "react"
 import type { ButtonProps } from "../dom/Button"
 import { Button } from "../dom/Button"
@@ -10,7 +9,7 @@ import { Modal } from "../ui/Modal"
 import { TextInputField } from "../ui/TextInputField"
 
 export function CreateBucketButton(props: ButtonProps) {
-  const router = useRouter()
+  const { isLoading } = useFormSubmit()
   return (
     <Modal
       title="create a bucket!"
@@ -26,7 +25,11 @@ export function CreateBucketButton(props: ButtonProps) {
             <Button type="button" className={fadedButtonClass} onClick={close}>
               cancel
             </Button>
-            <Button type="submit" className={solidButtonClass}>
+            <Button
+              type="submit"
+              className={solidButtonClass}
+              loading={isLoading}
+            >
               <ViewGridAddIcon className={leftButtonIconClass} /> create bucket
             </Button>
           </div>

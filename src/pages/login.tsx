@@ -1,12 +1,11 @@
 import { handle, json, redirect } from "next-runtime"
-import { Form } from "next-runtime/form"
+import { Form, useFormSubmit } from "next-runtime/form"
 import Link from "next/link"
 import { z } from "zod"
 import { createSessionHelpers } from "../db/session"
 import { loginUser } from "../db/user"
 import { AuthPageLayout } from "../modules/auth/AuthPageLayout"
 import { Button } from "../modules/dom/Button"
-import { usePendingFormNavigation } from "../modules/routing/usePendingFormNavigation"
 import { anchorClass } from "../modules/ui/anchor"
 import { solidButtonClass } from "../modules/ui/button"
 import { TextInputField } from "../modules/ui/TextInputField"
@@ -47,18 +46,18 @@ export const getServerSideProps = handle<Props>({
 })
 
 export default function LoginPage(props: Props) {
-  const navigating = usePendingFormNavigation()
+  const { isLoading } = useFormSubmit()
 
   return (
     <AuthPageLayout title="log in">
-      <Form className={AuthPageLayout.formClass} method="post">
+      <Form name="login" className={AuthPageLayout.formClass} method="post">
         <TextInputField.Email name="email" required />
         <TextInputField.Password
           name="password"
           required
           isNewPassword={false}
         />
-        <Button className={solidButtonClass} type="submit" loading={navigating}>
+        <Button className={solidButtonClass} type="submit" loading={isLoading}>
           log in
         </Button>
       </Form>
