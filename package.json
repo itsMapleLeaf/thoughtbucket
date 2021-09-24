@@ -14,7 +14,10 @@
     "lint": "eslint --ext js,ts,tsx .",
     "format": "prettier --write .",
     "lint-fix": "npm run lint -- --fix",
-    "cypress-open": "cypress open"
+    "cypress-open": "cypress open",
+    "db-start": "docker-compose up --detach",
+    "db-stop": "docker-compose down",
+    "db-logs": "docker-compose logs --follow"
   },
   "dependencies": {
     "@headlessui/react": "1.4.1",

@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -33,5 +33,5 @@ model Bucket {
   name      String
   owner     User     @relation(fields: [ownerId], references: [id])
   ownerId   String
-  data      String   @default("{ \"columns\": [] }")
+  columns   Json
 }

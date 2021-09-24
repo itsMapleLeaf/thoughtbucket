@@ -5,7 +5,7 @@ node_modules
 /build
 /public/build
 
-.env
+.env.local
 /prisma/data
 /src/generated/prisma
 
