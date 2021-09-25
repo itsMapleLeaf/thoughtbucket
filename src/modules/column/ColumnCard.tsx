@@ -28,6 +28,11 @@ export function ColumnCard({
   )
 }
 
+ColumnCard.listClass =
+  "grid items-start content-start flex-1 min-h-0 gap-3 px-3 pb-3 overflow-y-auto transform-gpu"
+
+ColumnCard.sectionClass = "px-3 pb-3"
+
 ColumnCard.Header = function Header({
   title,
   right,
@@ -42,17 +47,5 @@ ColumnCard.Header = function Header({
       {pending && <LoadingIcon size={2} />}
       <div className="ml-auto">{right}</div>
     </div>
-  )
-}
-
-ColumnCard.Section = function Section({ children }: { children: ReactNode }) {
-  return <section className="px-3 pb-3">{children}</section>
-}
-
-ColumnCard.CardList = function CardList({ children }: { children: ReactNode }) {
-  return (
-    <ul className="grid items-start content-start flex-1 min-h-0 gap-3 px-3 pb-3 overflow-y-auto transform-gpu">
-      {children}
-    </ul>
   )
 }

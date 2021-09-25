@@ -212,7 +212,8 @@ export default function BucketPage({
                   </Button>
                 }
               />
-              <ColumnCard.Section>
+
+              <div className={ColumnCard.sectionClass}>
                 <QuickInsertForm
                   onSubmit={(text) =>
                     createThought({ columnId: column.id, text })
@@ -224,9 +225,10 @@ export default function BucketPage({
                   />
                   <QuickInsertForm.Button title="add thought" />
                 </QuickInsertForm>
-              </ColumnCard.Section>
-              <ColumnCard.CardList>
-                {column.thoughts.map((thought) => (
+              </div>
+
+              <ul className={ColumnCard.listClass}>
+                {column.thoughts.map((thought, index) => (
                   <li key={thought.id}>
                     <ThoughtCard
                       thought={thought}
@@ -239,7 +241,7 @@ export default function BucketPage({
                     />
                   </li>
                 ))}
-              </ColumnCard.CardList>
+              </ul>
             </ColumnCard>
           ))}
 
