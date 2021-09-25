@@ -71,8 +71,10 @@ describe("feature: auth", () => {
     submitButton().click()
     cy.url().should("contain", "/login") // should not submit
 
-    cy.findByLabelText(/email/i).type(user.email)
-    cy.findByLabelText(/password/i).type(user.password)
+    cy.findByLabelText(/email/i).clear().type(user.email)
+    cy.findByLabelText(/password/i)
+      .clear()
+      .type(user.password)
     submitButton().click()
 
     cy.url().should("include", "/buckets") // sent to buckets after login
