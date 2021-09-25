@@ -1,5 +1,15 @@
 import type { Observable } from "rxjs"
-import { catchError, merge, of, retry, switchMap } from "rxjs"
+import {
+  catchError,
+  concatMap,
+  delay,
+  merge,
+  of,
+  retryWhen,
+  switchMap,
+  take,
+  throwError,
+} from "rxjs"
 import { fromFetch } from "rxjs/fetch"
 import { asError, raise } from "../../helpers"
 
@@ -21,10 +31,39 @@ export function fetchWithRetry(
         }
         return { status: "success" as const, response }
       }),
-      retry(2),
+      retryWithDelay(2, 1000),
       catchError((error) => [
         { status: "error" as const, error: asError(error) },
       ]),
     ),
+  )
+}
+
+type JsonValue =
+  | string
+  | number
+  | boolean
+  | null
+  | JsonValue[]
+  | { [key: string]: JsonValue | undefined }
+
+export function fetchJsonWithRetry(options: {
+  url: string
+  data: JsonValue
+  method: "get" | "post" | "patch" | "put" | "delete"
+}): Observable<FetchState> {
+  return fetchWithRetry(options.url, {
+    method: options.method.toUpperCase(),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(options.data),
+  })
+}
+
+// https://stackoverflow.com/a/44979389/1332403
+function retryWithDelay<T>(count: number, delayMs: number) {
+  return retryWhen<T>((errors) =>
+    errors.pipe(delay(delayMs), take(count), concatMap(throwError)),
   )
 }
