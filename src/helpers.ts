@@ -1,13 +1,13 @@
 import type { Falsy } from "./types"
 
-export function raise(message: string): never {
-  throw new Error(message)
+export function raise(value: unknown): never {
+  throw value
 }
 
-export function pick<Subject, Key extends keyof Subject>(
-  subject: Subject,
-  keys: Key[],
-): Pick<Subject, Key> {
+export function pick<
+  Subject extends Record<string, unknown>,
+  Key extends keyof Subject,
+>(subject: Subject, keys: Key[]): Pick<Subject, Key> {
   const result: any = {}
   for (const key of keys) {
     result[key] = subject[key]
