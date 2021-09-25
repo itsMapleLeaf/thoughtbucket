@@ -6,7 +6,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     redirect: {
       destination: "/login",
-      permanent: false,
+      statusCode: 303,
     },
   }
 }
