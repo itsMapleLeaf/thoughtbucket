@@ -15,6 +15,7 @@
     "format": "prettier --write .",
     "lint-fix": "npm run lint -- --fix",
     "cypress-open": "cypress open",
+    "prisma-studio-test": "dotenv -e .env.test -- prisma studio",
     "db-start": "docker-compose up --detach",
     "db-stop": "docker-compose down",
     "db-logs": "docker-compose logs --follow"
