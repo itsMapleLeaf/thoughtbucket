@@ -43,10 +43,10 @@ export const getServerSideProps = handle<Props>({
 })
 
 export default function SignupPage(props: Props) {
-  const { isLoading } = useFormSubmit("signup")
+  const { isLoading } = useFormSubmit()
   return (
     <AuthPageLayout title="sign up">
-      <Form name="signup" className={AuthPageLayout.formClass} method="post">
+      <Form className={AuthPageLayout.formClass} method="post">
         <TextInputField.Username name="name" required />
         <TextInputField.Email name="email" required />
         <TextInputField.Password
