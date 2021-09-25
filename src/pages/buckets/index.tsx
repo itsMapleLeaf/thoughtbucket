@@ -67,6 +67,7 @@ export const getServerSideProps = handle<Props>({
       data: {
         name: result.data.name,
         ownerId: user.id,
+        columns: [],
       },
       select: {
         id: true,
