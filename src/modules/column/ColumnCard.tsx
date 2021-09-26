@@ -9,7 +9,7 @@ import { fadedButtonClass } from "../ui/button"
 import { cardClass } from "../ui/card"
 import { leftButtonIconClass } from "../ui/icon"
 import { QuickInsertForm } from "../ui/QuickInsertForm"
-import type { BucketColumn } from "./BucketColumn"
+import type { Column, MoveThoughtArgs } from "./Column"
 
 export function ColumnCard({
   column,
@@ -18,20 +18,11 @@ export function ColumnCard({
   onDeleteThought,
   onMoveThought,
 }: {
-  column: BucketColumn
+  column: Column
   onDelete: () => void
   onCreateThought: (text: string) => void
   onDeleteThought: (id: string) => void
-  onMoveThought: (args: {
-    from: {
-      columnId: string
-      index: number
-    }
-    to: {
-      columnId: string
-      index: number
-    }
-  }) => void
+  onMoveThought: (args: MoveThoughtArgs) => void
 }) {
   const [dropState, dropRef] = useDrop({
     accept: "thought",

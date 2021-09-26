@@ -7,14 +7,14 @@ import { createSessionHelpers } from "../../db/session"
 import { pick } from "../../helpers"
 import { httpCodes } from "../../http-codes"
 import { AppLayout } from "../../modules/app/AppLayout"
-import { BucketPageColumns } from "../../modules/bucket/BucketPageColumns"
 import { BucketPageHeader } from "../../modules/bucket/BucketPageHeader"
 import type { ClientBucket } from "../../modules/bucket/ClientBucket"
 import { asClientBucket } from "../../modules/bucket/ClientBucket"
 import { usingBucket } from "../../modules/bucket/usingBucket"
 import { usingOwnedBucket } from "../../modules/bucket/usingOwnedBucket"
-import type { BucketColumn } from "../../modules/column/BucketColumn"
-import { bucketColumnSchema } from "../../modules/column/BucketColumn"
+import type { Column } from "../../modules/column/Column"
+import { columnSchema } from "../../modules/column/Column"
+import { ScrollingColumnList } from "../../modules/column/ScrollingColumnList"
 import { fetchJsonWithRetry } from "../../modules/network/fetchWithRetry"
 import { getContextParam } from "../../modules/routing/getContextParam"
 import { useObservable } from "../../modules/rxjs/useObservable"
@@ -22,13 +22,13 @@ import { useObservable } from "../../modules/rxjs/useObservable"
 type Props = {
   user?: Pick<User, "name">
   bucket: ClientBucket
-  columns: BucketColumn[]
+  columns: Column[]
   errorMessage?: string
 }
 
 const patchBodySchema = z.object({
   name: z.string().optional(),
-  columns: z.array(bucketColumnSchema).optional(),
+  columns: z.array(columnSchema).optional(),
 })
 
 export const getServerSideProps = handle<Props>({
@@ -39,7 +39,7 @@ export const getServerSideProps = handle<Props>({
       return json<Props>({
         user: user ? pick(user, ["name"]) : undefined,
         bucket: asClientBucket(bucket),
-        columns: z.array(bucketColumnSchema).parse(bucket.columns),
+        columns: z.array(columnSchema).parse(bucket.columns),
       })
     })
   },
@@ -73,7 +73,7 @@ export const getServerSideProps = handle<Props>({
       return json(
         {
           bucket: asClientBucket(bucket),
-          columns: z.array(bucketColumnSchema).parse(bucket.columns),
+          columns: z.array(columnSchema).parse(bucket.columns),
         },
         httpCodes.forbidden,
       )
@@ -93,7 +93,7 @@ export const getServerSideProps = handle<Props>({
       {
         user: pick(user, ["name"]),
         bucket: asClientBucket(bucket),
-        columns: z.array(bucketColumnSchema).parse(bucket.columns),
+        columns: z.array(columnSchema).parse(bucket.columns),
       },
       httpCodes.ok,
     )
@@ -125,7 +125,7 @@ export default function BucketPage({
       <div className="flex flex-col h-full">
         <BucketPageHeader bucket={bucket} />
         <pre>{fetchState.status === "error" && fetchState.error.message}</pre>
-        <BucketPageColumns columns={columns} onChange={setColumns} />
+        <ScrollingColumnList columns={columns} onChange={setColumns} />
       </div>
     </AppLayout>
   )
