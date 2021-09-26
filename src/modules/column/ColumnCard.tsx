@@ -91,7 +91,6 @@ export function ColumnCard({
             index={index}
             onDelete={() => onDeleteThought(thought.id)}
             onDrop={(info) => {
-              console.log({ thought, info, index })
               onMoveThought({
                 from: info,
                 to: { columnId: column.id, index },
