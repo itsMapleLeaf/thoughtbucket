@@ -126,7 +126,6 @@ export default function BucketPage({
         <BucketPageHeader bucket={bucket} />
         <pre>{fetchState.status === "error" && fetchState.error.message}</pre>
         <BucketPageColumns columns={columns} onChange={setColumns} />
-        <div className={"flex-1"}></div>
       </div>
     </AppLayout>
   )

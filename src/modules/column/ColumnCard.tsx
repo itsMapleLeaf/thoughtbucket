@@ -1,51 +1,105 @@
+import { TrashIcon } from "@heroicons/react/solid"
 import clsx from "clsx"
-import type { ReactNode } from "react"
-import { createContext, useContext } from "react"
+import React from "react"
+import { useDrop } from "react-dnd"
+import { Button } from "../dom/Button"
+import type { ThoughtDragInfo } from "../thought/ThoughtCard"
+import { ThoughtCard } from "../thought/ThoughtCard"
+import { fadedButtonClass } from "../ui/button"
 import { cardClass } from "../ui/card"
-import { LoadingIcon } from "../ui/LoadingIcon"
-
-const PendingContext = createContext(false)
+import { leftButtonIconClass } from "../ui/icon"
+import { QuickInsertForm } from "../ui/QuickInsertForm"
+import type { BucketColumn } from "./BucketColumn"
 
 export function ColumnCard({
-  children,
-  pending = false,
+  column,
+  onDelete,
+  onCreateThought,
+  onDeleteThought,
+  onMoveThought,
 }: {
-  children: ReactNode
-  pending?: boolean
+  column: BucketColumn
+  onDelete: () => void
+  onCreateThought: (text: string) => void
+  onDeleteThought: (id: string) => void
+  onMoveThought: (args: {
+    from: {
+      columnId: string
+      index: number
+    }
+    to: {
+      columnId: string
+      index: number
+    }
+  }) => void
 }) {
+  const [dropState, dropRef] = useDrop({
+    accept: "thought",
+    drop: (info: ThoughtDragInfo, monitor) => {
+      if (monitor.didDrop()) return
+      onMoveThought({
+        from: info,
+        to: { columnId: column.id, index: column.thoughts.length },
+      })
+    },
+    collect: (monitor) => ({
+      isOver: monitor.isOver({ shallow: true }),
+    }),
+  })
+
   return (
     <section
       className={clsx(
         cardClass,
-        "flex flex-col transition-opacity",
-        pending && "opacity-50",
+        "flex flex-col",
+        dropState.isOver && "opacity-75",
       )}
+      data-testid="column-card"
     >
-      <PendingContext.Provider value={pending}>
-        {children}
-      </PendingContext.Provider>
+      <div className="flex items-start gap-3 p-3">
+        <h3 className="text-lg font-light leading-tight">{column.name}</h3>
+        <div className="ml-auto">
+          <Button
+            className={fadedButtonClass}
+            title="delete this column"
+            onClick={onDelete}
+          >
+            <TrashIcon className={leftButtonIconClass} />
+          </Button>
+        </div>
+      </div>
+
+      <div className="px-3 pb-3">
+        <QuickInsertForm onSubmit={onCreateThought}>
+          <QuickInsertForm.Input
+            placeholder="add a new thought..."
+            label="thought text"
+          />
+          <QuickInsertForm.Button title="add thought" />
+        </QuickInsertForm>
+      </div>
+
+      <div
+        className="grid items-start content-start flex-1 min-h-0 gap-3 px-3 pb-3 overflow-y-auto transform-gpu"
+        ref={dropRef}
+      >
+        {column.thoughts.map((thought, index) => (
+          <ThoughtCard
+            key={thought.id}
+            thought={thought}
+            column={column}
+            index={index}
+            onDelete={() => onDeleteThought(thought.id)}
+            onDrop={(info) => {
+              console.log({ thought, info, index })
+              onMoveThought({
+                from: info,
+                to: { columnId: column.id, index },
+              })
+            }}
+          />
+        ))}
+      </div>
     </section>
-  )
-}
-
-ColumnCard.listClass =
-  "grid items-start content-start flex-1 min-h-0 gap-3 px-3 pb-3 overflow-y-auto transform-gpu"
-
-ColumnCard.sectionClass = "px-3 pb-3"
-
-ColumnCard.Header = function Header({
-  title,
-  right,
-}: {
-  title: ReactNode
-  right?: ReactNode
-}) {
-  const pending = useContext(PendingContext)
-  return (
-    <div className="flex items-start gap-3 p-3">
-      <h3 className="text-lg font-light leading-tight">{title}</h3>
-      {pending && <LoadingIcon size={2} />}
-      <div className="ml-auto">{right}</div>
-    </div>
   )
 }
