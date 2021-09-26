@@ -1,18 +1,15 @@
 > man, if only i had some simplier version of trello to organize these tasks in
 
-## tasks to become usable
+## tasks for MVP
 
-- card interactions
-  - click card text to edit
-  - delete button on right, shows on hover
-- drag n drop thought cards between columns
+- dnd reordering columns
+- thought editing
 
 ## polish tasks
 
 - empty state on bucket list
 - rename bucket on bucket page
 - focus the "new thought" input in columns after creating the column
-- undo?
 
 ## ideas / nice to have
 
@@ -20,3 +17,4 @@
 - labels/colors as a colored stripe on the card
 - filters by ^
 - import from trello
+- undo?
