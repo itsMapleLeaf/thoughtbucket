@@ -24,7 +24,8 @@ export function ColumnCard({
   onDeleteThought: (id: string) => void
   onMoveThought: (args: MoveThoughtArgs) => void
 }) {
-  const [dropState, dropRef] = useDrop({
+
+  const [thoughtDropState, thoughtDropRef] = useDrop({
     accept: "thought",
     drop: (info: ThoughtDragInfo, monitor) => {
       if (monitor.didDrop()) return
@@ -40,11 +41,7 @@ export function ColumnCard({
 
   return (
     <section
-      className={clsx(
-        cardClass,
-        "flex flex-col",
-        dropState.isOver && "opacity-75",
-      )}
+      className={clsx(cardClass, "flex flex-col")}
       data-testid="column-card"
     >
       <div className="flex items-start gap-3 p-3">
@@ -71,24 +68,31 @@ export function ColumnCard({
       </div>
 
       <div
-        className="grid items-start content-start flex-1 min-h-0 gap-3 px-3 pb-3 overflow-y-auto transform-gpu"
-        ref={dropRef}
+        className="flex-1 min-h-0 px-3 pb-3 overflow-y-auto transform-gpu"
+        ref={thoughtDropRef}
       >
-        {column.thoughts.map((thought, index) => (
-          <ThoughtCard
-            key={thought.id}
-            thought={thought}
-            column={column}
-            index={index}
-            onDelete={() => onDeleteThought(thought.id)}
-            onDrop={(info) => {
-              onMoveThought({
-                from: info,
-                to: { columnId: column.id, index },
-              })
-            }}
-          />
-        ))}
+        <div
+          className={clsx(
+            "grid items-start content-start gap-3 h-full",
+            thoughtDropState.isOver && "bg-black/20",
+          )}
+        >
+          {column.thoughts.map((thought, index) => (
+            <ThoughtCard
+              key={thought.id}
+              thought={thought}
+              column={column}
+              index={index}
+              onDelete={() => onDeleteThought(thought.id)}
+              onDrop={(info) => {
+                onMoveThought({
+                  from: info,
+                  to: { columnId: column.id, index },
+                })
+              }}
+            />
+          ))}
+        </div>
       </div>
     </section>
   )
