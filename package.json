@@ -6,7 +6,7 @@
     "dev": "next dev",
     "dev-test": "trash .next && dotenv -e .env.test -- concurrently --kill-others npm:dev npm:cypress-open",
     "test-dev": "pnpm run dev-test",
-    "build": "tsc --noEmit && next build",
+    "build": "pnpm run typecheck && pnpm run lint && next build",
     "build-yolo": "next build",
     "start": "next start",
     "test": "dotenv -e .env.test -- ts-node --transpile-only ./scripts/test.ts",
@@ -42,7 +42,7 @@
     "zod": "3.8.2"
   },
   "devDependencies": {
-    "@itsmapleleaf/configs": "link:..\\setup-project",
+    "@itsmapleleaf/configs": "1.0.0",
     "@next/eslint-plugin-next": "11.1.2",
     "@tailwindcss/line-clamp": "0.2.1",
     "@testing-library/cypress": "8.0.1",
