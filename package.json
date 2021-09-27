@@ -2,7 +2,6 @@
   "name": "thoughtbucket",
   "private": true,
   "scripts": {
-    "prepare": "prisma generate",
     "dev": "next dev",
     "dev-test": "trash .next && dotenv -e .env.test -- concurrently --kill-others npm:dev npm:cypress-open",
     "test-dev": "npm run dev-test",
@@ -18,7 +17,8 @@
     "prisma-studio-test": "dotenv -e .env.test -- prisma studio",
     "db-start": "docker-compose up --detach",
     "db-stop": "docker-compose down",
-    "db-logs": "docker-compose logs --follow"
+    "db-logs": "docker-compose logs --follow",
+    "heroku-postbuild": "npm run build && prisma db push"
   },
   "dependencies": {
     "@headlessui/react": "1.4.1",
@@ -93,6 +93,7 @@
       "jsx-a11y/anchor-is-valid": "off"
     },
     "ignorePatterns": [
+      "**/node_modules/**",
       "**/.next/**"
     ],
     "overrides": [
