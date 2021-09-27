@@ -1,7 +1,69 @@
 import { nanoid } from "nanoid"
 import { createTestUserCredentials } from "../support/helpers"
 
-describe("feature: drag n drop", () => {
+describe("feature: drag n drop", { retries: 2 }, () => {
+  it("supports drag n drop with columns", () => {
+    const thoughtNames = [`thought-text-1`, `thought-text-2`, `thought-text-3`]
+
+    cy.request("POST", "/signup", createTestUserCredentials())
+
+    cy.visit({
+      method: "POST",
+      url: "/buckets",
+      body: { name: `bucket-${nanoid()}` },
+    })
+
+    cy.location("pathname").then((path) => {
+      cy.request("PATCH", path, {
+        columns: [
+          {
+            id: nanoid(),
+            name: "column-1",
+            thoughts: thoughtNames.map((name) => ({
+              id: nanoid(),
+              text: name,
+            })),
+          },
+          {
+            id: nanoid(),
+            name: "column-2",
+            thoughts: [],
+          },
+        ],
+      })
+    })
+
+    cy.reload()
+
+    cy.findAllByTestId("column-card").eq(0).contains("column-1")
+    cy.findAllByTestId("column-card").eq(1).contains("column-2")
+
+    drag({
+      target: () =>
+        cy.findAllByTestId("column-card").eq(0).findByText("column-1"),
+      destination: () => cy.findAllByTestId("column-card").eq(1),
+    })
+
+    cy.findAllByTestId("column-card").eq(0).contains("column-2")
+    cy.findAllByTestId("column-card").eq(1).contains("column-1")
+
+    drag({
+      target: () => cy.findByText("column-2"),
+      destination: () => cy.findAllByTestId("column-card").eq(1),
+    })
+
+    cy.findAllByTestId("column-card").eq(0).contains("column-1")
+    cy.findAllByTestId("column-card").eq(1).contains("column-2")
+
+    drag({
+      target: () => cy.findByText("column-2"),
+      destination: () => cy.findByText("column-1"),
+    })
+
+    cy.findAllByTestId("column-card").eq(0).contains("column-2")
+    cy.findAllByTestId("column-card").eq(1).contains("column-1")
+  })
+
   it("supports drag n drop with thought cards", () => {
     const bucketName = `bucket-${nanoid()}`
 
@@ -131,6 +193,8 @@ function drag({
     target()
       .trigger("mousedown", { button: 0 })
       .trigger("mousemove", { button: 0, clientX, clientY })
+    cy.document()
+      .its("body")
       .trigger("mousemove", { button: 0, clientX, clientY })
       .trigger("mouseup", { button: 0, clientX, clientY })
   })

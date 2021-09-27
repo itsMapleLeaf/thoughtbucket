@@ -1,10 +1,11 @@
 import { useRef } from "react"
-import { ScrollingDndProvider } from "../ui/drag-and-drop"
+import { Draggable, ScrollingDndProvider } from "../ui/drag-and-drop"
 import { QuickInsertForm } from "../ui/QuickInsertForm"
 import type { Column } from "./Column"
 import {
   addColumnToList,
   createThoughtWithinColumn,
+  moveColumnWithinList,
   moveThoughtBetweenColumns,
   removeColumnFromList,
   removeThoughtFromColumn,
@@ -23,29 +24,43 @@ export function ScrollingColumnList({
   return (
     <ScrollingDndProvider>
       <div
-        className="grid grid-flow-col gap-4 p-4 auto-cols-[18rem] grid-rows-1 mx-auto min-w-[min(1024px,100%)] max-w-full overflow-auto h-full"
+        className="grid grid-flow-col gap-4 p-4 auto-cols-max grid-rows-1 mx-auto min-w-[min(1024px,100%)] max-w-full overflow-auto h-full"
         ref={containerRef}
       >
-        {columns.map((column) => (
-          <ColumnCard
-            key={column.id}
-            column={column}
-            onDelete={() => onChange(removeColumnFromList(column.id))}
-            onCreateThought={(text) => {
-              onChange(createThoughtWithinColumn({ columnId: column.id, text }))
-            }}
-            onDeleteThought={(thoughtId) => {
-              onChange(
-                removeThoughtFromColumn({ columnId: column.id, thoughtId }),
-              )
-            }}
-            onMoveThought={(args) => {
-              onChange(moveThoughtBetweenColumns(args))
-            }}
-          />
+        {columns.map((column, index) => (
+          <Draggable type="column" item={{ index }} key={column.id}>
+            {(draggable) => (
+              <div className="w-72">
+                <ColumnCard
+                  column={column}
+                  titleRef={draggable.ref}
+                  onDelete={() => onChange(removeColumnFromList(column.id))}
+                  onCreateThought={(text) => {
+                    onChange(
+                      createThoughtWithinColumn({ columnId: column.id, text }),
+                    )
+                  }}
+                  onDeleteThought={(thoughtId) => {
+                    onChange(
+                      removeThoughtFromColumn({
+                        columnId: column.id,
+                        thoughtId,
+                      }),
+                    )
+                  }}
+                  onMoveThought={(args) => {
+                    onChange(moveThoughtBetweenColumns(args))
+                  }}
+                  onDropColumn={(otherIndex) => {
+                    onChange(moveColumnWithinList(otherIndex, index))
+                  }}
+                />
+              </div>
+            )}
+          </Draggable>
         ))}
 
-        <div>
+        <div className="w-72">
           <QuickInsertForm
             onSubmit={(name) => {
               onChange(addColumnToList(name.trim()))

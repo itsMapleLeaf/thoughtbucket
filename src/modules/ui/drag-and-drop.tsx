@@ -1,5 +1,7 @@
+import { Portal } from "@headlessui/react"
 import React, { useEffect } from "react"
-import { DndProvider, useDragDropManager } from "react-dnd"
+import type { ConnectDragSource } from "react-dnd"
+import { DndProvider, useDrag, useDragDropManager } from "react-dnd"
 import type { TouchBackendOptions } from "react-dnd-touch-backend"
 import { TouchBackend } from "react-dnd-touch-backend"
 import { clamp } from "../../helpers"
@@ -66,4 +68,54 @@ export function DragScroller() {
   }, [manager])
 
   return null
+}
+
+export function Draggable<Item>({
+  type,
+  item,
+  children,
+}: {
+  type: string
+  item: Item
+  children: (props: {
+    ref: ConnectDragSource
+    isDragging: boolean
+  }) => React.ReactNode
+}) {
+  const [{ isDragging, mousePosition, elementOffset }, dragRef] = useDrag({
+    type,
+    item,
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+      elementOffset: monitor.getInitialSourceClientOffset(),
+      mousePosition: monitor.getDifferenceFromInitialOffset(),
+    }),
+  })
+
+  const content = children({
+    ref: dragRef,
+    isDragging,
+  })
+
+  const shouldShowPreview = isDragging && mousePosition && elementOffset
+
+  if (!shouldShowPreview) {
+    return <>{content}</>
+  }
+
+  const x = elementOffset.x + mousePosition.x
+  const y = elementOffset.y + mousePosition.y
+  return (
+    <>
+      <div className="opacity-0 pointer-events-none">{content}</div>
+      <Portal>
+        <div
+          className="fixed top-0 left-0 pointer-events-none"
+          style={{ transform: `translate(${x}px, ${y}px) rotate(-3deg)` }}
+        >
+          {content}
+        </div>
+      </Portal>
+    </>
+  )
 }

@@ -22,6 +22,12 @@ export const addColumnToList = (name: string) => (columns: Column[]) =>
 export const removeColumnFromList = (id: string) => (columns: Column[]) =>
   columns.filter((c) => c.id !== id)
 
+export const moveColumnWithinList = (oldIndex: number, newIndex: number) =>
+  produce((draft: Draft<Column[]>) => {
+    const removed = draft.splice(oldIndex, 1)
+    draft.splice(newIndex, 0, ...removed)
+  })
+
 export const createThoughtWithinColumn = (args: {
   columnId: string
   text: string

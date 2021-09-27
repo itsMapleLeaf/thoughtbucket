@@ -7,24 +7,28 @@ import type { ThoughtDragInfo } from "../thought/ThoughtCard"
 import { ThoughtCard } from "../thought/ThoughtCard"
 import { fadedButtonClass } from "../ui/button"
 import { cardClass } from "../ui/card"
+import { Draggable } from "../ui/drag-and-drop"
 import { leftButtonIconClass } from "../ui/icon"
 import { QuickInsertForm } from "../ui/QuickInsertForm"
 import type { Column, MoveThoughtArgs } from "./Column"
 
 export function ColumnCard({
   column,
+  titleRef,
   onDelete,
   onCreateThought,
   onDeleteThought,
   onMoveThought,
+  onDropColumn,
 }: {
   column: Column
+  titleRef: React.Ref<HTMLHeadingElement>
   onDelete: () => void
   onCreateThought: (text: string) => void
   onDeleteThought: (id: string) => void
   onMoveThought: (args: MoveThoughtArgs) => void
+  onDropColumn: (otherIndex: number) => void
 }) {
-
   const [thoughtDropState, thoughtDropRef] = useDrop({
     accept: "thought",
     drop: (info: ThoughtDragInfo, monitor) => {
@@ -39,14 +43,35 @@ export function ColumnCard({
     }),
   })
 
+  const [columnDropState, columnDropRef] = useDrop({
+    accept: "column",
+    drop: (info: { index: number }, monitor) => {
+      if (monitor.didDrop()) return
+      onDropColumn(info.index)
+    },
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+    }),
+  })
+
   return (
     <section
-      className={clsx(cardClass, "flex flex-col")}
+      className={clsx(
+        cardClass,
+        "flex flex-col h-full",
+        columnDropState.isOver && "opacity-50",
+      )}
       data-testid="column-card"
+      ref={columnDropRef}
     >
-      <div className="flex items-start gap-3 p-3">
-        <h3 className="text-lg font-light leading-tight">{column.name}</h3>
-        <div className="ml-auto">
+      <div className="flex items-start">
+        <h3
+          className="flex-1 p-3 text-lg font-light leading-tight cursor-[grab] "
+          ref={titleRef}
+        >
+          {column.name}
+        </h3>
+        <div className="p-3">
           <Button
             className={fadedButtonClass}
             title="delete this column"
@@ -73,24 +98,32 @@ export function ColumnCard({
       >
         <div
           className={clsx(
-            "grid items-start content-start gap-3 h-full",
+            "grid items-start content-start gap-3 h-full rounded",
             thoughtDropState.isOver && "bg-black/20",
           )}
         >
           {column.thoughts.map((thought, index) => (
-            <ThoughtCard
+            <Draggable
               key={thought.id}
-              thought={thought}
-              column={column}
-              index={index}
-              onDelete={() => onDeleteThought(thought.id)}
-              onDrop={(info) => {
-                onMoveThought({
-                  from: info,
-                  to: { columnId: column.id, index },
-                })
-              }}
-            />
+              type="thought"
+              item={{ index, columnId: column.id }}
+            >
+              {({ ref, isDragging }) => (
+                <div className={isDragging ? "w-64" : ""}>
+                  <ThoughtCard
+                    dragHandleRef={ref}
+                    thought={thought}
+                    onDelete={() => onDeleteThought(thought.id)}
+                    onDrop={(info) => {
+                      onMoveThought({
+                        from: info,
+                        to: { columnId: column.id, index },
+                      })
+                    }}
+                  />
+                </div>
+              )}
+            </Draggable>
           ))}
         </div>
       </div>
