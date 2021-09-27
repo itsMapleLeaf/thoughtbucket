@@ -1,8 +1,4 @@
 {
   "nodeVersion": "system",
-  "baseUrl": "http://localhost:3000/",
-  "retries": {
-    "runMode": 1,
-    "openMode": 0
-  }
+  "baseUrl": "http://localhost:4000/"
 }
