@@ -19,7 +19,9 @@ void (async function () {
   await app.prepare()
 
   const server = createServer(app.getRequestHandler())
-  await new Promise<void>((resolve) => server.listen(3000, resolve))
+  await new Promise<void>((resolve) =>
+    server.listen(Number(process.env.PORT), resolve),
+  )
 
   console.log("Running tests...")
   await cypress.run()
