@@ -2,8 +2,8 @@
 
 ## tasks for MVP
 
-- dnd reordering columns
-- thought editing
+- edit thought text
+- edit column names
 
 ## polish tasks
 
@@ -18,3 +18,4 @@
 - filters by ^
 - import from trello
 - undo?
+- keyboard controls
