@@ -12,7 +12,7 @@ if (process.env.NODE_ENV !== "test") {
 
 void (async function () {
   console.log("Building app...")
-  await execa("npm run build", { stdio: "inherit" })
+  await execa("npm", ["run", "build"], { stdio: "inherit" })
 
   console.log("Starting app...")
   const app = next({ dir: join(__dirname, ".."), quiet: true })
