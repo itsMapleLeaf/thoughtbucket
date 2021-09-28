@@ -2,7 +2,7 @@ import { handle, json, redirect } from "next-runtime"
 import { Form, useFormSubmit } from "next-runtime/form"
 import Link from "next/link"
 import { z } from "zod"
-import { createSessionHelpers } from "../db/session"
+import { sessionHelpers } from "../db/session"
 import { createUser } from "../db/user"
 import { AuthPageLayout } from "../modules/auth/AuthPageLayout"
 import { Button } from "../modules/dom/Button"
@@ -22,7 +22,7 @@ const signupBodySchema = z.object({
 
 export const getServerSideProps = handle<Props>({
   async get(context) {
-    const user = await createSessionHelpers(context).getUser()
+    const user = await sessionHelpers(context).getUser()
     return user ? redirect("/buckets") : json({})
   },
 
@@ -35,8 +35,8 @@ export const getServerSideProps = handle<Props>({
 
     const user = await createUser(body.data)
 
-    const session = createSessionHelpers(context)
-    await session.createSession(user)
+    const session = sessionHelpers(context)
+    await session.create(user)
 
     return redirect("/buckets", 303)
   },

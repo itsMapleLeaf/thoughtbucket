@@ -3,7 +3,7 @@ import { handle, json, notFound, redirect } from "next-runtime"
 import { useMemo, useState } from "react"
 import { z } from "zod"
 import { getClient } from "../../db/client"
-import { createSessionHelpers } from "../../db/session"
+import { sessionHelpers } from "../../db/session"
 import { pick } from "../../helpers"
 import { httpCodes } from "../../http-codes"
 import { AppLayout } from "../../modules/app/AppLayout"
@@ -33,7 +33,7 @@ const patchBodySchema = z.object({
 
 export const getServerSideProps = handle<Props>({
   get: async (context) => {
-    const user = await createSessionHelpers(context).getUser()
+    const user = await sessionHelpers(context).getUser()
     const bucketId = getContextParam(context, "bucketId")
     return usingBucket(bucketId, (bucket) => {
       return json<Props>({
@@ -67,7 +67,7 @@ export const getServerSideProps = handle<Props>({
       return notFound()
     }
 
-    const user = await createSessionHelpers(context).getUser()
+    const user = await sessionHelpers(context).getUser()
 
     if (bucket.ownerId !== user?.id) {
       return json(

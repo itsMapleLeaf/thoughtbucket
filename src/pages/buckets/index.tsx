@@ -3,7 +3,7 @@ import clsx from "clsx"
 import { handle, json, redirect } from "next-runtime"
 import { z } from "zod"
 import { getClient } from "../../db/client"
-import { createSessionHelpers } from "../../db/session"
+import { sessionHelpers } from "../../db/session"
 import { pick } from "../../helpers"
 import { AppLayout } from "../../modules/app/AppLayout"
 import { BucketSummaryCard } from "../../modules/bucket/BucketSummaryCard"
@@ -24,7 +24,7 @@ type Props = {
 
 export const getServerSideProps = handle<Props>({
   get: async (context) => {
-    const user = await createSessionHelpers(context).getUser()
+    const user = await sessionHelpers(context).getUser()
     if (!user) {
       return redirect("/login")
     }
@@ -56,7 +56,7 @@ export const getServerSideProps = handle<Props>({
       })
     }
 
-    const user = await createSessionHelpers(context).getUser()
+    const user = await sessionHelpers(context).getUser()
     if (!user) {
       return json({
         errorMessage: "You must be logged in to create a bucket",

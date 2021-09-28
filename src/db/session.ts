@@ -16,7 +16,7 @@ const cookieOptions = {
   signed: false,
 }
 
-export function createSessionHelpers({
+export function sessionHelpers({
   req,
   res,
 }: {
@@ -26,48 +26,45 @@ export function createSessionHelpers({
   const db = getClient()
   const cookies = new Cookies(req, res, cookieOptions)
 
-  async function getSession(): Promise<Session | undefined> {
-    const id = cookies.get(sessionCookieName, cookieOptions)
-    if (!id) return
+  const helpers = {
+    async get(): Promise<Session | undefined> {
+      const id = cookies.get(sessionCookieName, cookieOptions)
+      if (!id) return
 
-    const session = await db.session.findUnique({
-      where: { id },
-    })
-    return session ?? undefined
+      const session = await db.session.findUnique({
+        where: { id },
+      })
+      return session ?? undefined
+    },
+
+    async create(user: { id: string }): Promise<void> {
+      const session = await db.session.upsert({
+        where: { userId: user.id },
+        update: { userId: user.id },
+        create: { userId: user.id },
+        select: { id: true },
+      })
+      cookies.set(sessionCookieName, session.id, cookieOptions)
+    },
+
+    async delete(): Promise<void> {
+      const session = await helpers.get()
+      if (session) {
+        await db.session.delete({ where: { id: session.id } })
+      }
+      cookies.set(sessionCookieName, null, cookieOptions)
+    },
+
+    async getUser(): Promise<User | undefined> {
+      const session = await helpers.get()
+      if (!session) return
+
+      const user = await db.user.findUnique({
+        where: { id: session.userId },
+      })
+      return user ?? undefined
+    },
   }
 
-  async function createSession(user: { id: string }): Promise<void> {
-    const session = await db.session.upsert({
-      where: { userId: user.id },
-      update: { userId: user.id },
-      create: { userId: user.id },
-      select: { id: true },
-    })
-    cookies.set(sessionCookieName, session.id, cookieOptions)
-  }
-
-  async function deleteSession(): Promise<void> {
-    const session = await getSession()
-    if (session) {
-      await db.session.delete({ where: { id: session.id } })
-    }
-    cookies.set(sessionCookieName, null, cookieOptions)
-  }
-
-  async function getUser(): Promise<User | undefined> {
-    const session = await getSession()
-    if (!session) return
-
-    const user = await db.user.findUnique({
-      where: { id: session.userId },
-    })
-    return user ?? undefined
-  }
-
-  return {
-    getSession,
-    createSession,
-    deleteSession,
-    getUser,
-  }
+  return helpers
 }

@@ -3,7 +3,7 @@ import { Form, useFormSubmit } from "next-runtime/form"
 import { FetchError } from "next-runtime/lib/fetch-error"
 import Link from "next/link"
 import { z } from "zod"
-import { createSessionHelpers } from "../db/session"
+import { sessionHelpers } from "../db/session"
 import { loginUser } from "../db/user"
 import { httpCodes } from "../http-codes"
 import { AuthPageLayout } from "../modules/auth/AuthPageLayout"
@@ -23,7 +23,7 @@ const loginBodySchema = z.object({
 
 export const getServerSideProps = handle<Response>({
   async get(context) {
-    const user = await createSessionHelpers(context).getUser()
+    const user = await sessionHelpers(context).getUser()
     return user ? redirect("/buckets") : json({})
   },
 
@@ -37,7 +37,7 @@ export const getServerSideProps = handle<Response>({
       )
     }
 
-    await createSessionHelpers(context).createSession(user)
+    await sessionHelpers(context).create(user)
     return redirect("/buckets", httpCodes.seeOther)
   },
 })

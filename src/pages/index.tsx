@@ -1,10 +1,8 @@
 import type { GetServerSideProps } from "next"
-import { createSessionHelpers } from "../db/session"
+import { sessionHelpers } from "../db/session"
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = createSessionHelpers(context)
-
-  if (await session.getSession()) {
+  if (await sessionHelpers(context).get()) {
     return {
       redirect: {
         destination: "/buckets",

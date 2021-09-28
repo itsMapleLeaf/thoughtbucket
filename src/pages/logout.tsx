@@ -1,8 +1,8 @@
 import type { GetServerSideProps } from "next"
-import { createSessionHelpers } from "../db/session"
+import { sessionHelpers } from "../db/session"
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  await createSessionHelpers(context).deleteSession()
+  await sessionHelpers(context).delete()
   return {
     redirect: {
       destination: "/login",
