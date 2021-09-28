@@ -1,7 +1,12 @@
 import { Portal } from "@headlessui/react"
 import React, { useEffect } from "react"
-import type { ConnectDragSource } from "react-dnd"
-import { DndProvider, useDrag, useDragDropManager } from "react-dnd"
+import type { XYCoord } from "react-dnd"
+import {
+  DndProvider,
+  useDrag as useDragBase,
+  useDragDropManager,
+  useDrop as useDropBase,
+} from "react-dnd"
 import type { TouchBackendOptions } from "react-dnd-touch-backend"
 import { TouchBackend } from "react-dnd-touch-backend"
 import { clamp } from "../../helpers"
@@ -70,50 +75,68 @@ export function DragScroller() {
   return null
 }
 
-export function Draggable<Item>({
-  type,
-  item,
-  children,
-}: {
-  type: string
-  item: Item
-  children: (props: {
-    ref: ConnectDragSource
-    isDragging: boolean
-  }) => React.ReactNode
-}) {
-  const [{ isDragging, mousePosition, elementOffset }, dragRef] = useDrag({
-    type,
-    item,
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-      elementOffset: monitor.getInitialSourceClientOffset(),
-      mousePosition: monitor.getDifferenceFromInitialOffset(),
-    }),
-  })
+type DragState = {
+  isDragging: boolean
+  elementOffset: XYCoord
+  mousePosition: XYCoord
+}
 
-  const content = children({
-    ref: dragRef,
-    isDragging,
-  })
+const origin: XYCoord = { x: 0, y: 0 }
 
-  const shouldShowPreview = isDragging && mousePosition && elementOffset
+export function createDndHooks<Item>(options: { type: string }) {
+  function useDrag({ item }: { item: Item }) {
+    const [dragState, dragRef] = useDragBase<Item, unknown, DragState>({
+      type: options.type,
+      item,
+      collect: (monitor) => ({
+        isDragging: monitor.isDragging(),
+        elementOffset: monitor.getInitialSourceClientOffset() ?? origin,
+        mousePosition: monitor.getDifferenceFromInitialOffset() ?? origin,
+      }),
+    })
 
-  if (!shouldShowPreview) {
-    return <>{content}</>
+    return [dragState, dragRef] as const
   }
 
-  const x = elementOffset.x + mousePosition.x
-  const y = elementOffset.y + mousePosition.y
+  function useDrop({ onDrop }: { onDrop: (item: Item) => void }) {
+    const [dropState, dropRef] = useDropBase({
+      accept: options.type,
+      drop: (info: Item) => {
+        onDrop(info)
+      },
+      collect: (monitor) => ({
+        isOver: monitor.isOver(),
+      }),
+    })
+
+    return [dropState, dropRef] as const
+  }
+
+  return { useDrag, useDrop }
+}
+
+export function DragPreview({
+  state,
+  children,
+}: {
+  state: DragState
+  children: React.ReactNode
+}) {
+  if (!state.isDragging) {
+    return <>{children}</>
+  }
+
+  const x = state.elementOffset.x + state.mousePosition.x
+  const y = state.elementOffset.y + state.mousePosition.y
   return (
     <>
-      <div className="opacity-0 pointer-events-none">{content}</div>
+      <div className="opacity-0 pointer-events-none">{children}</div>
       <Portal>
         <div
           className="fixed top-0 left-0 pointer-events-none"
           style={{ transform: `translate(${x}px, ${y}px) rotate(-3deg)` }}
         >
-          {content}
+          {children}
         </div>
       </Portal>
     </>

@@ -1,5 +1,5 @@
 import { useRef } from "react"
-import { Draggable, ScrollingDndProvider } from "../ui/drag-and-drop"
+import { ScrollingDndProvider } from "../ui/drag-and-drop"
 import { QuickInsertForm } from "../ui/QuickInsertForm"
 import type { Column } from "./Column"
 import {
@@ -28,36 +28,29 @@ export function ScrollingColumnList({
         ref={containerRef}
       >
         {columns.map((column, index) => (
-          <Draggable type="column" item={{ index }} key={column.id}>
-            {(draggable) => (
-              <div className="w-72">
-                <ColumnCard
-                  column={column}
-                  titleRef={draggable.ref}
-                  onDelete={() => onChange(removeColumnFromList(column.id))}
-                  onCreateThought={(text) => {
-                    onChange(
-                      createThoughtWithinColumn({ columnId: column.id, text }),
-                    )
-                  }}
-                  onDeleteThought={(thoughtId) => {
-                    onChange(
-                      removeThoughtFromColumn({
-                        columnId: column.id,
-                        thoughtId,
-                      }),
-                    )
-                  }}
-                  onMoveThought={(args) => {
-                    onChange(moveThoughtBetweenColumns(args))
-                  }}
-                  onDropColumn={(otherIndex) => {
-                    onChange(moveColumnWithinList(otherIndex, index))
-                  }}
-                />
-              </div>
-            )}
-          </Draggable>
+          <ColumnCard
+            key={column.id}
+            column={column}
+            index={index}
+            onDelete={() => onChange(removeColumnFromList(column.id))}
+            onCreateThought={(text) => {
+              onChange(createThoughtWithinColumn({ columnId: column.id, text }))
+            }}
+            onDeleteThought={(thoughtId) => {
+              onChange(
+                removeThoughtFromColumn({
+                  columnId: column.id,
+                  thoughtId,
+                }),
+              )
+            }}
+            onMoveThought={(args) => {
+              onChange(moveThoughtBetweenColumns(args))
+            }}
+            onDropColumn={(otherIndex) => {
+              onChange(moveColumnWithinList(otherIndex, index))
+            }}
+          />
         ))}
 
         <div className="w-72">
