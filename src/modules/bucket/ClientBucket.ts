@@ -1,5 +1,6 @@
 import type { Bucket } from "@prisma/client"
-import { pick, serialize } from "../../helpers"
+import { pick } from "../common/helpers"
+import { serialize } from "../common/serialize"
 
 export type ClientBucket = {
   id: string

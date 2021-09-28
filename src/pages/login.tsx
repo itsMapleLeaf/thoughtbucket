@@ -3,14 +3,14 @@ import { Form, useFormSubmit } from "next-runtime/form"
 import { FetchError } from "next-runtime/lib/fetch-error"
 import Link from "next/link"
 import { z } from "zod"
-import { sessionHelpers } from "../db/session"
-import { loginUser } from "../db/user"
-import { httpCodes } from "../http-codes"
 import { AuthPageLayout } from "../modules/auth/AuthPageLayout"
+import { sessionHelpers } from "../modules/auth/session"
 import { Button } from "../modules/dom/Button"
+import { httpCodes } from "../modules/network/http-codes"
 import { anchorClass } from "../modules/ui/anchor"
 import { solidButtonClass } from "../modules/ui/button"
 import { TextInputField } from "../modules/ui/TextInputField"
+import { loginUser } from "../modules/user"
 
 type Response = {
   errorMessage?: string

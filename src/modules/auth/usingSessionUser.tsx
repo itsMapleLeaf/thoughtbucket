@@ -2,8 +2,8 @@ import type { User } from "@prisma/client"
 import type { RuntimeContext, RuntimeResponse } from "next-runtime"
 import { redirect } from "next-runtime"
 import type { ParsedUrlQuery } from "next-runtime/types/querystring"
-import { sessionHelpers } from "../../db/session"
-import type { MaybePromise } from "../../types"
+import type { MaybePromise } from "../common/types"
+import { sessionHelpers } from "./session"
 
 export async function usingSessionUser<Result>(
   context: RuntimeContext<ParsedUrlQuery>,

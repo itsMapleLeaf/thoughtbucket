@@ -1,5 +1,5 @@
 import type { GetServerSideProps } from "next"
-import { sessionHelpers } from "../db/session"
+import { sessionHelpers } from "../modules/auth/session"
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   await sessionHelpers(context).delete()

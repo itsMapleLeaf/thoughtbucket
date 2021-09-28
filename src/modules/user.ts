@@ -1,6 +1,6 @@
 import type { User } from "@prisma/client"
 import bcrypt from "bcryptjs"
-import { getClient } from "./client"
+import { getClient } from "./db"
 
 const db = getClient()
 

@@ -1,7 +1,7 @@
 import type { Session, User } from "@prisma/client"
 import Cookies from "cookies"
 import type { IncomingMessage, ServerResponse } from "http"
-import { getClient } from "./client"
+import { getClient } from "../db"
 
 const sessionCookieName = "session"
 

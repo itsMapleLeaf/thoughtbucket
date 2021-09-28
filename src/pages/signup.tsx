@@ -2,13 +2,13 @@ import { handle, json, redirect } from "next-runtime"
 import { Form, useFormSubmit } from "next-runtime/form"
 import Link from "next/link"
 import { z } from "zod"
-import { sessionHelpers } from "../db/session"
-import { createUser } from "../db/user"
 import { AuthPageLayout } from "../modules/auth/AuthPageLayout"
+import { sessionHelpers } from "../modules/auth/session"
 import { Button } from "../modules/dom/Button"
 import { anchorClass } from "../modules/ui/anchor"
 import { solidButtonClass } from "../modules/ui/button"
 import { TextInputField } from "../modules/ui/TextInputField"
+import { createUser } from "../modules/user"
 
 type Props = {
   errorMessage?: string

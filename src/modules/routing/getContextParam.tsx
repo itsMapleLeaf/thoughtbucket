@@ -1,6 +1,6 @@
 import type { RuntimeContext } from "next-runtime"
 import type { ParsedUrlQuery } from "next-runtime/types/querystring"
-import { raise } from "../../helpers"
+import { raise } from "../common/helpers"
 
 export function getContextParam(
   context: RuntimeContext<ParsedUrlQuery>,

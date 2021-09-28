@@ -9,7 +9,7 @@ import {
 } from "react-dnd"
 import type { TouchBackendOptions } from "react-dnd-touch-backend"
 import { TouchBackend } from "react-dnd-touch-backend"
-import { clamp } from "../../helpers"
+import { clamp } from "../common/helpers"
 
 const touchBackendOptions: Partial<TouchBackendOptions> = {
   enableMouseEvents: true,

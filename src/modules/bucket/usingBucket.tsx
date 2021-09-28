@@ -1,7 +1,7 @@
 import type { Bucket } from "@prisma/client"
 import type { RuntimeResponse } from "next-runtime"
 import { notFound } from "next-runtime"
-import { getClient } from "../../db/client"
+import { getClient } from "../db"
 
 export async function usingBucket<Result>(
   bucketId: string,
