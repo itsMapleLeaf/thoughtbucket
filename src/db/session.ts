@@ -3,11 +3,11 @@ import Cookies from "cookies"
 import type { IncomingMessage, ServerResponse } from "http"
 import { getClient } from "./client"
 
-export const sessionCookieName = "session"
+const sessionCookieName = "session"
 
 const cookieOptions = {
   httpOnly: true,
-  maxAge: 60 * 60 * 24 * 30, // 30 days
+  maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
   secure:
     process.env.NODE_ENV === "production" &&
     // the app is built with production even when setting the node env to test,
