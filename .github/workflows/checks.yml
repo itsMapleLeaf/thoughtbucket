@@ -7,6 +7,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: ./.github/setup
+      - run: pnpm run db-start
       - run: pnpm run test
   lint:
     runs-on: ubuntu-latest
