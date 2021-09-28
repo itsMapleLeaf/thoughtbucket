@@ -101,7 +101,8 @@ export function createDndHooks<Item>(options: { type: string }) {
   function useDrop({ onDrop }: { onDrop: (item: Item) => void }) {
     const [dropState, dropRef] = useDropBase({
       accept: options.type,
-      drop: (info: Item) => {
+      drop: (info: Item, monitor) => {
+        if (monitor.didDrop()) return
         onDrop(info)
       },
       collect: (monitor) => ({
