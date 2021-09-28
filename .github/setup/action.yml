@@ -1,0 +1,13 @@
+name: Setup
+description: Shared steps for workflows in this repo
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v2
+      with:
+        node-version: 16.x
+    - shell: bash
+      run: |
+        npm i -g pnpm
+        pnpm i --frozen-lockfile
+        pnpx prisma generate
