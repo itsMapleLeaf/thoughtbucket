@@ -1,4 +1,9 @@
 {
   "nodeVersion": "system",
-  "baseUrl": "http://localhost:4000/"
+  "baseUrl": "http://localhost:4000/",
+  "env": {
+    "codeCoverage": {
+      "url": "/api/__coverage__"
+    }
+  }
 }

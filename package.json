@@ -2,12 +2,13 @@
   "name": "thoughtbucket",
   "private": true,
   "scripts": {
+    "clean": "trash .next coverage .nyc_output",
     "dev": "next dev",
-    "dev-test": "trash .next && dotenv -e .env.test -- concurrently --kill-others npm:dev npm:cypress-open",
+    "dev-test": "npm run clean && dotenv -e .env.test -- concurrently --kill-others npm:dev npm:cypress-open",
     "test-dev": "npm run dev-test",
     "build": "next build",
     "start": "next start",
-    "test": "dotenv -e .env.test -- ts-node --transpile-only ./scripts/test.ts",
+    "test": "npm run clean && dotenv -e .env.test -- ts-node --transpile-only ./scripts/test.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint --ext js,ts,tsx .",
     "format": "prettier --write .",
@@ -40,6 +41,8 @@
     "zod": "3.9.1"
   },
   "devDependencies": {
+    "@cypress/code-coverage": "3.9.11",
+    "@istanbuljs/nyc-config-typescript": "1.0.1",
     "@itsmapleleaf/configs": "1.0.0",
     "@next/eslint-plugin-next": "11.1.2",
     "@tailwindcss/line-clamp": "0.2.1",
@@ -53,6 +56,7 @@
     "@typescript-eslint/eslint-plugin": "4.31.2",
     "@typescript-eslint/parser": "4.31.2",
     "autoprefixer": "10.3.6",
+    "babel-plugin-istanbul": "6.0.0",
     "concurrently": "6.2.1",
     "cypress": "8.4.1",
     "cypress-esbuild-preprocessor": "1.0.2",
@@ -98,6 +102,26 @@
           "project": "./cypress/tsconfig.json"
         }
       }
+    ]
+  },
+  "nyc": {
+    "extension": [
+      ".js",
+      ".jsx",
+      ".ts",
+      ".tsx"
+    ],
+    "extends": "@istanbuljs/nyc-config-typescript",
+    "include": [
+      "src/**/*"
+    ],
+    "exclude": [
+      "src/pages/api/__coverage__.js"
+    ],
+    "sourceMap": true,
+    "instrument": true,
+    "reporter": [
+      "html"
     ]
   }
 }
