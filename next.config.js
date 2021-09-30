@@ -5,4 +5,5 @@ module.exports = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  productionBrowserSourceMaps: process.env.SOURCE_MAPS === "true",
 }

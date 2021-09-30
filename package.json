@@ -18,7 +18,8 @@
     "db-start": "docker-compose up --detach",
     "db-stop": "docker-compose down",
     "db-logs": "docker-compose logs --follow",
-    "heroku-postbuild": "npm run build && prisma db push"
+    "heroku-postbuild": "npm run build && prisma db push",
+    "analyze": "cross-env SOURCE_MAPS=true npm run build && source-map-explorer \".next/**/*.js\""
   },
   "dependencies": {
     "@headlessui/react": "1.4.1",
@@ -58,6 +59,7 @@
     "autoprefixer": "10.3.6",
     "babel-plugin-istanbul": "6.0.0",
     "concurrently": "6.2.1",
+    "cross-env": "7.0.3",
     "cypress": "8.4.1",
     "cypress-esbuild-preprocessor": "1.0.2",
     "dotenv-cli": "4.0.0",
@@ -71,6 +73,7 @@
     "postcss": "8.3.8",
     "prettier": "2.4.1",
     "prisma": "3.1.1",
+    "source-map-explorer": "2.5.2",
     "tailwindcss": "2.2.16",
     "trash-cli": "4.0.0",
     "ts-node": "10.2.1",
