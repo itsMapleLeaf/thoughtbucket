@@ -1,7 +1,7 @@
 import { nanoid } from "nanoid"
 import { createTestUserCredentials } from "../support/helpers"
 
-describe("feature: drag n drop", { retries: 2 }, () => {
+describe("drag n drop", { retries: 2 }, () => {
   it("supports drag n drop with columns", () => {
     const thoughtNames = [`thought-text-1`, `thought-text-2`, `thought-text-3`]
 

@@ -1,7 +1,7 @@
 import { createTestUserCredentials } from "../support/helpers"
 import { persistenceCheck } from "../support/persistenceCheck"
 
-describe("feature: buckets", () => {
+describe("buckets", () => {
   it("has a ui to create buckets", { retries: 1 }, () => {
     const bucketName = `testbucket-${String(Math.random())}`
 

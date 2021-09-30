@@ -1,6 +1,6 @@
 import { createTestUserCredentials } from "../support/helpers"
 
-describe("feature: auth", () => {
+describe("auth", () => {
   it("supports signup", () => {
     const user = createTestUserCredentials()
 
