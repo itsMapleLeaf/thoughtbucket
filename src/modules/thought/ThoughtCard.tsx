@@ -74,11 +74,11 @@ export function ThoughtCard({
           <form
             className="flex-1"
             onSubmit={withPreventDefault((event) => {
-              const value = event.currentTarget.querySelector("textarea")!.value
               submitEdit(event.currentTarget.querySelector("textarea")!.value)
             })}
           >
             <TextArea
+              aria-label="text"
               className="block w-full p-2 transition bg-transparent resize-none hover:bg-black/30 focus:bg-black/30 focus:outline-none"
               defaultValue={thought.text}
               ref={textAreaRef}
