@@ -25,6 +25,5 @@ module.exports = {
   variants: {
     extend: {},
   },
-  // @ts-expect-error
   plugins: [require("@tailwindcss/line-clamp")],
 }
