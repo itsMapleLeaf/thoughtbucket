@@ -57,7 +57,7 @@ describe("buckets", () => {
     cy.findByText(bucketName).should("not.exist")
   })
 
-  it("supports managing columns", () => {
+  it("supports managing columns", { retries: 1 }, () => {
     const bucketName = `bucket-${String(Math.random())}`
 
     cy.request("POST", "/signup", createTestUserCredentials())
