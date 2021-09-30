@@ -1,25 +1,13 @@
 import { useRef } from "react"
+import { useStoreState } from "../state/Store"
 import { ScrollingDndProvider } from "../ui/drag-and-drop"
 import { QuickInsertForm } from "../ui/QuickInsertForm"
-import type { Column } from "./Column"
-import {
-  addColumnToList,
-  createThoughtWithinColumn,
-  moveColumnWithinList,
-  moveThoughtBetweenColumns,
-  removeColumnFromList,
-  removeThoughtFromColumn,
-} from "./Column"
 import { ColumnCard } from "./ColumnCard"
+import type { ColumnEditorStore } from "./ColumnEditorStore"
 
-export function ScrollingColumnList({
-  columns,
-  onChange,
-}: {
-  columns: Column[]
-  onChange: (updateFn: (prev: Column[]) => Column[]) => void
-}) {
+export function ColumnEditor({ store }: { store: ColumnEditorStore }) {
   const containerRef = useRef<HTMLDivElement>(null)
+  const columns = useStoreState(store)
 
   return (
     <ScrollingDndProvider>
@@ -32,31 +20,14 @@ export function ScrollingColumnList({
             key={column.id}
             column={column}
             index={index}
-            onDelete={() => onChange(removeColumnFromList(column.id))}
-            onCreateThought={(text) => {
-              onChange(createThoughtWithinColumn({ columnId: column.id, text }))
-            }}
-            onDeleteThought={(thoughtId) => {
-              onChange(
-                removeThoughtFromColumn({
-                  columnId: column.id,
-                  thoughtId,
-                }),
-              )
-            }}
-            onMoveThought={(args) => {
-              onChange(moveThoughtBetweenColumns(args))
-            }}
-            onDropColumn={(otherIndex) => {
-              onChange(moveColumnWithinList(otherIndex, index))
-            }}
+            store={store}
           />
         ))}
 
         <div className="w-72">
           <QuickInsertForm
             onSubmit={(name) => {
-              onChange(addColumnToList(name.trim()))
+              store.addColumn(name)
               requestAnimationFrame(() => {
                 containerRef.current?.scrollTo({
                   left: 0,

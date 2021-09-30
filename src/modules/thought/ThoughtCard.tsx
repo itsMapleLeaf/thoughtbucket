@@ -2,6 +2,7 @@ import { CheckIcon, PencilAltIcon, TrashIcon } from "@heroicons/react/solid"
 import clsx from "clsx"
 import React, { useEffect } from "react"
 import TextArea from "react-expanding-textarea"
+import type { ColumnEditorStore } from "../column/ColumnEditorStore"
 import { withPreventDefault } from "../common/withPreventDefault"
 import { Button } from "../dom/Button"
 import { fadedButtonClass } from "../ui/button"
@@ -25,21 +26,26 @@ export function ThoughtCard({
   thought,
   columnId,
   index,
-  onDelete,
-  onDrop,
+  store,
 }: {
   thought: ClientThought
   columnId: string
   index: number
-  onDelete: () => void
-  onDrop: (info: ThoughtDragInfo) => void
+  store: ColumnEditorStore
 }) {
   const [dragState, dragRef] = useThoughtDrag({
     item: { index, columnId },
   })
 
   const [dropState, dropRef] = useThoughtDrop({
-    onDrop,
+    onDrop: (info) => {
+      if (info.columnId === columnId) {
+        store.moveThought({
+          from: info,
+          to: { index, columnId },
+        })
+      }
+    },
   })
 
   const [editing, setEditing] = React.useState(false)
@@ -47,6 +53,11 @@ export function ThoughtCard({
   useEffect(() => {
     if (editing) textAreaRef.current!.focus()
   }, [editing])
+
+  function submitEdit(newText: string) {
+    setEditing(false)
+    store.editThought(columnId, thought.id, newText)
+  }
 
   return (
     <DragPreview state={dragState}>
@@ -60,7 +71,13 @@ export function ThoughtCard({
         data-testid="thought-card"
       >
         {editing ? (
-          <form className="flex-1" onSubmit={withPreventDefault(() => {})}>
+          <form
+            className="flex-1"
+            onSubmit={withPreventDefault((event) => {
+              const value = event.currentTarget.querySelector("textarea")!.value
+              submitEdit(event.currentTarget.querySelector("textarea")!.value)
+            })}
+          >
             <TextArea
               className="block w-full p-2 transition bg-transparent resize-none hover:bg-black/30 focus:bg-black/30 focus:outline-none"
               defaultValue={thought.text}
@@ -68,10 +85,10 @@ export function ThoughtCard({
               onKeyDown={(event) => {
                 if (event.key === "Enter" && event.ctrlKey) {
                   event.preventDefault()
-                  setEditing(false)
+                  submitEdit(event.currentTarget.value)
                 }
               }}
-              onBlur={() => setEditing(false)}
+              onBlur={(event) => submitEdit(event.currentTarget.value)}
             />
             <Button type="submit" hidden>
               save
@@ -107,7 +124,7 @@ export function ThoughtCard({
           <Button
             className={fadedButtonClass}
             title="delete thought"
-            onClick={onDelete}
+            onClick={() => store.removeThought(columnId, thought.id)}
           >
             <TrashIcon className={inlineIconClass} />
           </Button>

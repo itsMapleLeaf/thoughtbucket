@@ -1,8 +1,7 @@
 import type { User } from "@prisma/client"
 import { handle, json, notFound, redirect } from "next-runtime"
-import { useMemo, useState } from "react"
+import { useMemo } from "react"
 import { z } from "zod"
-import { getClient } from "../../modules/db"
 import { AppLayout } from "../../modules/app/AppLayout"
 import { sessionHelpers } from "../../modules/auth/session"
 import { BucketPageHeader } from "../../modules/bucket/BucketPageHeader"
@@ -12,9 +11,10 @@ import { usingBucket } from "../../modules/bucket/usingBucket"
 import { usingOwnedBucket } from "../../modules/bucket/usingOwnedBucket"
 import type { Column } from "../../modules/column/Column"
 import { columnSchema } from "../../modules/column/Column"
-import { ScrollingColumnList } from "../../modules/column/ScrollingColumnList"
+import { ColumnEditor } from "../../modules/column/ColumnEditor"
+import { ColumnEditorStore } from "../../modules/column/ColumnEditorStore"
 import { pick } from "../../modules/common/helpers"
-import { fetchJsonWithRetry } from "../../modules/network/fetchWithRetry"
+import { getClient } from "../../modules/db"
 import { httpCodes } from "../../modules/network/http-codes"
 import { getContextParam } from "../../modules/routing/getContextParam"
 import { useObservable } from "../../modules/rxjs/useObservable"
@@ -105,27 +105,21 @@ export default function BucketPage({
   bucket,
   columns: initialColumns,
 }: Props) {
-  const [columns, setColumns] = useState(initialColumns)
-
-  const fetchState = useObservable(
-    useMemo(() => {
-      if (columns === initialColumns) return
-
-      return fetchJsonWithRetry({
-        url: window.location.pathname,
-        method: "patch",
-        data: { columns },
-      })
-    }, [columns, initialColumns]),
-    { status: "init" as const },
+  const store = useMemo(
+    () => new ColumnEditorStore(bucket.id, initialColumns),
+    [bucket.id, initialColumns],
   )
+
+  const fetchState = useObservable(store.fetchStream, {
+    status: "idle" as const,
+  })
 
   return (
     <AppLayout user={user}>
       <div className="flex flex-col h-full">
         <BucketPageHeader bucket={bucket} />
         <pre>{fetchState.status === "error" && fetchState.error.message}</pre>
-        <ScrollingColumnList columns={columns} onChange={setColumns} />
+        <ColumnEditor store={store} />
       </div>
     </AppLayout>
   )

@@ -8,7 +8,8 @@ import { cardClass } from "../ui/card"
 import { createDndHooks, DragPreview } from "../ui/drag-and-drop"
 import { leftButtonIconClass } from "../ui/icon"
 import { QuickInsertForm } from "../ui/QuickInsertForm"
-import type { Column, MoveThoughtArgs } from "./Column"
+import type { Column } from "./Column"
+import type { ColumnEditorStore } from "./ColumnEditorStore"
 
 const { useDrag: useColumnDrag, useDrop: useColumnDrop } = createDndHooks<{
   index: number
@@ -17,23 +18,15 @@ const { useDrag: useColumnDrag, useDrop: useColumnDrop } = createDndHooks<{
 export function ColumnCard({
   column,
   index,
-  onDelete,
-  onCreateThought,
-  onDeleteThought,
-  onMoveThought,
-  onDropColumn,
+  store,
 }: {
   column: Column
   index: number
-  onDelete: () => void
-  onCreateThought: (text: string) => void
-  onDeleteThought: (id: string) => void
-  onMoveThought: (args: MoveThoughtArgs) => void
-  onDropColumn: (otherIndex: number) => void
+  store: ColumnEditorStore
 }) {
   const [thoughtDropState, thoughtDropRef] = useThoughtDrop({
     onDrop(info) {
-      onMoveThought({
+      store.moveThought({
         from: info,
         to: { columnId: column.id, index: column.thoughts.length },
       })
@@ -41,7 +34,9 @@ export function ColumnCard({
   })
 
   const [columnDropState, columnDropRef] = useColumnDrop({
-    onDrop: (info) => onDropColumn(info.index),
+    onDrop: (info) => {
+      store.moveColumn(info.index, index)
+    },
   })
 
   const [columnDragState, columnDragRef] = useColumnDrag({
@@ -70,7 +65,7 @@ export function ColumnCard({
             <Button
               className={fadedButtonClass}
               title="delete this column"
-              onClick={onDelete}
+              onClick={() => store.removeColumn(column.id)}
             >
               <TrashIcon className={leftButtonIconClass} />
             </Button>
@@ -78,7 +73,9 @@ export function ColumnCard({
         </div>
 
         <div className="px-3 pb-3">
-          <QuickInsertForm onSubmit={onCreateThought}>
+          <QuickInsertForm
+            onSubmit={(text) => store.addThought(column.id, text)}
+          >
             <QuickInsertForm.Input
               placeholder="add a new thought..."
               label="thought text"
@@ -103,13 +100,7 @@ export function ColumnCard({
                 thought={thought}
                 columnId={column.id}
                 index={index}
-                onDelete={() => onDeleteThought(thought.id)}
-                onDrop={(info) => {
-                  onMoveThought({
-                    from: info,
-                    to: { columnId: column.id, index },
-                  })
-                }}
+                store={store}
               />
             ))}
           </div>
