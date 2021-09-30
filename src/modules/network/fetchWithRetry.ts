@@ -3,17 +3,16 @@ import {
   catchError,
   concatMap,
   delay,
+  map,
   merge,
-  of,
   retryWhen,
-  switchMap,
   take,
   throwError,
 } from "rxjs"
 import { fromFetch } from "rxjs/fetch"
 import { asError, raise } from "../common/helpers"
 
-type FetchState =
+export type FetchState =
   | { status: "loading" }
   | { status: "success"; response: Response }
   | { status: "error"; error: Error }
@@ -23,9 +22,9 @@ export function fetchWithRetry(
   init?: RequestInit,
 ): Observable<FetchState> {
   return merge(
-    of({ status: "loading" as const }),
+    [{ status: "loading" as const }],
     fromFetch(input, init).pipe(
-      switchMap(async (response) => {
+      map((response) => {
         if (!response.ok) {
           raise(`${response.status} (${response.statusText})`)
         }
@@ -44,7 +43,7 @@ type JsonValue =
   | number
   | boolean
   | null
-  | JsonValue[]
+  | readonly JsonValue[]
   | { [key: string]: JsonValue | undefined }
 
 export function fetchJsonWithRetry(options: {
