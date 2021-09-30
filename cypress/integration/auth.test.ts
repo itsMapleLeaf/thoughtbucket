@@ -1,7 +1,7 @@
 import { createTestUserCredentials } from "../support/helpers"
 
 describe("auth", () => {
-  it("supports signup", () => {
+  it("supports signup", { retries: 1 }, () => {
     const user = createTestUserCredentials()
 
     const submitButton = () => cy.findByRole("button", { name: /sign\s*up/i })
