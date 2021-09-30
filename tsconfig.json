@@ -1,6 +1,7 @@
 {
   "extends": "@itsmapleleaf/configs/tsconfig.app",
   "compilerOptions": {
+    "checkJs": false,
     "jsx": "preserve",
     "maxNodeModuleJsDepth": 1
   },
