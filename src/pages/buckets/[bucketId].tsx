@@ -1,3 +1,4 @@
+import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/outline"
 import type { User } from "@prisma/client"
 import { handle, json, notFound, redirect } from "next-runtime"
 import { useMemo } from "react"
@@ -18,6 +19,7 @@ import { getClient } from "../../modules/db"
 import { httpCodes } from "../../modules/network/http-codes"
 import { getContextParam } from "../../modules/routing/getContextParam"
 import { useObservable } from "../../modules/rxjs/useObservable"
+import { LoadingIcon } from "../../modules/ui/LoadingIcon"
 
 type Props = {
   user?: Pick<User, "name">
@@ -110,17 +112,38 @@ export default function BucketPage({
     [bucket.id, initialColumns],
   )
 
-  const fetchState = useObservable(store.fetchStream, {
-    status: "idle" as const,
-  })
-
   return (
     <AppLayout user={user}>
       <div className="flex flex-col h-full">
         <BucketPageHeader bucket={bucket} />
-        <pre>{fetchState.status === "error" && fetchState.error.message}</pre>
         <ColumnEditor store={store} />
+        <FetchStatusIndicator store={store} />
       </div>
     </AppLayout>
+  )
+}
+
+function FetchStatusIndicator({ store }: { store: ColumnEditorStore }) {
+  const state = useObservable(store.fetchStream, { status: "idle" as const })
+
+  return (
+    <div
+      data-testid={`fetch-status-${state.status}`}
+      className="fixed bottom-0 right-0 p-4"
+    >
+      {state.status === "error" ? (
+        <div title="Failed to save changes">
+          <XCircleIcon className="w-6 text-red-400 drop-shadow" />
+        </div>
+      ) : state.status === "success" ? (
+        <div title="Changes saved successfully.">
+          <CheckCircleIcon className="w-6 text-green-400 drop-shadow " />
+        </div>
+      ) : state.status === "loading" ? (
+        <div title="Saving changes..." className="p-0.5">
+          <LoadingIcon size={2} />
+        </div>
+      ) : null}
+    </div>
   )
 }
