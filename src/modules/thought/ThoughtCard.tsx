@@ -39,12 +39,10 @@ export function ThoughtCard({
 
   const [dropState, dropRef] = useThoughtDrop({
     onDrop: (info) => {
-      if (info.columnId === columnId) {
-        store.moveThought({
-          from: info,
-          to: { index, columnId },
-        })
-      }
+      store.moveThought({
+        from: info,
+        to: { index, columnId },
+      })
     },
   })
 
