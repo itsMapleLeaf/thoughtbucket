@@ -1,6 +1,6 @@
 import { nanoid } from "nanoid"
 import { createTestUserCredentials } from "../support/helpers"
-import { persistenceCheck } from "../support/persistenceCheck"
+import { runWithReload } from "../support/persistenceCheck"
 
 describe("buckets", () => {
   it("has a ui to create buckets", { retries: 1 }, () => {
@@ -113,7 +113,7 @@ describe("buckets", () => {
     cy.findByPlaceholderText(/new column/i).type(`${columnName2}`)
     cy.findByRole("button", { name: /add column/i }).click()
 
-    persistenceCheck(() => {
+    runWithReload(() => {
       cy.findByRole("heading", { name: columnName1 }).should("exist")
       cy.findByRole("heading", { name: columnName2 }).should("exist")
     })
@@ -123,46 +123,9 @@ describe("buckets", () => {
       multiple: true,
     })
 
-    persistenceCheck(() => {
+    runWithReload(() => {
       cy.findByRole("heading", { name: columnName1 }).should("not.exist")
       cy.findByRole("heading", { name: columnName2 }).should("not.exist")
-    })
-  })
-
-  it("supports managing thoughts", () => {
-    const bucketName = `bucket-${String(Math.random())}`
-    const thought1 = `thought-text-${String(Math.random())}`
-    const thought2 = `thought-text-${String(Math.random())}`
-
-    cy.request("POST", "/signup", createTestUserCredentials())
-    cy.visit({ method: "POST", url: "/buckets", body: { name: bucketName } })
-
-    cy.findByPlaceholderText(/new column/i).type(`column{enter}`)
-
-    cy.findByPlaceholderText(/new thought/i).type(thought1)
-    cy.findByRole("button", { name: /add thought/i }).click()
-    cy.findByPlaceholderText(/new thought/i).type(thought2)
-    cy.findByRole("button", { name: /add thought/i }).click()
-
-    // check that the last thought is at the top
-    persistenceCheck(() => {
-      cy.findAllByText(/thought-text/i).should("have.length", 2)
-      cy.findAllByText(/thought-text/i)
-        .first()
-        .should("contain", thought2)
-      cy.findAllByText(/thought-text/i)
-        .eq(1)
-        .should("contain", thought1)
-    })
-
-    // delete all of the thoughts
-    cy.findAllByRole("button", { name: /delete.*thought/i }).click({
-      multiple: true,
-    })
-
-    persistenceCheck(() => {
-      cy.findByText(thought1).should("not.exist")
-      cy.findByText(thought2).should("not.exist")
     })
   })
 })
