@@ -20,6 +20,8 @@ export function CreateBucketButton(props: ButtonProps) {
             label="bucket name"
             name="name"
             placeholder="my awesome bucket"
+            data-testid="create-bucket-name"
+            required
           />
           <div className="flex justify-end gap-4 mt-4">
             <Button type="button" className={fadedButtonClass} onClick={close}>

@@ -12,7 +12,16 @@ describe("buckets", () => {
 
     // creation flow
     cy.findByRole(/button|link/, { name: /new bucket/i }).click()
-    cy.findByLabelText(/name/i).type(bucketName)
+
+    // test that we can't continue without a name
+    cy.findByTestId("create-bucket-name").clear()
+    cy.findByRole(/button/i, { name: /create/i })
+      .click()
+      .should("contain.text", "create bucket")
+    cy.findByTestId("create-bucket-name").should("exist")
+
+    // now type a name and create
+    cy.findByTestId("create-bucket-name").type(bucketName)
     cy.findByRole(/button/i, { name: /create/i }).click()
 
     // need to show the bucket name in a heading
