@@ -170,6 +170,17 @@ describe("drag n drop", { retries: 2 }, () => {
       [initialThoughts[0], initialThoughts[2], initialThoughts[1]],
       [],
     ])
+
+    // dropping on top of itself shouldn't change order
+    drag({
+      target: () => cy.findAllByTestId("thought-card").eq(0),
+      destination: () => cy.findAllByTestId("thought-card").eq(0),
+    })
+
+    assertThoughtTexts([
+      [initialThoughts[0], initialThoughts[2], initialThoughts[1]],
+      [],
+    ])
   })
 })
 
