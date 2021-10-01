@@ -4,13 +4,18 @@ import { textInputClass } from "./input"
 
 type TextInputFieldProps = ComponentPropsWithoutRef<"input"> & {
   label: ReactNode
+  inputRef?: React.Ref<HTMLInputElement>
 }
 
-export function TextInputField({ label, ...props }: TextInputFieldProps) {
+export function TextInputField({
+  label,
+  inputRef,
+  ...props
+}: TextInputFieldProps) {
   return (
     <label className="block w-full">
       <div className="mb-0.5 text-sm font-semibold">{label}</div>
-      <input className={textInputClass} {...props} />
+      <input className={textInputClass} {...props} ref={inputRef} />
     </label>
   )
 }

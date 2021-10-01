@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid"
 import { createTestUserCredentials } from "../support/helpers"
 import { persistenceCheck } from "../support/persistenceCheck"
 
@@ -16,6 +17,37 @@ describe("buckets", () => {
 
     // need to show the bucket name in a heading
     cy.findByRole("heading", { name: bucketName }).should("exist")
+  })
+
+  it("supports renaming", () => {
+    const oldName = `testbucket-${nanoid()}`
+    const newName = `testbucket-${nanoid()}`
+
+    cy.request("POST", "/signup", createTestUserCredentials())
+    cy.visit("/buckets", {
+      method: "POST",
+      body: { name: oldName },
+      headers: { "Content-Type": "application/json" },
+    })
+
+    cy.findByRole("heading", { name: oldName }).should("exist")
+
+    cy.findByRole(/button/i, { name: /rename/i }).click()
+    cy.findByTestId("edit-bucket-form").within(() => {
+      cy.findByLabelText("name").should("be.focused").clear().type(newName)
+      cy.findByRole(/button/i, { name: /(save|submit|edit)/i }).click()
+    })
+
+    cy.findByRole("heading", { name: newName }).should("exist")
+
+    // try again, to make sure we can edit multiple times
+    cy.findByRole(/button/i, { name: /rename/i }).click()
+    cy.findByTestId("edit-bucket-form").within(() => {
+      cy.findByLabelText("name").should("be.focused").clear().type(oldName)
+      cy.findByRole(/button/i, { name: /(save|submit|edit)/i }).click()
+    })
+
+    cy.findByRole("heading", { name: oldName }).should("exist")
   })
 
   it("lists created buckets", () => {

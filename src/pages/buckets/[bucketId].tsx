@@ -91,14 +91,7 @@ export const getServerSideProps = handle<Props>({
       },
     })
 
-    return json(
-      {
-        user: pick(user, ["name"]),
-        bucket: asClientBucket(bucket),
-        columns: z.array(columnSchema).parse(bucket.columns),
-      },
-      httpCodes.ok,
-    )
+    return redirect(`/buckets/${bucketId}`, 303)
   },
 })
 

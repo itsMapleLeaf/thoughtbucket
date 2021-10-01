@@ -1,9 +1,10 @@
-import { TrashIcon } from "@heroicons/react/solid"
+import { PencilAltIcon, TrashIcon } from "@heroicons/react/solid"
 import { fadedButtonClass } from "../ui/button"
 import { containerClass } from "../ui/container"
 import { leftButtonIconClass } from "../ui/icon"
 import { BucketPageSummary } from "./BucketPageSummary"
 import { DeleteBucketButton } from "./DeleteBucketButton"
+import { EditBucketButton } from "./EditBucketButton"
 
 export function BucketPageHeader({
   bucket,
@@ -19,9 +20,9 @@ export function BucketPageHeader({
       </div>
 
       <div className="flex gap-4">
-        {/* <Button className={fadedButtonClass}>
+        <EditBucketButton bucket={bucket} className={fadedButtonClass}>
           <PencilAltIcon className={leftButtonIconClass} /> rename
-        </Button> */}
+        </EditBucketButton>
         <DeleteBucketButton
           bucket={bucket}
           className={fadedButtonClass}
