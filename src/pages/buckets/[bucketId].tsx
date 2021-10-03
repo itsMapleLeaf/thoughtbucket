@@ -3,6 +3,7 @@ import type { User } from "@prisma/client"
 import { handle, json, notFound, redirect } from "next-runtime"
 import { useMemo } from "react"
 import { z } from "zod"
+import { AppHead } from "../../modules/app/AppHead"
 import { AppLayout } from "../../modules/app/AppLayout"
 import { sessionHelpers } from "../../modules/auth/session"
 import { BucketPageHeader } from "../../modules/bucket/BucketPageHeader"
@@ -107,6 +108,7 @@ export default function BucketPage({
 
   return (
     <AppLayout user={user}>
+      <AppHead title={bucket.name} />
       <div className="flex flex-col h-full">
         <BucketPageHeader bucket={bucket} />
         <ColumnEditor store={store} />

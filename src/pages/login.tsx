@@ -3,6 +3,7 @@ import { Form, useFormSubmit } from "next-runtime/form"
 import { FetchError } from "next-runtime/lib/fetch-error"
 import Link from "next/link"
 import { z } from "zod"
+import { AppHead } from "../modules/app/AppHead"
 import { AuthPageLayout } from "../modules/auth/AuthPageLayout"
 import { sessionHelpers } from "../modules/auth/session"
 import { Button } from "../modules/dom/Button"
@@ -47,6 +48,7 @@ export default function LoginPage() {
 
   return (
     <AuthPageLayout title="log in">
+      <AppHead title="log in" />
       <Form method="post" className={AuthPageLayout.formClass}>
         <TextInputField.Email name="email" required />
         <TextInputField.Password

@@ -2,6 +2,7 @@ import { handle, json, redirect } from "next-runtime"
 import { Form, useFormSubmit } from "next-runtime/form"
 import Link from "next/link"
 import { z } from "zod"
+import { AppHead } from "../modules/app/AppHead"
 import { AuthPageLayout } from "../modules/auth/AuthPageLayout"
 import { sessionHelpers } from "../modules/auth/session"
 import { Button } from "../modules/dom/Button"
@@ -46,6 +47,8 @@ export default function SignupPage(props: Props) {
   const { isLoading } = useFormSubmit()
   return (
     <AuthPageLayout title="sign up">
+      <AppHead title="sign up" />
+
       <Form className={AuthPageLayout.formClass} method="post">
         <TextInputField.Username name="name" required />
         <TextInputField.Email name="email" required />

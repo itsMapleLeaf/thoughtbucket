@@ -2,11 +2,11 @@ import type { Bucket, User } from "@prisma/client"
 import clsx from "clsx"
 import { handle, json, redirect } from "next-runtime"
 import { z } from "zod"
-import { getClient } from "../../modules/db"
 import { AppLayout } from "../../modules/app/AppLayout"
 import { sessionHelpers } from "../../modules/auth/session"
 import { BucketSummaryCard } from "../../modules/bucket/BucketSummaryCard"
 import { pick } from "../../modules/common/helpers"
+import { getClient } from "../../modules/db"
 import { containerClass } from "../../modules/ui/container"
 
 const db = getClient()
