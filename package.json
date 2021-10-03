@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "dev-test": "npm run clean && dotenv -e .env.test -- concurrently --kill-others npm:dev npm:cypress-open",
+    "dev-test": "npm run test-clean && dotenv -e .env.test -- concurrently --kill-others npm:dev npm:cypress-open",
     "test-dev": "npm run dev-test",
     "build": "next build",
     "start": "next start",
