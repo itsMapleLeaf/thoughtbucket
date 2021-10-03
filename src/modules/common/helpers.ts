@@ -4,25 +4,26 @@ export function raise(value: unknown): never {
   throw value
 }
 
-export function pick<
+type PickFn = <
   Subject extends Record<string, unknown>,
   Key extends keyof Subject,
->(subject: Subject, keys: Key[]): Pick<Subject, Key> {
-  const result: any = {}
-  for (const key of keys) {
-    result[key] = subject[key]
-  }
-  return result
-}
+>(
+  subject: Subject,
+  keys: Key[],
+) => Pick<Subject, Key>
 
-export function isTruthy<T>(value: T | Falsy): value is T {
-  return Boolean(value)
-}
+export const pick: PickFn = (subject, keys) =>
+  Object.fromEntries(keys.map((key) => [key, subject[key]])) as any
 
-export function asError(value: unknown): Error {
-  return value instanceof Error ? value : new Error(String(value))
-}
+export const isTruthy = <T>(value: T | Falsy): value is T => Boolean(value)
 
-export function clamp(value: number, min: number, max: number) {
-  return Math.min(Math.max(value, min), max)
-}
+export const asError = (value: unknown): Error =>
+  value instanceof Error ? value : new Error(String(value))
+
+export const clamp = (value: number, min: number, max: number) =>
+  Math.min(Math.max(value, min), max)
+
+export const joinContentfulStrings = (
+  strings: Array<string | Falsy>,
+  separator: string,
+) => strings.filter(isTruthy).join(separator)
