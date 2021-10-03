@@ -13,7 +13,7 @@ const solidButtonBaseClass = clsx`
 export const solidButtonClass = clsx`
   ${solidButtonBaseClass}
   ${activePressClass}
- bg-green-700 hover:bg-green-800
+ bg-sky-700 hover:bg-sky-800
 `
 
 export const solidDangerButtonClass = clsx`

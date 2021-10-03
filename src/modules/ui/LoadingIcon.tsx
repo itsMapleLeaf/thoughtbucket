@@ -20,8 +20,8 @@ export function LoadingIcon({ size = 4 }: { size?: 2 | 4 | 6 }) {
       )}
     >
       <div className={clsx("bg-white rounded-full", dotSizeClass)}></div>
-      <div className={clsx("bg-green-500 rounded-full", dotSizeClass)}></div>
-      <div className={clsx("bg-green-500 rounded-full", dotSizeClass)}></div>
+      <div className={clsx("bg-sky-500 rounded-full", dotSizeClass)}></div>
+      <div className={clsx("bg-sky-500 rounded-full", dotSizeClass)}></div>
       <div className={clsx("bg-white rounded-full", dotSizeClass)}></div>
     </div>
   )
