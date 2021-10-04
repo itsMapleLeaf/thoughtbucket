@@ -18,7 +18,6 @@
     "db-start": "docker-compose up --detach",
     "db-stop": "docker-compose down",
     "db-logs": "docker-compose logs --follow",
-    "heroku-postbuild": "npm run build && prisma db push",
     "analyze": "cross-env SOURCE_MAPS=true npm run build && source-map-explorer \".next/**/*.js\""
   },
   "dependencies": {
