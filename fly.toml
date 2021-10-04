@@ -5,6 +5,11 @@ processes = []
 
 [env]
 PORT = "8080"
+CYPRESS_INSTALL_BINARY = "0"
+NODE_ENV = "production"
+
+[deploy]
+release_command = "pnpx prisma db push"
 
 [experimental]
 allowed_public_ports = []
