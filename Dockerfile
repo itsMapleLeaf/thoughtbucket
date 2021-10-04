@@ -14,7 +14,6 @@ RUN sed -i '/"cypress":/d' package.json
 
 RUN npm install -g pnpm
 RUN pnpm install
-RUN pnpx prisma generate
 RUN pnpm run build
 RUN pnpx prisma db push
 
