@@ -21,7 +21,7 @@ export function BucketSummaryCard({
           className={clsx(
             cardClass,
             activePressClass,
-            "flex items-center h-full gap-2 pr-10 p-4 transition hover:bg-gray-600",
+            "flex items-center h-full gap-2 pr-10 p-4 transition hover:bg-slate-600",
           )}
         >
           <ViewGridIcon className="inline w-5" />

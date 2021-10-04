@@ -8,7 +8,7 @@ export default class MyDocument extends Document {
     return (
       <Html
         lang="en"
-        className="text-gray-100 break-words bg-gray-900 selection:bg-white/30"
+        className="text-slate-100 break-words bg-slate-900 selection:bg-white/30"
         style={{ wordBreak: "break-word" }}
       >
         <Head>

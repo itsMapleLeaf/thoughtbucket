@@ -13,7 +13,7 @@ import { inlineIconClass, leftButtonIconClass } from "../ui/icon"
 
 export function AppHeader({ user }: { user: { name: string } | undefined }) {
   return (
-    <div className="bg-gray-800 shadow">
+    <div className="bg-slate-800 shadow">
       <header
         className={clsx(
           containerClass,

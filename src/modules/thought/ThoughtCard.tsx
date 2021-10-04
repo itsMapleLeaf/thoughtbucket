@@ -62,7 +62,7 @@ export function ThoughtCard({
       {({ isPreview }) => (
         <div
           className={clsx(
-            "flex items-center bg-gray-700 border-l-4 border-indigo-400 rounded-sm shadow group",
+            "flex items-center bg-slate-700 border-l-4 border-indigo-400 rounded-sm shadow group",
             dropState.isOver && !isPreview && "opacity-50",
 
             // the card shrinks when dragging, so we need to set a width
