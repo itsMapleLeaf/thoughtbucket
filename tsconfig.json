@@ -3,7 +3,8 @@
   "compilerOptions": {
     "checkJs": false,
     "jsx": "preserve",
-    "maxNodeModuleJsDepth": 1
+    "maxNodeModuleJsDepth": 1,
+    "incremental": true
   },
   "include": ["next-env.d.ts", "**/*.*"],
   "exclude": ["node_modules", ".next", "cypress"]
