@@ -2,7 +2,7 @@ import { TrashIcon } from "@heroicons/react/solid"
 import clsx from "clsx"
 import React from "react"
 import { Button } from "../dom/Button"
-import { ThoughtCard, useThoughtDrop } from "../thought/ThoughtCard"
+import { ThoughtCard, ThoughtDndHooks } from "../thought/ThoughtCard"
 import { fadedButtonClass } from "../ui/button"
 import { cardClass } from "../ui/card"
 import { createDndHooks, DragPreview } from "../ui/drag-and-drop"
@@ -11,7 +11,7 @@ import { QuickInsertForm } from "../ui/QuickInsertForm"
 import type { Column } from "./Column"
 import type { ColumnEditorStore } from "./ColumnEditorStore"
 
-const { useDrag: useColumnDrag, useDrop: useColumnDrop } = createDndHooks<{
+const ColumnDndHooks = createDndHooks<{
   index: number
 }>({ type: "column" })
 
@@ -24,7 +24,7 @@ export function ColumnCard({
   index: number
   store: ColumnEditorStore
 }) {
-  const [thoughtDropState, thoughtDropRef] = useThoughtDrop({
+  const [thoughtDropState, thoughtDropRef] = ThoughtDndHooks.useDrop({
     onDrop(info) {
       store.moveThought({
         from: info,
@@ -33,13 +33,13 @@ export function ColumnCard({
     },
   })
 
-  const [columnDropState, columnDropRef] = useColumnDrop({
+  const [columnDropState, columnDropRef] = ColumnDndHooks.useDrop({
     onDrop: (info) => {
       store.moveColumn(info.index, index)
     },
   })
 
-  const [columnDragState, columnDragRef] = useColumnDrag({
+  const [columnDragState, columnDragRef] = ColumnDndHooks.useDrag({
     item: { index },
   })
 

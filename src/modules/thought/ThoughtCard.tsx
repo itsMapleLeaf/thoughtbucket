@@ -19,8 +19,9 @@ export type ThoughtDragInfo = {
   columnId: string
 }
 
-export const { useDrag: useThoughtDrag, useDrop: useThoughtDrop } =
-  createDndHooks<ThoughtDragInfo>({ type: "thought" })
+export const ThoughtDndHooks = createDndHooks<ThoughtDragInfo>({
+  type: "thought",
+})
 
 export function ThoughtCard({
   thought,
@@ -33,11 +34,11 @@ export function ThoughtCard({
   index: number
   store: ColumnEditorStore
 }) {
-  const [dragState, dragRef] = useThoughtDrag({
+  const [dragState, dragRef] = ThoughtDndHooks.useDrag({
     item: { index, columnId },
   })
 
-  const [dropState, dropRef] = useThoughtDrop({
+  const [dropState, dropRef] = ThoughtDndHooks.useDrop({
     onDrop: (info) => {
       store.moveThought({
         from: info,
