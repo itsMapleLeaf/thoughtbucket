@@ -27,7 +27,9 @@ export function useStoreSelector<T>(
 ): T {
   const [state, setState] = useState(selector(store.state))
   useEffect(() => {
-    const subscription = store.stateStream.subscribe(setState)
+    const subscription = store.stateStream.subscribe((state) => {
+      setState(selector(state))
+    })
     return () => subscription.unsubscribe()
   }, [store.stateStream])
   return state
