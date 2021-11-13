@@ -7,11 +7,8 @@ import { AuthPageLayout } from "~/modules/auth/AuthPageLayout"
 import { sessionHelpers } from "~/modules/auth/session"
 import { Button } from "~/modules/dom/Button"
 import { httpCodes } from "~/modules/network/http-codes"
-import {
-  jsonTyped,
-  redirectTyped,
-  useActionDataTyped,
-} from "~/modules/remix/data"
+import { redirectTyped, useActionDataTyped } from "~/modules/remix/data"
+import { errorResponse } from "~/modules/remix/error-response"
 import { createFormHelpers } from "~/modules/remix/form"
 import { anchorClass } from "~/modules/ui/anchor"
 import { solidButtonClass } from "~/modules/ui/button"
@@ -38,10 +35,7 @@ export async function action({ request }: DataFunctionArgs) {
 
   const user = await loginUser(body)
   if (!user) {
-    return jsonTyped(
-      { errorMessage: "invalid email or password" },
-      httpCodes.unauthorized,
-    )
+    return errorResponse("invalid email or password", httpCodes.unauthorized)
   }
 
   const { responseHeaders } = await sessionHelpers(request).create(user)
