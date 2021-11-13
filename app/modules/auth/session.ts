@@ -24,8 +24,6 @@ export function sessionHelpers(request: Request) {
       const id = await sessionCookie.parse(request.headers.get("cookie") || "")
       if (!id) return
 
-      console.log({ id })
-
       const session = await db.session.findUnique({
         where: { id },
       })
