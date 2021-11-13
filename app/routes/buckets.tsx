@@ -1,9 +1,9 @@
 import type { DataFunctionArgs } from "@remix-run/server-runtime"
 import clsx from "clsx"
-import { z } from "zod"
 import { AppLayout } from "~/modules/app/AppLayout"
 import { sessionHelpers } from "~/modules/auth/session"
 import { BucketSummaryCard } from "~/modules/bucket/BucketSummaryCard"
+import { CreateBucketForm } from "~/modules/bucket/forms"
 import { pick } from "~/modules/common/helpers"
 import { serialize } from "~/modules/common/serialize"
 import { getClient } from "~/modules/db"
@@ -15,14 +15,7 @@ import {
   useLoaderDataTyped,
 } from "~/modules/remix/data"
 import { errorResponse } from "~/modules/remix/error-response"
-import { createFormHelpers } from "~/modules/remix/form"
 import { containerClass } from "~/modules/ui/container"
-
-const PostForm = createFormHelpers(
-  z.object({
-    name: z.string(),
-  }),
-)
 
 export async function loader({ request }: DataFunctionArgs) {
   const user = await sessionHelpers(request).getUser()
@@ -49,7 +42,7 @@ export async function loader({ request }: DataFunctionArgs) {
 export async function action({ request }: DataFunctionArgs) {
   allowMethods(request, "post")
 
-  const [body, bodyError] = await PostForm.getBody(request)
+  const [body, bodyError] = await CreateBucketForm.getBody(request)
   if (!body) return bodyError
 
   const user = await sessionHelpers(request).getUser()

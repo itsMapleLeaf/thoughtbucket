@@ -1,5 +1,6 @@
 import { ViewGridAddIcon } from "@heroicons/react/solid"
 import { Form } from "remix"
+import { CreateBucketForm } from "~/modules/bucket/forms"
 import { FormSubmitButton } from "~/modules/remix/FormSubmitButton"
 import type { ButtonProps } from "../dom/Button"
 import { Button } from "../dom/Button"
@@ -15,7 +16,8 @@ export function CreateBucketButton(props: ButtonProps) {
       renderTrigger={(triggerProps) => <Button {...triggerProps} {...props} />}
       renderContent={({ close }) => (
         <Form action="/buckets" method="post">
-          <TextInputField
+          <CreateBucketForm.Field
+            as={TextInputField}
             label="bucket name"
             name="name"
             placeholder="my awesome bucket"
