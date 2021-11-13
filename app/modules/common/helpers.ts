@@ -17,7 +17,7 @@ export const pick: PickFn = (subject, keys) =>
 
 export const isTruthy = <T>(value: T | Falsy): value is T => Boolean(value)
 
-export const asError = (value: unknown): Error =>
+export const toError = (value: unknown): Error =>
   value instanceof Error ? value : new Error(String(value))
 
 export const clamp = (value: number, min: number, max: number) =>

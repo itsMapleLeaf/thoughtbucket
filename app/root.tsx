@@ -1,7 +1,9 @@
 import { Outlet } from "react-router-dom"
 import type { LinksFunction } from "remix"
 import { Links, LiveReload, Meta, Scripts, useCatch } from "remix"
-import stylesUrl from "./styles/tailwind.css"
+import { SystemMessageLayout } from "~/modules/app/SystemMessageLayout"
+import { toError } from "~/modules/common/helpers"
+import stylesUrl from "~/styles/tailwind.css"
 
 export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: stylesUrl }]
@@ -58,32 +60,31 @@ export default function App() {
 export function CatchBoundary() {
   const caught = useCatch()
 
-  switch (caught.status) {
-    case 401:
-    case 404:
-      return (
-        <Document title={`${caught.status} ${caught.statusText}`}>
-          <h1>
-            {caught.status} {caught.statusText}
-          </h1>
-        </Document>
-      )
-
-    default:
-      throw new Error(
-        `Unexpected caught response with status: ${caught.status}`,
-      )
+  if (caught.status === 404) {
+    return (
+      <Document title={`${caught.status} ${caught.statusText}`}>
+        <SystemMessageLayout title="oops">
+          {"couldn't find what you were looking for :("}
+        </SystemMessageLayout>
+      </Document>
+    )
   }
+
+  throw new Error(`Unexpected caught response with status ${caught.status}`)
 }
 
-export function ErrorBoundary({ error }: { error: Error }) {
+export function ErrorBoundary({ error }: { error: unknown }) {
+  const errorInfo = toError(error)
+
   console.error(error)
 
   return (
-    <Document title="oops lol">
-      <h1>oops lol</h1>
-      <p>something went wrong</p>
-      <pre>{error.message}</pre>
+    <Document title="oops">
+      <SystemMessageLayout title="oops">
+        <pre className="p-3 overflow-x-auto rounded-md shadow-inner bg-black/50">
+          {errorInfo.stack || errorInfo.message}
+        </pre>
+      </SystemMessageLayout>
     </Document>
   )
 }
