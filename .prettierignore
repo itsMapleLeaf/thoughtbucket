@@ -1,0 +1,7 @@
+build
+dist
+.yarn
+pnpm-lock.yaml
+.next
+.cache
+next-app
