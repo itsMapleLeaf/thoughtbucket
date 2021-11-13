@@ -4,8 +4,8 @@ import { z } from "zod"
 import { getAppMeta } from "~/modules/app/getAppMeta"
 import { AuthPageLayout } from "~/modules/auth/AuthPageLayout"
 import { sessionHelpers } from "~/modules/auth/session"
-import { getRequestBody } from "~/modules/common/getRequestBody"
 import { Button } from "~/modules/dom/Button"
+import { createFormHelpers } from "~/modules/form"
 import { httpCodes } from "~/modules/network/http-codes"
 import { anchorClass } from "~/modules/ui/anchor"
 import { solidButtonClass } from "~/modules/ui/button"
@@ -16,10 +16,12 @@ type ActionData = {
   errorMessage?: string
 }
 
-const loginBodySchema = z.object({
-  email: z.string().email(`Must be a valid email`),
-  password: z.string(),
-})
+const { getBody, Field } = createFormHelpers(
+  z.object({
+    email: z.string().email(`email is invalid`),
+    password: z.string(),
+  }),
+)
 
 export const meta: MetaFunction = () => getAppMeta("login")
 
@@ -29,7 +31,9 @@ export const loader: LoaderFunction = async ({ request }) => {
 }
 
 export const action: ActionFunction = async ({ request }) => {
-  const body = loginBodySchema.parse(await getRequestBody(request))
+  const [body, bodyError] = await getBody(request)
+  if (!body) return bodyError
+
   const user = await loginUser(body)
   if (!user) {
     return json(
@@ -47,14 +51,15 @@ export const action: ActionFunction = async ({ request }) => {
 }
 
 export default function LoginPage() {
-  const data = useActionData<ActionData>()
   const transition = useTransition()
+  const { errorMessage } = useActionData<{ errorMessage?: string }>() ?? {}
 
   return (
     <AuthPageLayout title="log in">
       <Form method="post" className={AuthPageLayout.formClass}>
-        <TextInputField.Email name="email" required />
-        <TextInputField.Password
+        <Field as={TextInputField.Email} name="email" required />
+        <Field
+          as={TextInputField.Password}
           name="password"
           required
           isNewPassword={false}
@@ -68,8 +73,10 @@ export default function LoginPage() {
         </Button>
       </Form>
 
-      {data?.errorMessage ? (
-        <AuthPageLayout.Paragraph>{data.errorMessage}</AuthPageLayout.Paragraph>
+      {errorMessage ? (
+        <AuthPageLayout.Paragraph className="text-red-400">
+          error: {errorMessage}
+        </AuthPageLayout.Paragraph>
       ) : null}
 
       <AuthPageLayout.Paragraph>
