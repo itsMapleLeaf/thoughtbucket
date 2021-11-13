@@ -15,10 +15,25 @@ function Document({
   title?: string
 }) {
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      className="break-words text-slate-100 bg-slate-900 selection:bg-white/30"
+    >
       <head>
         <meta charSet="utf-8" />
+
         <link rel="icon" href="/favicon.png" type="image/png" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap"
+          rel="stylesheet"
+        />
+
         {title ? <title>{title}</title> : null}
         <Meta />
         <Links />

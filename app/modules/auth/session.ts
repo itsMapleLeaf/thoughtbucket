@@ -1,11 +1,9 @@
 import type { Session, User } from "@prisma/client"
-import Cookies from "cookies"
-import type { IncomingMessage, ServerResponse } from "http"
+import type { CookieOptions } from "remix"
+import { createCookie } from "remix"
 import { getClient } from "../db"
 
-const sessionCookieName = "session"
-
-const cookieOptions = {
+const cookieOptions: CookieOptions = {
   httpOnly: true,
   maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
   secure:
@@ -13,23 +11,20 @@ const cookieOptions = {
     // the app is built with production even when setting the node env to test,
     // so we need this extra env variable to explicitly disable https cookies during tests
     process.env.COOKIE_SECURE !== "false",
-  signed: false,
 }
 
-export function sessionHelpers({
-  req,
-  res,
-}: {
-  req: IncomingMessage
-  res: ServerResponse
-}) {
+const sessionCookieName = "remix-session"
+const sessionCookie = createCookie(sessionCookieName, cookieOptions)
+
+export function sessionHelpers(request: Request) {
   const db = getClient()
-  const cookies = new Cookies(req, res, cookieOptions)
 
   const helpers = {
     async get(): Promise<Session | undefined> {
-      const id = cookies.get(sessionCookieName, cookieOptions)
+      const id = await sessionCookie.parse(request.headers.get("cookie") || "")
       if (!id) return
+
+      console.log({ id })
 
       const session = await db.session.findUnique({
         where: { id },
@@ -37,22 +32,31 @@ export function sessionHelpers({
       return session ?? undefined
     },
 
-    async create(user: { id: string }): Promise<void> {
+    async create(user: { id: string }) {
       const session = await db.session.upsert({
         where: { userId: user.id },
         update: { userId: user.id },
         create: { userId: user.id },
         select: { id: true },
       })
-      cookies.set(sessionCookieName, session.id, cookieOptions)
+      return {
+        session,
+        responseHeaders: {
+          "Set-Cookie": await sessionCookie.serialize(session.id),
+        },
+      }
     },
 
-    async delete(): Promise<void> {
+    async delete() {
       const session = await helpers.get()
       if (session) {
         await db.session.delete({ where: { id: session.id } })
       }
-      cookies.set(sessionCookieName, null, cookieOptions)
+      return {
+        responseHeaders: {
+          "Set-Cookie": await sessionCookie.serialize(""),
+        },
+      }
     },
 
     async getUser(): Promise<User | undefined> {
