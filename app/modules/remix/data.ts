@@ -16,11 +16,14 @@ export type DataFunctionData<Fn> = Fn extends DataFunction<infer Data>
     : Data
   : unknown
 
-export function responseTyped<Data>(
+export function responseTyped<Data = never>(
   data?: BodyInit,
-  init?: ResponseInit,
+  init?: ResponseInit | number,
 ): ResponseTyped<Data> {
-  return new Response(data, init) as ResponseTyped<Data>
+  return new Response(
+    data,
+    typeof init === "number" ? { status: init } : init,
+  ) as ResponseTyped<Data>
 }
 
 export function jsonTyped<Data extends JsonValue>(
