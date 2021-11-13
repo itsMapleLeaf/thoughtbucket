@@ -10,7 +10,10 @@ export type DataFunction<Data> = (
 ) => MaybePromise<ResponseTyped<Data> | Data | Response>
 
 export type DataFunctionData<Fn> = Fn extends DataFunction<infer Data>
-  ? Data
+  ? // if the actual data is a Response object (lol), we should un-infer it
+    Response extends Data
+    ? unknown
+    : Data
   : unknown
 
 export function responseTyped<Data>(
