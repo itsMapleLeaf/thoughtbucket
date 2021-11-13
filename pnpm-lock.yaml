@@ -9,6 +9,7 @@ specifiers:
   '@remix-run/node': 0.20.1
   '@remix-run/react': ^0.20.1
   '@remix-run/serve': ^0.20.1
+  '@remix-run/server-runtime': 0.20.1
   '@tailwindcss/line-clamp': 0.2.2
   '@types/bcryptjs': 2.4.2
   '@types/cookies': 0.7.7
@@ -45,6 +46,7 @@ specifiers:
   remix: ^0.20.1
   rxjs: 7.4.0
   tailwindcss: 3.0.0-alpha.2
+  type-fest: 2.5.3
   typescript: ^4.1.2
   zod: 3.11.6
 
@@ -55,6 +57,7 @@ dependencies:
   '@remix-run/node': 0.20.1_6f8917fdcbb38c416263d1943ceabd28
   '@remix-run/react': 0.20.1_6f8917fdcbb38c416263d1943ceabd28
   '@remix-run/serve': 0.20.1_6f8917fdcbb38c416263d1943ceabd28
+  '@remix-run/server-runtime': 0.20.1_6f8917fdcbb38c416263d1943ceabd28
   bcryptjs: 2.4.3
   clsx: 1.1.1
   cookies: 0.8.0
@@ -96,6 +99,7 @@ devDependencies:
   prettier: 2.4.1
   prisma: 3.4.2
   tailwindcss: 3.0.0-alpha.2_0c54bdadaf9d9c9c6c134cb2c6c061a3
+  type-fest: 2.5.3
   typescript: 4.4.4
 
 packages:
@@ -5451,6 +5455,11 @@ packages:
 
   /type-fest/2.3.3:
     resolution: {integrity: sha512-4r1ygCTovO9M+cJOdhlit7JkDmMgYwOXmttU1Nd/9a5UY8oebN0+wN/b5N5i/f8aQ/pTDS2oQ3CBxnu+/1p4aA==}
+    engines: {node: '>=12.20'}
+    dev: true
+
+  /type-fest/2.5.3:
+    resolution: {integrity: sha512-7VNmE7FlsrdcWjKbtuRuynZz96Gmf35p5DvoR2tbceNP0vd58ISx87PvUUInlhtRC49vSX6qlxEKc7AoiHRirg==}
     engines: {node: '>=12.20'}
     dev: true
 

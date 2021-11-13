@@ -1,7 +1,7 @@
 import type { ComponentProps, ElementType } from "react"
-import { json } from "remix"
 import type { ZodType } from "zod"
 import { getRequestBody } from "~/modules/common/getRequestBody"
+import { jsonTyped, responseTyped } from "~/modules/remix/data"
 
 type InputProps = ComponentProps<"input">
 
@@ -14,14 +14,14 @@ export function createFormHelpers<T extends Record<string, string>>(
       const result = schema.safeParse(body)
 
       if (result.success) {
-        return [result.data, new Response()] as const
+        return [result.data, responseTyped<never>()] as const
       }
 
       const errorMessage = result.error.issues
         .map((issue) => issue.message)
         .join("\n")
 
-      return [undefined, json({ errorMessage }, 400)] as const
+      return [undefined, jsonTyped({ errorMessage }, 400)] as const
     },
 
     Field: <Props extends InputProps>({

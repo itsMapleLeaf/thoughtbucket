@@ -1,20 +1,22 @@
-import type { ActionFunction, LoaderFunction, MetaFunction } from "remix"
-import { Form, json, Link, redirect, useActionData, useTransition } from "remix"
+import type { DataFunctionArgs } from "@remix-run/server-runtime"
+import type { MetaFunction } from "remix"
+import { Form, Link, redirect, useTransition } from "remix"
 import { z } from "zod"
 import { getAppMeta } from "~/modules/app/getAppMeta"
 import { AuthPageLayout } from "~/modules/auth/AuthPageLayout"
 import { sessionHelpers } from "~/modules/auth/session"
 import { Button } from "~/modules/dom/Button"
-import { createFormHelpers } from "~/modules/form"
 import { httpCodes } from "~/modules/network/http-codes"
+import {
+  jsonTyped,
+  redirectTyped,
+  useActionDataTyped,
+} from "~/modules/remix/data"
+import { createFormHelpers } from "~/modules/remix/form"
 import { anchorClass } from "~/modules/ui/anchor"
 import { solidButtonClass } from "~/modules/ui/button"
 import { TextInputField } from "~/modules/ui/TextInputField"
 import { loginUser } from "~/modules/user"
-
-type ActionData = {
-  errorMessage?: string
-}
 
 const { getBody, Field } = createFormHelpers(
   z.object({
@@ -25,18 +27,18 @@ const { getBody, Field } = createFormHelpers(
 
 export const meta: MetaFunction = () => getAppMeta("login")
 
-export const loader: LoaderFunction = async ({ request }) => {
+export async function loader({ request }: DataFunctionArgs) {
   const user = await sessionHelpers(request).getUser()
   return user ? redirect("/buckets") : new Response()
 }
 
-export const action: ActionFunction = async ({ request }) => {
+export async function action({ request }: DataFunctionArgs) {
   const [body, bodyError] = await getBody(request)
   if (!body) return bodyError
 
   const user = await loginUser(body)
   if (!user) {
-    return json(
+    return jsonTyped(
       { errorMessage: "invalid email or password" },
       httpCodes.unauthorized,
     )
@@ -44,7 +46,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   const { responseHeaders } = await sessionHelpers(request).create(user)
 
-  return redirect("/buckets", {
+  return redirectTyped("/buckets", {
     status: httpCodes.seeOther,
     headers: responseHeaders,
   })
@@ -52,7 +54,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function LoginPage() {
   const transition = useTransition()
-  const { errorMessage } = useActionData<{ errorMessage?: string }>() ?? {}
+  const { errorMessage } = useActionDataTyped<typeof action>() ?? {}
 
   return (
     <AuthPageLayout title="log in">
