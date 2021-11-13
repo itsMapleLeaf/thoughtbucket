@@ -1,3 +1,4 @@
+// @ts-nocheck
 /** @type {import('tailwindcss/tailwind-config').TailwindConfig} */
 module.exports = {
   content: ["./app/**/*.{ts,tsx}"],

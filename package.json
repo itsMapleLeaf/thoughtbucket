@@ -51,6 +51,7 @@
     "@types/prettier": "2.4.1",
     "@types/react": "^17.0.24",
     "@types/react-dom": "^17.0.9",
+    "@types/tailwindcss": "2.2.4",
     "@typescript-eslint/eslint-plugin": "5.3.1",
     "@typescript-eslint/parser": "5.3.1",
     "autoprefixer": "10.4.0",
