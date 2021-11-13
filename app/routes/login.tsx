@@ -1,15 +1,15 @@
 import type { DataFunctionArgs } from "@remix-run/server-runtime"
 import type { MetaFunction } from "remix"
-import { Form, Link, redirect, useTransition } from "remix"
+import { Form, Link, redirect } from "remix"
 import { z } from "zod"
 import { getAppMeta } from "~/modules/app/getAppMeta"
 import { AuthPageLayout } from "~/modules/auth/AuthPageLayout"
 import { sessionHelpers } from "~/modules/auth/session"
-import { Button } from "~/modules/dom/Button"
 import { httpCodes } from "~/modules/network/http-codes"
 import { redirectTyped, useActionDataTyped } from "~/modules/remix/data"
 import { errorResponse } from "~/modules/remix/error-response"
 import { createFormHelpers } from "~/modules/remix/form"
+import { FormSubmitButton } from "~/modules/remix/FormSubmitButton"
 import { anchorClass } from "~/modules/ui/anchor"
 import { solidButtonClass } from "~/modules/ui/button"
 import { TextInputField } from "~/modules/ui/TextInputField"
@@ -47,7 +47,6 @@ export async function action({ request }: DataFunctionArgs) {
 }
 
 export default function LoginPage() {
-  const transition = useTransition()
   const { errorMessage } = useActionDataTyped<typeof action>() ?? {}
 
   return (
@@ -60,13 +59,7 @@ export default function LoginPage() {
           required
           isNewPassword={false}
         />
-        <Button
-          className={solidButtonClass}
-          type="submit"
-          loading={transition.state !== "idle"}
-        >
-          log in
-        </Button>
+        <FormSubmitButton className={solidButtonClass}>log in</FormSubmitButton>
       </Form>
 
       {errorMessage ? (
