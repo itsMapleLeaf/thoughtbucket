@@ -81,6 +81,18 @@
       "**/build/**",
       "**/.cache/**",
       "**/next-app/**"
-    ]
+    ],
+    "rules": {
+      "no-console": [
+        "warn",
+        {
+          "allow": [
+            "info",
+            "warn",
+            "error"
+          ]
+        }
+      ]
+    }
   }
 }
