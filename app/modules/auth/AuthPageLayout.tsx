@@ -26,5 +26,5 @@ AuthPageLayout.formClass = "grid gap-3 mt-4 justify-items-start"
 AuthPageLayout.Paragraph = function AuthPageParagraph(
   props: ComponentPropsWithoutRef<"p">,
 ) {
-  return <p className="mt-4" {...props} />
+  return <p {...props} className={clsx("mt-4", props.className)} />
 }
