@@ -1,126 +1,39 @@
 {
-  "name": "thoughtbucket",
   "private": true,
+  "name": "remix-app-template",
+  "description": "",
+  "license": "",
   "scripts": {
-    "prepare": "prisma generate",
-    "dev": "cross-env NODE_OPTIONS=\"--inspect\" next dev",
-    "dev-test": "dotenv -e .env.test -- concurrently --kill-others npm:dev npm:cypress-open",
-    "test-dev": "npm run dev-test",
-    "build": "next build",
-    "start": "next start",
-    "test": "dotenv -e .env.test -- ts-node --transpile-only ./scripts/test.ts",
-    "typecheck": "tsc --noEmit",
-    "lint": "eslint --ext js,ts,tsx .",
-    "format": "prettier --write .",
-    "lint-fix": "npm run lint -- --fix",
-    "cypress-open": "cypress open",
-    "prisma-studio-test": "dotenv -e .env.test -- prisma studio",
-    "db-start": "docker-compose up --detach",
-    "db-stop": "docker-compose down",
-    "db-logs": "docker-compose logs --follow",
-    "analyze": "cross-env SOURCE_MAPS=true npm run build && source-map-explorer \".next/**/*.js\""
+    "dev": "npm-run-all --parallel --print-label --race dev-*",
+    "dev-remix": "remix dev",
+    "dev-styles": "postcss styles --base styles --dir app/styles -w",
+    "build": "pnpm build-styles && remix build",
+    "build-styles": "postcss styles --base styles --dir app/styles",
+    "prepare": "remix setup node && pnpm build-styles",
+    "start": "remix-serve build"
   },
   "dependencies": {
-    "@headlessui/react": "1.4.2",
-    "@heroicons/react": "1.0.5",
-    "@prisma/client": "3.4.2",
-    "bcryptjs": "2.4.3",
-    "clsx": "1.1.1",
-    "cookies": "0.8.0",
-    "immer": "9.0.6",
-    "nanoid": "3.1.30",
-    "next": "12.0.3",
-    "next-runtime": "2.3.0",
+    "@remix-run/node": "0.20.1",
+    "@remix-run/react": "^0.20.1",
+    "@remix-run/serve": "^0.20.1",
     "react": "^17.0.2",
-    "react-dnd": "14.0.4",
-    "react-dnd-touch-backend": "14.1.1",
     "react-dom": "^17.0.2",
-    "react-expanding-textarea": "2.3.3",
-    "react-focus-on": "3.5.4",
-    "rxjs": "7.4.0",
-    "zod": "3.11.6"
+    "react-router-dom": "6.0.0-beta.8",
+    "remix": "^0.20.1"
   },
   "devDependencies": {
-    "@itsmapleleaf/configs": "1.0.0",
-    "@next/eslint-plugin-next": "12.0.3",
-    "@tailwindcss/line-clamp": "0.2.2",
-    "@testing-library/cypress": "8.0.1",
-    "@types/bcryptjs": "2.4.2",
-    "@types/cookies": "0.7.7",
-    "@types/node": "16.11.7",
-    "@types/react": "^17.0.34",
-    "@types/react-dom": "^17.0.11",
-    "@types/tailwindcss": "2.2.4",
-    "@typescript-eslint/eslint-plugin": "5.3.1",
-    "@typescript-eslint/parser": "5.3.1",
+    "@remix-run/dev": "^0.20.1",
+    "@types/react": "^17.0.24",
+    "@types/react-dom": "^17.0.9",
     "autoprefixer": "10.4.0",
-    "concurrently": "6.4.0",
-    "cross-env": "7.0.3",
-    "cypress": "9.0.0",
-    "cypress-esbuild-preprocessor": "1.0.2",
-    "dotenv-cli": "4.1.0",
-    "esbuild": "0.13.13",
-    "eslint": "8.2.0",
-    "eslint-config-prettier": "8.3.0",
-    "eslint-plugin-jsx-a11y": "6.5.1",
-    "eslint-plugin-react": "7.27.0",
-    "eslint-plugin-react-hooks": "4.3.0",
-    "execa": "5.1.1",
+    "npm-run-all": "4.1.5",
     "postcss": "8.3.11",
-    "prettier": "2.4.1",
-    "prisma": "3.4.2",
-    "source-map-explorer": "2.5.2",
-    "tailwindcss": "3.0.0-alpha.1",
-    "trash-cli": "4.0.0",
-    "ts-node": "10.4.0",
-    "typescript": "~4.4.4"
+    "postcss-cli": "9.0.2",
+    "tailwindcss": "3.0.0-alpha.2",
+    "typescript": "^4.1.2"
   },
   "engines": {
-    "node": "^16"
+    "node": ">=14"
   },
-  "sideEffects": false,
-  "prettier": "@itsmapleleaf/configs/prettier",
-  "eslintConfig": {
-    "extends": [
-      "plugin:@next/next/recommended",
-      "./node_modules/@itsmapleleaf/configs/eslint"
-    ],
-    "rules": {
-      "jsx-a11y/anchor-is-valid": "off"
-    },
-    "ignorePatterns": [
-      "**/node_modules/**",
-      "**/.next/**"
-    ],
-    "overrides": [
-      {
-        "files": [
-          "cypress/**/*"
-        ],
-        "parserOptions": {
-          "project": "./cypress/tsconfig.json"
-        }
-      }
-    ]
-  },
-  "nyc": {
-    "extension": [
-      ".js",
-      ".jsx",
-      ".ts",
-      ".tsx"
-    ],
-    "extends": "@istanbuljs/nyc-config-typescript",
-    "include": [
-      "src/**/*"
-    ],
-    "exclude": [
-      "src/pages/api/__coverage__.js"
-    ],
-    "sourceMap": true,
-    "instrument": true,
-    "reporter": [
-      "html"
-    ]
-  }
+  "sideEffects": false
 }

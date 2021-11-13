@@ -1,19 +1,6 @@
 node_modules
-.next
 
 /.cache
 /build
 /public/build
-
-.env.local
-/prisma/data
-/src/generated/prisma
-
-.vscode
-cypress/videos
-cypress/screenshots
-
-*.tsbuildinfo
-
-coverage
-.nyc_output
+app/styles

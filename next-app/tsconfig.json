@@ -1,0 +1,11 @@
+{
+  "extends": "@itsmapleleaf/configs/tsconfig.app",
+  "compilerOptions": {
+    "checkJs": false,
+    "jsx": "preserve",
+    "maxNodeModuleJsDepth": 1,
+    "incremental": true
+  },
+  "include": ["next-env.d.ts", "**/*.*"],
+  "exclude": ["node_modules", ".next", "cypress"]
+}
