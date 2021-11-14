@@ -3,41 +3,35 @@
 import { Portal } from "@headlessui/react"
 import clsx from "clsx"
 import type { ReactNode } from "react"
-import { useState } from "react"
 import { FocusOn } from "react-focus-on"
 import { cardClass } from "./card"
 
-export function Modal(props: {
+export type ModalProps = {
   title: ReactNode
-  renderTrigger: (props: { onClick: () => void }) => React.ReactNode
-  renderContent: (props: { close: () => void }) => React.ReactNode
-}) {
-  const [visible, setVisible] = useState(false)
-  const open = () => setVisible(true)
-  const close = () => setVisible(false)
+  children: ReactNode
+  open?: boolean
+  onClose?: () => void
+}
 
+export function Modal({ title, children, open, onClose }: ModalProps) {
+  if (!open) return null
   return (
-    <>
-      {props.renderTrigger({ onClick: open })}
-      {visible && (
-        <Portal>
-          <FocusOn onEscapeKey={close}>
-            <div
-              className="fixed inset-0 flex flex-col p-4 overflow-y-auto bg-black/50"
-              onClick={onSelf(close)}
-            >
-              {/* TODO?: add close button to ensure it can always be closed */}
-              <div className={clsx(cardClass, "m-auto w-full max-w-md p-4")}>
-                <h2 id="dialog-title" className="mb-4 text-2xl font-light">
-                  {props.title}
-                </h2>
-                {props.renderContent({ close })}
-              </div>
-            </div>
-          </FocusOn>
-        </Portal>
-      )}
-    </>
+    <Portal>
+      <FocusOn onEscapeKey={onClose}>
+        <div
+          className="fixed inset-0 flex flex-col p-4 overflow-y-auto bg-black/50"
+          onClick={onSelf(() => onClose?.())}
+        >
+          {/* TODO?: add close button to ensure it can always be closed */}
+          <div className={clsx(cardClass, "m-auto w-full max-w-md p-4")}>
+            <h2 id="dialog-title" className="mb-4 text-2xl font-light">
+              {title}
+            </h2>
+            {children}
+          </div>
+        </div>
+      </FocusOn>
+    </Portal>
   )
 }
 
