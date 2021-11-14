@@ -40,7 +40,7 @@ export async function loader({ request }: DataFunctionArgs) {
 }
 
 export async function action({ request }: DataFunctionArgs) {
-  allowMethods(request, "post")
+  allowMethods(request, ["post"])
 
   const [body, bodyError] = await CreateBucketForm.getBody(request)
   if (!body) return bodyError

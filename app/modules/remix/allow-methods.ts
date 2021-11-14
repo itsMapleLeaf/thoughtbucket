@@ -6,15 +6,14 @@ type HttpMethod = HttpMethodUpper | Lowercase<HttpMethodUpper>
 
 export function allowMethods<AllowedMethod extends HttpMethod>(
   request: Request,
-  ...methods: AllowedMethod[]
+  methods: AllowedMethod[],
 ): AllowedMethod {
-  const methodIsAllowed = methods
-    .map((m) => m.toLowerCase())
-    .includes(request.method.toLowerCase())
+  const method = request.method.toLowerCase() as HttpMethod
 
-  if (!methodIsAllowed) {
+  const isAllowed = methods.map((m) => m.toLowerCase()).includes(method)
+  if (!isAllowed) {
     throw responseTyped(undefined, httpCodes.methodNotAllowed)
   }
 
-  return request.method as AllowedMethod
+  return method as AllowedMethod
 }
