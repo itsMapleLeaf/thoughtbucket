@@ -1,4 +1,5 @@
 import type { ComponentProps, ElementType } from "react"
+import type { JsonValue } from "type-fest"
 import type { ZodType } from "zod"
 import { getRequestBody } from "~/modules/common/getRequestBody"
 import { responseTyped } from "~/modules/remix/data"
@@ -6,13 +7,10 @@ import { errorResponse } from "~/modules/remix/error-response"
 
 type InputProps = ComponentProps<"input">
 
-export function createFormHelpers<T extends Record<string, string>>(
-  schema: ZodType<T>,
-) {
+export function createFormHelpers<T extends JsonValue>(schema: ZodType<T>) {
   return {
     getBody: async (request: Request) => {
-      const body = await getRequestBody(request)
-      const result = schema.safeParse(body)
+      const result = schema.safeParse(await getRequestBody(request))
 
       if (result.success) {
         return [result.data, responseTyped<never>()] as const
