@@ -4,6 +4,7 @@ import { z } from "zod"
 import { getAppMeta } from "~/modules/app/getAppMeta"
 import { AuthPageLayout } from "~/modules/auth/AuthPageLayout"
 import { sessionHelpers } from "~/modules/auth/session"
+import { httpCodes } from "~/modules/network/http-codes"
 import {
   jsonTyped,
   redirectTyped,
@@ -38,9 +39,12 @@ export async function action({ request }: DataFunctionArgs) {
   const user = await createUser(body)
 
   const session = sessionHelpers(request)
-  await session.create(user)
+  const { responseHeaders } = await session.create(user)
 
-  return redirectTyped("/buckets", 303)
+  return redirectTyped("/buckets", {
+    status: httpCodes.seeOther,
+    headers: responseHeaders,
+  })
 }
 
 export default function SignupPage() {

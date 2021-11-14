@@ -24,7 +24,10 @@ export function DeleteBucketButton({
           </p>
           <div className={Modal.buttonGroupClass}>
             <BackButton className={fadedButtonClass}>cancel</BackButton>
-            <FormSubmitButton className={solidDangerButtonClass}>
+            <FormSubmitButton
+              data-testid="bucket-delete-confirm"
+              className={solidDangerButtonClass}
+            >
               <TrashIcon className={leftButtonIconClass} /> delete bucket
             </FormSubmitButton>
           </div>

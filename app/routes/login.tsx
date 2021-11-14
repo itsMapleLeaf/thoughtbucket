@@ -22,7 +22,7 @@ const { getBody, Field } = createFormHelpers(
   }),
 )
 
-export const meta: MetaFunction = () => getAppMeta("login")
+export const meta: MetaFunction = () => getAppMeta("log in")
 
 export async function loader({ request }: DataFunctionArgs) {
   const user = await sessionHelpers(request).getUser()
