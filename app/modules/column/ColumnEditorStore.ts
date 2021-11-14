@@ -2,6 +2,8 @@ import produce from "immer"
 import { nanoid } from "nanoid"
 import type { Observable } from "rxjs"
 import { switchMap } from "rxjs"
+import type { EditBucketBody } from "~/modules/bucket/forms"
+import type { DeepReadonly } from "~/modules/common/types"
 import type { FetchState } from "../network/fetchWithRetry"
 import { fetchJsonWithRetry } from "../network/fetchWithRetry"
 import { Store } from "../state/Store"
@@ -19,10 +21,14 @@ export class ColumnEditorStore extends Store<readonly Column[]> {
           return [{ status: "idle" as const }]
         }
 
+        const data: DeepReadonly<EditBucketBody> = {
+          columns,
+        }
+
         return fetchJsonWithRetry({
           url: `/buckets/${bucketId}`,
           method: "patch",
-          data: { columns },
+          data,
         })
       }),
     )
