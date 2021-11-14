@@ -1,7 +1,7 @@
 import type { Observable } from "rxjs"
 import { catchError, delay, map, merge, retryWhen } from "rxjs"
 import { fromFetch } from "rxjs/fetch"
-import { asError, raise } from "../common/helpers"
+import { raise, toError } from "../common/helpers"
 
 export type FetchState =
   | { status: "loading" }
@@ -23,7 +23,7 @@ export function fetchWithRetry(
       }),
       retryWithDelay(1000),
       catchError((error) => [
-        { status: "error" as const, error: asError(error) },
+        { status: "error" as const, error: toError(error) },
       ]),
     ),
   )
