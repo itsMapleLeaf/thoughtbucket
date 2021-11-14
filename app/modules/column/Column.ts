@@ -12,3 +12,5 @@ export const columnSchema = z.object({
     }),
   ),
 })
+
+export const columnListSchema = z.array(columnSchema)
