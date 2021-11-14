@@ -8,13 +8,13 @@ import { pick } from "~/modules/common/helpers"
 import { serialize } from "~/modules/common/serialize"
 import { getClient } from "~/modules/db"
 import { httpCodes } from "~/modules/network/http-codes"
-import { allowMethods } from "~/modules/remix/allow-methods"
 import {
   jsonTyped,
   redirectTyped,
   useLoaderDataTyped,
 } from "~/modules/remix/data"
 import { errorResponse } from "~/modules/remix/error-response"
+import { handleMethods } from "~/modules/remix/handleMethods"
 import { containerClass } from "~/modules/ui/container"
 
 export async function loader({ request }: DataFunctionArgs) {
@@ -40,31 +40,33 @@ export async function loader({ request }: DataFunctionArgs) {
 }
 
 export async function action({ request }: DataFunctionArgs) {
-  allowMethods(request, ["post"])
+  return handleMethods(request, {
+    async post() {
+      const [body, bodyError] = await CreateBucketForm.getBody(request)
+      if (!body) return bodyError
 
-  const [body, bodyError] = await CreateBucketForm.getBody(request)
-  if (!body) return bodyError
+      const user = await sessionHelpers(request).getUser()
+      if (!user) {
+        return errorResponse(
+          "you must be logged in to create a bucket",
+          httpCodes.unauthorized,
+        )
+      }
 
-  const user = await sessionHelpers(request).getUser()
-  if (!user) {
-    return errorResponse(
-      "you must be logged in to create a bucket",
-      httpCodes.unauthorized,
-    )
-  }
+      const bucket = await getClient().bucket.create({
+        data: {
+          name: body.name,
+          ownerId: user.id,
+          columns: [],
+        },
+        select: {
+          id: true,
+        },
+      })
 
-  const bucket = await getClient().bucket.create({
-    data: {
-      name: body.name,
-      ownerId: user.id,
-      columns: [],
-    },
-    select: {
-      id: true,
+      return redirectTyped(`/buckets/${bucket.id}`, 303)
     },
   })
-
-  return redirectTyped(`/buckets/${bucket.id}`, 303)
 }
 
 export default function BucketListPage() {
