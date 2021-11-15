@@ -18,7 +18,7 @@
     "test-cypress": "wait-on http-get://localhost:3000 && cypress run",
     "lint": "eslint --ext js,ts,tsx .",
     "lint-fix": "npm run lint -- --fix",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc -b ./tsconfig.base.json",
     "format": "prettier --write .",
     "db-start": "docker-compose up --detach",
     "db-stop": "docker-compose down",
@@ -93,8 +93,7 @@
     "ignorePatterns": [
       "**/node_modules/**",
       "**/build/**",
-      "**/.cache/**",
-      "**/next-app/**"
+      "**/.cache/**"
     ],
     "rules": {
       "no-console": [
@@ -107,6 +106,16 @@
           ]
         }
       ]
-    }
+    },
+    "overrides": [
+      {
+        "files": [
+          "cypress/**/*"
+        ],
+        "parserOptions": {
+          "project": "./cypress/tsconfig.json"
+        }
+      }
+    ]
   }
 }

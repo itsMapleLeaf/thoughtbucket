@@ -1,9 +1,14 @@
+# generated files
 node_modules
+cypress/videos
+cypress/screenshots
+*.tsbuildinfo
 
+# build output
 /.cache
 /build
 /public/build
 app/styles
+
+# editor folders
 .vscode
-cypress/videos
-cypress/screenshots

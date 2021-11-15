@@ -1,15 +1,13 @@
 {
   "extends": "@itsmapleleaf/configs/tsconfig.app",
   "compilerOptions": {
+    "composite": true,
     "target": "ES2019",
     "lib": ["DOM", "DOM.Iterable", "ES2019"],
     "jsx": "react-jsx",
     "paths": {
       "~/*": ["./app/*"]
-    },
-
-    // Remix takes care of building everything in `remix build`.
-    "noEmit": true
+    }
   },
   "exclude": ["build", "public/build", "node_modules", "cypress"]
 }
