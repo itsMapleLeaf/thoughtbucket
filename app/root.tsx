@@ -45,7 +45,7 @@ function Document({
         {children}
         <NavigationIndicator />
         <Scripts />
-        {process.env.NODE_ENV === "development" && <LiveReload />}
+        {process.env.NODE_ENV !== "production" && <LiveReload />}
       </body>
     </html>
   )
