@@ -122,6 +122,38 @@ describe("buckets", () => {
       cy.findByRole("heading", { name: columnName2 }).should("exist")
     })
 
+    // editing by clicking done button
+    const columnName3 = `column-${String(Math.random())}`
+    cy.findAllByRole(/button|link/i, { name: /^edit this column$/i })
+      .first()
+      .click()
+    cy.findAllByRole("textbox").contains(columnName1).clear().type(columnName3)
+    cy.findAllByRole(/button|link/i, { name: /^save column name$/i })
+      .first()
+      .click()
+
+    runWithReload(() => {
+      cy.findByRole("heading", { name: columnName3 }).should("exist")
+    })
+
+    // editing by unfocusing the input
+    const columnName4 = `column-${String(Math.random())}`
+    cy.findAllByRole(/button|link/i, { name: /^edit this column$/i })
+      .first()
+      .click()
+    cy.findAllByRole("textbox")
+      .contains(columnName3)
+      .clear()
+      .type(columnName4)
+      .blur()
+
+    // wait until the data is saved
+    cy.findByTestId("fetch-status-success").should("exist")
+
+    runWithReload(() => {
+      cy.findByRole("heading", { name: columnName4 }).should("exist")
+    })
+
     // delete all columns
     cy.findAllByRole("button", { name: /delete.*column/i }).click({
       multiple: true,

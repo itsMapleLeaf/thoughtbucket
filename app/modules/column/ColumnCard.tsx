@@ -1,12 +1,13 @@
-import { TrashIcon } from "@heroicons/react/solid"
+import { CheckIcon, PencilAltIcon, TrashIcon } from "@heroicons/react/solid"
 import clsx from "clsx"
 import React from "react"
+import { InlineInputForm } from "~/modules/ui/InlineInputForm"
 import { Button } from "../dom/Button"
 import { ThoughtCard, ThoughtDndHooks } from "../thought/ThoughtCard"
 import { fadedButtonClass } from "../ui/button"
 import { cardClass } from "../ui/card"
 import { createDndHooks, DragPreview } from "../ui/drag-and-drop"
-import { leftButtonIconClass } from "../ui/icon"
+import { inlineIconClass } from "../ui/icon"
 import { QuickInsertForm } from "../ui/QuickInsertForm"
 import type { Column } from "./Column"
 import type { ColumnEditorStore } from "./ColumnEditorStore"
@@ -43,6 +44,8 @@ export function ColumnCard({
     item: { index },
   })
 
+  const [editing, setEditing] = React.useState(false)
+
   return (
     <DragPreview state={columnDragState}>
       {() => (
@@ -56,19 +59,49 @@ export function ColumnCard({
           ref={columnDropRef}
         >
           <div className="flex items-start">
-            <h3
-              className="flex-1 p-3 text-lg font-light leading-tight cursor-[grab]"
-              ref={columnDragRef}
-            >
-              {column.name}
-            </h3>
-            <div className="p-3">
+            {editing ? (
+              <div className="flex-1 p-3 pr-0">
+                <InlineInputForm
+                  initialValue={column.name}
+                  onSubmit={(name) => {
+                    setEditing(false)
+                    store.renameColumn(column.id, name)
+                  }}
+                />
+              </div>
+            ) : (
+              <h3
+                className="flex-1 p-3 text-lg font-light leading-tight cursor-[grab]"
+                ref={columnDragRef}
+              >
+                {column.name}
+              </h3>
+            )}
+            <div className="flex gap-3 p-3">
+              {editing ? (
+                <Button
+                  className={fadedButtonClass}
+                  title="save column name"
+                  onClick={() => setEditing(false)}
+                >
+                  <CheckIcon className={inlineIconClass} />
+                </Button>
+              ) : (
+                <Button
+                  title="edit this column"
+                  className={fadedButtonClass}
+                  onClick={() => setEditing(true)}
+                >
+                  <PencilAltIcon className={inlineIconClass} />
+                </Button>
+              )}
+
               <Button
-                className={fadedButtonClass}
                 title="delete this column"
+                className={fadedButtonClass}
                 onClick={() => store.removeColumn(column.id)}
               >
-                <TrashIcon className={leftButtonIconClass} />
+                <TrashIcon className={inlineIconClass} />
               </Button>
             </div>
           </div>

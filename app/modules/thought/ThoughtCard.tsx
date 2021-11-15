@@ -1,9 +1,8 @@
 import { CheckIcon, PencilAltIcon, TrashIcon } from "@heroicons/react/solid"
 import clsx from "clsx"
-import React, { useEffect } from "react"
-import TextArea from "react-expanding-textarea"
+import React from "react"
+import { InlineInputForm } from "~/modules/ui/InlineInputForm"
 import type { ColumnEditorStore } from "../column/ColumnEditorStore"
-import { withPreventDefault } from "../common/withPreventDefault"
 import { Button } from "../dom/Button"
 import { fadedButtonClass } from "../ui/button"
 import { createDndHooks, DragPreview } from "../ui/drag-and-drop"
@@ -48,10 +47,6 @@ export function ThoughtCard({
   })
 
   const [editing, setEditing] = React.useState(false)
-  const textAreaRef = React.useRef<HTMLTextAreaElement>(null)
-  useEffect(() => {
-    if (editing) textAreaRef.current!.focus()
-  }, [editing])
 
   function submitEdit(newText: string) {
     setEditing(false)
@@ -75,29 +70,16 @@ export function ThoughtCard({
           data-testid="thought-card"
         >
           {editing ? (
-            <form
-              className="flex-1"
-              onSubmit={withPreventDefault((event) => {
-                submitEdit(event.currentTarget.querySelector("textarea")!.value)
-              })}
-            >
-              <TextArea
-                aria-label="text"
-                className="block w-full p-2 transition bg-transparent resize-none hover:bg-black/30 focus:bg-black/30 focus:outline-none"
-                defaultValue={thought.text}
-                ref={textAreaRef}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" && event.ctrlKey) {
-                    event.preventDefault()
-                    submitEdit(event.currentTarget.value)
-                  }
+            <div className="flex-1">
+              <InlineInputForm
+                initialValue={thought.text}
+                textAreaClass="block w-full p-2 transition bg-transparent resize-none hover:bg-black/30 focus:bg-black/30 focus:outline-none"
+                onSubmit={(newText) => {
+                  setEditing(false)
+                  store.editThought(columnId, thought.id, newText)
                 }}
-                onBlur={(event) => submitEdit(event.currentTarget.value)}
               />
-              <Button type="submit" hidden>
-                save
-              </Button>
-            </form>
+            </div>
           ) : (
             <p
               className="flex-1 flex items-center p-2 cursor-[grab] self-stretch"
