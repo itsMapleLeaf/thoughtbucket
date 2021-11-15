@@ -1,11 +1,14 @@
 export type Serialized<Value> = Value extends Date
   ? string
-  : Value extends object
+  : Value extends Array<infer Element>
+  ? Array<Serialized<Element>>
+  : Value extends Record<string, unknown>
   ? {
       [K in keyof Value]: Serialized<Value[K]>
     }
   : Value
 
+// need to use an overload so the value can be narrowed in the implementation
 export function serialize<Value>(value: Value): Serialized<Value>
 export function serialize(value: unknown): any {
   if (value instanceof Date) {
