@@ -11,3 +11,5 @@ export type DeepReadonly<T> = T extends Primitive
   : {
       readonly [P in keyof T]: DeepReadonly<T[P]>
     }
+
+export type Awaited<T> = T extends PromiseLike<infer V> ? Awaited<V> : T
