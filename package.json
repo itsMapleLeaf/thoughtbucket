@@ -1,8 +1,8 @@
 {
+  "name": "thoughtbucket",
+  "author": "itsMapleLeaf",
+  "license": "MIT",
   "private": true,
-  "name": "remix-app-template",
-  "description": "",
-  "license": "",
   "scripts": {
     "prepare": "remix setup node && pnpm build-styles && prisma generate",
     "dev": "npm-run-all --parallel --print-label --race dev-remix dev-styles",
