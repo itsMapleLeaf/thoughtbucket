@@ -13,18 +13,26 @@ jobs:
       - uses: ./.github/setup
       - run: pnpm run db-start
       - run: pnpm run test
+      - uses: actions/upload-artifact@v2
+        if: ${{ failure() }}
+        with:
+          name: test artifacts
+          path: cypress/videos/*
+
   lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: ./.github/setup
       - run: pnpm run lint
+
   typecheck:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: ./.github/setup
       - run: pnpm run typecheck
+
   deploy:
     needs: [test, lint, typecheck]
     runs-on: ubuntu-latest
