@@ -28,10 +28,30 @@ model Session {
 }
 
 model Bucket {
+  id                String   @id @default(cuid())
+  createdAt         DateTime @default(now())
+  name              String
+  owner             User     @relation(fields: [ownerId], references: [id])
+  ownerId           String
+  columnsDeprecated Json?
+  columns           Column[]
+}
+
+model Column {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  name      String
+  bucket    Bucket    @relation(fields: [bucketId], references: [id])
+  bucketId  String
+  thoughts  Thought[]
+  order     Int
+}
+
+model Thought {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
-  name      String
-  owner     User     @relation(fields: [ownerId], references: [id])
-  ownerId   String
-  columns   Json
+  text      String
+  column    Column   @relation(fields: [columnId], references: [id])
+  columnId  String
+  order     Int
 }
