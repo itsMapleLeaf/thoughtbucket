@@ -1,9 +1,0 @@
-*
-!src/
-!prisma/
-!package.json
-!pnpm-lock.yaml
-!next.config.js
-!.babelrc
-!postcss.config.js
-!tailwind.config.js
