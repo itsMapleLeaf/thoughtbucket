@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import type { Subject } from "rxjs"
 import { BehaviorSubject } from "rxjs"
 
@@ -31,10 +31,13 @@ export function useStoreSelector<T>(
       setState(selector(state))
     })
     return () => subscription.unsubscribe()
-  }, [store.stateStream])
+  }, [selector, store.stateStream])
   return state
 }
 
 export function useStoreState<T>(store: Store<T>): T {
-  return useStoreSelector(store, (state) => state)
+  return useStoreSelector(
+    store,
+    useCallback((state) => state, []),
+  )
 }
