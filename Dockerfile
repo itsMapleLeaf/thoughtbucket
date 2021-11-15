@@ -7,9 +7,10 @@ WORKDIR /app
 COPY / ./
 
 RUN npm install -g pnpm
-RUN pnpm install
+# the install fails without --unsafe-perm
+RUN pnpm install --unsafe-perm 
 # generate on prepare doesn't work in the container for some reason
 RUN pnpx prisma generate
-RUN pnpm run build
+RUN pnpm build
 
 CMD [ "pnpm", "start" ]
