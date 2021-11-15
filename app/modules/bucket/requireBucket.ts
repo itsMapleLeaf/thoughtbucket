@@ -1,19 +1,10 @@
+import type { DatabaseBucket } from "~/modules/bucket/DatabaseBucket"
+import { getDatabaseBucket } from "~/modules/bucket/DatabaseBucket"
+import { raise } from "~/modules/common/helpers"
 import { httpCodes } from "~/modules/network/http-codes"
 import { errorResponse } from "~/modules/remix/error-response"
-import { getClient } from "../db"
 
-export async function requireBucket(bucketId: string) {
-  const db = getClient()
-
-  const bucket = await db.bucket.findUnique({
-    where: {
-      id: bucketId,
-    },
-  })
-
-  if (!bucket) {
-    throw errorResponse("bucket not found", httpCodes.notFound)
-  }
-
-  return bucket
+export async function requireBucket(bucketId: string): Promise<DatabaseBucket> {
+  const bucket = await getDatabaseBucket(bucketId)
+  return bucket ?? raise(errorResponse("bucket not found", httpCodes.notFound))
 }
