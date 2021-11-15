@@ -3,6 +3,7 @@ import type { LinksFunction } from "remix"
 import { Links, LiveReload, Meta, Scripts, useCatch } from "remix"
 import { SystemMessageLayout } from "~/modules/app/SystemMessageLayout"
 import { toError } from "~/modules/common/helpers"
+import { NavigationIndicator } from "~/modules/routing/NavigationIndicator"
 import stylesUrl from "~/styles/tailwind.css"
 
 export const links: LinksFunction = () => {
@@ -42,6 +43,7 @@ function Document({
       </head>
       <body>
         {children}
+        <NavigationIndicator />
         <Scripts />
         {process.env.NODE_ENV === "development" && <LiveReload />}
       </body>

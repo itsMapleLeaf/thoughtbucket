@@ -1,6 +1,5 @@
 import clsx from "clsx"
 import React from "react"
-import css from "./LoadingIcon.module.css"
 
 export function LoadingIcon({ size = 4 }: { size?: 2 | 4 | 6 }) {
   const dotSizeClass = {
@@ -16,7 +15,7 @@ export function LoadingIcon({ size = 4 }: { size?: 2 | 4 | 6 }) {
         size === 2 && "gap-1",
         size === 4 && "gap-2",
         size === 6 && "gap-4",
-        css.spin,
+        "spin",
       )}
     >
       <div className={clsx("bg-white rounded-full", dotSizeClass)}></div>

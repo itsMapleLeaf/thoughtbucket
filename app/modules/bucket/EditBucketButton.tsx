@@ -10,7 +10,7 @@ import { TextInputField } from "../ui/TextInputField"
 export function EditBucketButton({
   bucket,
   ...props
-}: LinkProps & { bucket: { id: string; name: string } }) {
+}: Partial<LinkProps> & { bucket: { id: string; name: string } }) {
   return (
     <>
       <Link {...props} to="?edit-bucket" />

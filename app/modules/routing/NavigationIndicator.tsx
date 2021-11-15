@@ -1,10 +1,10 @@
 import clsx from "clsx"
+import { useTransition } from "remix"
 import { LoadingIcon } from "../ui/LoadingIcon"
-import { useRouterStatus } from "./useRouterStatus"
 
 export function NavigationIndicator() {
-  const status = useRouterStatus()
-  const navigating = status === "navigating"
+  const { state } = useTransition()
+  const navigating = state !== "idle"
 
   return (
     <div
