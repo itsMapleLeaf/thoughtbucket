@@ -3,7 +3,7 @@ import { createTestUserCredentials } from "../support/helpers"
 import { runWithReload } from "../support/persistenceCheck"
 
 describe("thoughts", () => {
-  it("supports managing thoughts", () => {
+  it("supports managing thoughts", { retries: 1 }, () => {
     const bucketName = `bucket-${String(Math.random())}`
     const thought1 = `thought-text-${String(Math.random())}`
     const thought2 = `thought-text-${String(Math.random())}`
