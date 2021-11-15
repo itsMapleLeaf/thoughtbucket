@@ -42,6 +42,7 @@ jobs:
   deploy:
     needs: [test, lint, typecheck]
     runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/main' }}
     steps:
       - uses: actions/checkout@v2
       - uses: superfly/flyctl-actions@1.1
