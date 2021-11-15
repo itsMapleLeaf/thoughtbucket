@@ -1,14 +1,15 @@
-import type { Bucket } from "@prisma/client"
-import { pick } from "../common/helpers"
+import type { DatabaseBucket } from "~/modules/bucket/DatabaseBucket"
+import { pick } from "~/modules/common/helpers"
 import { serialize } from "../common/serialize"
 
-export type ClientBucket = {
-  id: string
-  name: string
-  createdAt: string
-  ownerId: string
-}
+export type ClientBucket = ReturnType<typeof asClientBucket>
 
-export function asClientBucket(bucket: Bucket): ClientBucket {
-  return serialize(pick(bucket, ["id", "name", "createdAt", "ownerId"]))
+export function asClientBucket(bucket: DatabaseBucket) {
+  return serialize({
+    ...pick(bucket, ["id", "name", "createdAt"]),
+    columns: bucket.columns.map((column) => ({
+      ...pick(column, ["id", "name"]),
+      thoughts: column.thoughts.map((thought) => pick(thought, ["id", "text"])),
+    })),
+  })
 }
