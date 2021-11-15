@@ -14,8 +14,15 @@ export async function getDatabaseBucket(
     },
     include: {
       columns: {
+        orderBy: {
+          order: "asc",
+        },
         include: {
-          thoughts: true,
+          thoughts: {
+            orderBy: {
+              order: "asc",
+            },
+          },
         },
       },
     },
