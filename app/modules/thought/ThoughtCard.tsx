@@ -93,7 +93,7 @@ export function ThoughtCard({
             {editing ? (
               <Button
                 className={fadedButtonClass}
-                title="save"
+                title="save thought"
                 onClick={() => setEditing(false)}
               >
                 <CheckIcon className={inlineIconClass} />

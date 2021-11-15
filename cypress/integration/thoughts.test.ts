@@ -75,7 +75,7 @@ describe("thoughts", () => {
         cy.root().should("contain", "hello world")
         cy.findByRole("button", { name: /edit/i }).click()
         cy.findByLabelText("text").clear().type("hello moon")
-        cy.findByRole("button", { name: /save/i }).click()
+        cy.findByRole("button", { name: /^save thought$/i }).click()
         cy.root().should("not.contain", "hello world")
         cy.root().should("contain", "hello moon")
 
