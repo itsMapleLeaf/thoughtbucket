@@ -1,13 +1,18 @@
 name: ci
 on: [push]
+
 env:
+  # installing the cypress binary takes really long, this disables that
   CYPRESS_INSTALL_BINARY: 0
+  # the prisma postinstall fails with pnpm
   PRISMA_SKIP_POSTINSTALL_GENERATE: 1
+
 jobs:
   test:
     runs-on: ubuntu-latest
-    continue-on-error: false
     env:
+      # need the cypress binary during cypress tests,
+      # unsetting this variable will cause the binary to be installed
       CYPRESS_INSTALL_BINARY: ""
     steps:
       - uses: actions/checkout@v2
