@@ -9,7 +9,7 @@ CYPRESS_INSTALL_BINARY = "0"
 NODE_ENV = "production"
 
 [deploy]
-release_command = "pnpx prisma db push"
+release_command = "pnpx prisma migrate deploy"
 
 [experimental]
 allowed_public_ports = []
