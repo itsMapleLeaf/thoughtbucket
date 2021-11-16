@@ -20,6 +20,7 @@
     "lint-fix": "npm run lint -- --fix",
     "typecheck": "tsc -b ./tsconfig.base.json",
     "format": "prettier --write .",
+    "unused-exports": "ts-unused-exports ./tsconfig.json --excludePathsFromReport=\"app\\root.tsx;app\\routes;app\\entry.server.tsx\"",
     "db-start": "docker-compose up --detach",
     "db-stop": "docker-compose down",
     "db-logs": "docker-compose logs --follow"
@@ -73,6 +74,7 @@
     "prettier": "2.4.1",
     "prisma": "3.4.2",
     "tailwindcss": "3.0.0-alpha.2",
+    "ts-unused-exports": "7.0.3",
     "type-fest": "2.5.3",
     "typescript": "^4.4.4",
     "wait-on": "6.0.0"
