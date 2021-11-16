@@ -5,16 +5,18 @@ import type { Awaited, MaybePromise } from "~/modules/common/types"
 
 export type ResponseTyped<Data> = Response & { __type: Data }
 
-type DataFunction<Data> = (
+type DataFunction<Data extends JsonValue> = (
   args: DataFunctionArgs,
 ) => MaybePromise<ResponseTyped<Data> | Data | Response>
 
-type DataFunctionResult<Fn> = Fn extends DataFunction<infer Result>
-  ? TypeOfResponse<Awaited<Result>>
-  : unknown
+type DataFunctionResult<Fn extends DataFunction<JsonValue>> = TypeOfResponse<
+  Awaited<ReturnType<Fn>>
+>
 
 type TypeOfResponse<Value> = Value extends ResponseTyped<infer Data>
   ? Data
+  : Value extends Response
+  ? unknown
   : Value
 
 export function responseTyped<Data = never>(
@@ -41,10 +43,10 @@ export function redirectTyped(
   return redirect(url, init) as ResponseTyped<never>
 }
 
-export function useLoaderDataTyped<Fn extends DataFunction<unknown>>() {
+export function useLoaderDataTyped<Fn extends DataFunction<JsonValue>>() {
   return useLoaderData<DataFunctionResult<Fn>>()
 }
 
-export function useActionDataTyped<Fn extends DataFunction<unknown>>() {
+export function useActionDataTyped<Fn extends DataFunction<JsonValue>>() {
   return useActionData<DataFunctionResult<Fn>>()
 }

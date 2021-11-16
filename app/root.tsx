@@ -7,13 +7,14 @@ import { getAppMeta } from "~/modules/app/getAppMeta"
 import { SystemMessage } from "~/modules/app/SystemMessage"
 import { sessionHelpers } from "~/modules/auth/session"
 import { toError } from "~/modules/common/helpers"
+import { serialize } from "~/modules/common/serialize"
 import { useLoaderDataTyped } from "~/modules/remix/data"
 import { NavigationIndicator } from "~/modules/routing/NavigationIndicator"
 import stylesUrl from "~/styles/tailwind.css"
 
 export async function loader({ request }: DataFunctionArgs) {
   const user = await sessionHelpers(request).getUser()
-  return { user }
+  return { user: serialize(user) }
 }
 
 export const links: LinksFunction = () => {
