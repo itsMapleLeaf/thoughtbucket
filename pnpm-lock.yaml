@@ -29,7 +29,6 @@ specifiers:
   eslint-plugin-jsx-a11y: 6.5.1
   eslint-plugin-react: 7.27.0
   eslint-plugin-react-hooks: 4.3.0
-  immer: 9.0.6
   nanoid: 3.1.30
   npm-run-all: 4.1.5
   postcss: 8.3.11
@@ -44,7 +43,6 @@ specifiers:
   react-focus-on: 3.5.4
   react-router-dom: 6.0.2
   remix: ^0.20.1
-  rxjs: 7.4.0
   tailwindcss: 3.0.0-alpha.2
   ts-unused-exports: 7.0.3
   type-fest: 2.5.3
@@ -62,7 +60,6 @@ dependencies:
   '@remix-run/server-runtime': 0.20.1_2a41006bc393cd199bfa8fd2aa017947
   bcryptjs: 2.4.3
   clsx: 1.1.1
-  immer: 9.0.6
   nanoid: 3.1.30
   react: 17.0.2
   react-dnd: 14.0.4_27d7f75f5fffc1228c129be468caca5c
@@ -72,7 +69,6 @@ dependencies:
   react-focus-on: 3.5.4_27d7f75f5fffc1228c129be468caca5c
   react-router-dom: 6.0.2_react-dom@17.0.2+react@17.0.2
   remix: 0.20.1
-  rxjs: 7.4.0
   zod: 3.11.6
 
 devDependencies:
@@ -3103,10 +3099,6 @@ packages:
     engines: {node: '>= 4'}
     dev: true
 
-  /immer/9.0.6:
-    resolution: {integrity: sha512-G95ivKpy+EvVAnAab4fVa4YGYn24J1SpEktnJX7JJ45Bd7xqME/SCplFzYFmTbrkwZbQ4xJK1xMTUYBkN6pWsQ==}
-    dev: false
-
   /import-cwd/3.0.0:
     resolution: {integrity: sha512-4pnzH16plW+hgvRECbDWpQl3cqtvSofHWh44met7ESfZ8UZOWWddm8hEyDTqREJ9RbYHY8gi8DqmaelApoOGMg==}
     engines: {node: '>=8'}
@@ -5556,6 +5548,7 @@ packages:
     resolution: {integrity: sha512-7SQDi7xeTMCJpqViXh8gL/lebcwlp3d831F05+9B44A4B0WfsEwUQHR64gsH1kvJ+Ep/J9K2+n1hVl1CsGN23w==}
     dependencies:
       tslib: 2.1.0
+    dev: true
 
   /sade/1.7.4:
     resolution: {integrity: sha512-y5yauMD93rX840MwUJr7C1ysLFBgMspsdTo4UVrDg3fXDvtwOyIqykhVAAm6fk/3au77773itJStObgK+LKaiA==}
@@ -6132,6 +6125,7 @@ packages:
 
   /tslib/2.1.0:
     resolution: {integrity: sha512-hcVC3wYEziELGGmEEXue7D75zbwIIVUMWAVbHItGPx0ziyXxrOMQx4rQEVEV45Ut/1IotuEvwqPopzIOkDMf0A==}
+    dev: true
 
   /tslib/2.3.1:
     resolution: {integrity: sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==}
