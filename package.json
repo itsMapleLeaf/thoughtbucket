@@ -7,7 +7,7 @@
     "prepare": "remix setup node && pnpm build-styles && prisma generate",
     "dev": "npm-run-all --parallel --print-label --race dev-remix dev-styles",
     "dev-test": "cross-env NODE_ENV=test npm-run-all --parallel --print-label --race dev-remix dev-styles dev-cypress",
-    "dev-remix": "remix dev",
+    "dev-remix": "cross-env NODE_OPTIONS=\"--inspect\" remix dev",
     "dev-styles": "postcss styles --base styles --dir app/styles -w",
     "dev-cypress": "cypress open",
     "build": "pnpm build-styles && remix build",
