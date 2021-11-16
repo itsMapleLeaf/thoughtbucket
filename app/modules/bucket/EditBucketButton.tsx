@@ -1,6 +1,6 @@
 import type { LinkProps } from "remix"
 import { Form, Link } from "remix"
-import { UpdateBucketForm } from "~/modules/bucket/UpdateBucket"
+import { UpdateBucketForm } from "~/modules/bucket/UpdateBucketForm"
 import { FormSubmitButton } from "~/modules/remix/FormSubmitButton"
 import { BackButton } from "../remix/BackButton"
 import { SearchParamModal } from "../remix/SearchParamModal"

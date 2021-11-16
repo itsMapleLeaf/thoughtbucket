@@ -1,7 +1,6 @@
 import { CheckIcon, PencilAltIcon, TrashIcon } from "@heroicons/react/solid"
 import clsx from "clsx"
 import React from "react"
-import type { ClientThought } from "~/modules/bucket/ClientBucket"
 import { InlineInputForm } from "~/modules/ui/InlineInputForm"
 import { Button } from "../dom/Button"
 import { fadedButtonClass } from "../ui/button"
@@ -17,11 +16,16 @@ export const ThoughtDndHooks = createDndHooks<ThoughtDragInfo>({
   type: "thought",
 })
 
+export type ThoughtCardThought = {
+  text: string
+  columnId: string
+}
+
 export function ThoughtCard({
   thought,
   index,
 }: {
-  thought: ClientThought
+  thought: ThoughtCardThought
   index: number
 }) {
   const [dragState, dragRef] = ThoughtDndHooks.useDrag({

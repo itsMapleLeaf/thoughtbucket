@@ -4,32 +4,57 @@ import { AppLayout } from "~/modules/app/AppLayout"
 import { getAppMeta } from "~/modules/app/getAppMeta"
 import { sessionHelpers } from "~/modules/auth/session"
 import { BucketPageHeader } from "~/modules/bucket/BucketPageHeader"
-import { asClientBucket } from "~/modules/bucket/ClientBucket"
-import { requireBucket } from "~/modules/bucket/requireBucket"
-import { requireOwnedBucket } from "~/modules/bucket/requireOwnedBucket"
-import { updateBucket } from "~/modules/bucket/UpdateBucket"
+import { updateBucket } from "~/modules/bucket/data"
+import { requireBucketOwnership } from "~/modules/bucket/requireBucketOwnership"
 import { ColumnEditor } from "~/modules/column/ColumnEditor"
 import { pick, raise } from "~/modules/common/helpers"
 import { serialize } from "~/modules/common/serialize"
 import { getClient } from "~/modules/db"
 import { httpCodes } from "~/modules/network/http-codes"
+import { catchErrorResponse } from "~/modules/remix/catchErrorResponse"
 import {
   jsonTyped,
   redirectTyped,
   useLoaderDataTyped,
 } from "~/modules/remix/data"
+import { errorResponse } from "~/modules/remix/error-response"
 import { handleMethods } from "~/modules/remix/handleMethods"
 
 export async function loader({ request, params }: DataFunctionArgs) {
-  const user = await sessionHelpers(request).getUser()
-
   const bucketId = params.bucketId ?? raise("bucketId param not found")
-  const bucket = await requireBucket(bucketId)
+  const user = await sessionHelpers(request).getUser()
+  const db = getClient()
+
+  const bucket = await db.bucket.findUnique({
+    where: { id: bucketId },
+    select: {
+      id: true,
+      name: true,
+      createdAt: true,
+      columns: {
+        select: {
+          id: true,
+          name: true,
+          thoughts: {
+            select: {
+              id: true,
+              columnId: true,
+              text: true,
+            },
+          },
+        },
+      },
+    },
+  })
+
+  if (!bucket) {
+    raise(errorResponse("couldn't find that bucket", httpCodes.notFound))
+  }
 
   return jsonTyped(
     serialize({
       user: user ? pick(user, ["name"]) : undefined,
-      bucket: asClientBucket(bucket),
+      bucket: serialize(bucket),
     }),
   )
 }
@@ -38,22 +63,24 @@ export async function action({ request, params }: DataFunctionArgs) {
   const db = getClient()
   const bucketId = params.bucketId ?? raise("bucketId param not found")
 
-  return handleMethods(request, {
-    async patch() {
-      let { bucket } = await requireOwnedBucket(request, bucketId)
-      await updateBucket(bucket, request)
-      return redirectTyped(`/buckets/${bucketId}`, httpCodes.seeOther)
-    },
+  return catchErrorResponse(async () => {
+    return handleMethods(request, {
+      async patch() {
+        await requireBucketOwnership(bucketId, request)
+        await updateBucket(bucketId, request)
+        return redirectTyped(`/buckets/${bucketId}`, httpCodes.seeOther)
+      },
 
-    async delete() {
-      await requireOwnedBucket(request, bucketId)
+      async delete() {
+        await requireBucketOwnership(bucketId, request)
 
-      await db.bucket.delete({
-        where: { id: bucketId },
-      })
+        await db.bucket.delete({
+          where: { id: bucketId },
+        })
 
-      return redirectTyped(`/buckets`, httpCodes.seeOther)
-    },
+        return redirectTyped(`/buckets`, httpCodes.seeOther)
+      },
+    })
   })
 }
 
@@ -71,6 +98,8 @@ export default function BucketDetails() {
     </AppLayout>
   )
 }
+
+// todo: catch boundary
 
 // function FetchStatusIndicator({ store }: { store: ColumnEditorStore }) {
 //   const state = useObservable(store.fetchStream, { status: "idle" as const })

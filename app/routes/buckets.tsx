@@ -1,25 +1,24 @@
 import type { DataFunctionArgs } from "@remix-run/server-runtime"
 import clsx from "clsx"
 import { AppLayout } from "~/modules/app/AppLayout"
-import { sessionHelpers } from "~/modules/auth/session"
+import { requireUserOrError } from "~/modules/auth/requireUserOrError"
+import { requireUserOrRedirect } from "~/modules/auth/requireUserOrRedirect"
 import { BucketSummaryCard } from "~/modules/bucket/BucketSummaryCard"
-import { CreateBucketForm } from "~/modules/bucket/forms"
+import { CreateBucketForm } from "~/modules/bucket/CreateBucketForm"
 import { pick } from "~/modules/common/helpers"
 import { serialize } from "~/modules/common/serialize"
 import { getClient } from "~/modules/db"
-import { httpCodes } from "~/modules/network/http-codes"
+import { catchErrorResponse } from "~/modules/remix/catchErrorResponse"
 import {
   jsonTyped,
   redirectTyped,
   useLoaderDataTyped,
 } from "~/modules/remix/data"
-import { errorResponse } from "~/modules/remix/error-response"
 import { handleMethods } from "~/modules/remix/handleMethods"
 import { containerClass } from "~/modules/ui/container"
 
 export async function loader({ request }: DataFunctionArgs) {
-  const user = await sessionHelpers(request).getUser()
-  if (!user) return redirectTyped("/login")
+  const user = await requireUserOrRedirect(request)
 
   const buckets = await getClient().bucket.findMany({
     where: {
@@ -40,31 +39,25 @@ export async function loader({ request }: DataFunctionArgs) {
 }
 
 export async function action({ request }: DataFunctionArgs) {
-  return handleMethods(request, {
-    async post() {
-      const [body, bodyError] = await CreateBucketForm.getBody(request)
-      if (!body) return bodyError
+  return catchErrorResponse(async () => {
+    return handleMethods(request, {
+      async post() {
+        const body = await CreateBucketForm.getBody(request)
+        const user = await requireUserOrError(request)
 
-      const user = await sessionHelpers(request).getUser()
-      if (!user) {
-        return errorResponse(
-          "you must be logged in to create a bucket",
-          httpCodes.unauthorized,
-        )
-      }
+        const bucket = await getClient().bucket.create({
+          data: {
+            name: body.name,
+            ownerId: user.id,
+          },
+          select: {
+            id: true,
+          },
+        })
 
-      const bucket = await getClient().bucket.create({
-        data: {
-          name: body.name,
-          ownerId: user.id,
-        },
-        select: {
-          id: true,
-        },
-      })
-
-      return redirectTyped(`/buckets/${bucket.id}`, 303)
-    },
+        return redirectTyped(`/buckets/${bucket.id}`, 303)
+      },
+    })
   })
 }
 

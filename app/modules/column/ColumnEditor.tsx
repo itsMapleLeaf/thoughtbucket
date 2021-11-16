@@ -1,13 +1,50 @@
-import { useRef } from "react"
-import type { ClientBucket } from "~/modules/bucket/ClientBucket"
-import { useUpdateBucketFetcher } from "~/modules/bucket/UpdateBucket"
+import { useEffect, useRef } from "react"
+import { useTransition } from "remix"
+import { CreateColumnForm } from "~/modules/column/CreateColumnForm"
 import { ScrollingDndProvider } from "../ui/drag-and-drop"
 import { QuickInsertForm } from "../ui/QuickInsertForm"
+import type { ColumnCardColumn } from "./ColumnCard"
 import { ColumnCard } from "./ColumnCard"
 
-export function ColumnEditor({ bucket }: { bucket: ClientBucket }) {
+export type ColumnEditorProps = {
+  bucket: {
+    id: string
+    columns: ColumnCardColumn[]
+  }
+}
+
+export function ColumnEditor({ bucket }: ColumnEditorProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const fetcher = useUpdateBucketFetcher(bucket.id)
+  const transition = useTransition()
+  const scrollOnIdle = useRef<boolean>(false)
+
+  //#region here be demons, we can probably simplify this later
+  useEffect(() => {
+    if (
+      transition.submission?.method === "POST" &&
+      transition.submission?.action === "/columns" &&
+      transition.type === "actionRedirect"
+    ) {
+      scrollOnIdle.current = true
+    }
+  }, [
+    transition.submission?.action,
+    transition.submission?.method,
+    transition.type,
+  ])
+
+  useEffect(() => {
+    if (transition.type === "idle" && scrollOnIdle.current) {
+      scrollOnIdle.current = false
+      requestAnimationFrame(() => {
+        containerRef.current?.scrollTo({
+          left: containerRef.current?.scrollWidth,
+          behavior: "smooth",
+        })
+      })
+    }
+  }, [transition.type])
+  //#endregion
 
   return (
     <ScrollingDndProvider>
@@ -20,21 +57,18 @@ export function ColumnEditor({ bucket }: { bucket: ClientBucket }) {
         ))}
 
         <div className="w-72">
-          <QuickInsertForm
-            onSubmit={(name) => {
-              fetcher.submit({ createColumnName: name })
-              requestAnimationFrame(() => {
-                containerRef.current?.scrollTo({
-                  left: 0,
-                  behavior: "smooth",
-                })
-              })
-            }}
-          >
-            <QuickInsertForm.Input
-              name="createColumn.name"
+          <QuickInsertForm action="/columns" method="post">
+            <CreateColumnForm.Field
+              as={QuickInsertForm.Input}
+              name="name"
               placeholder="add a new column..."
               label="column name"
+            />
+            <CreateColumnForm.Field
+              hidden
+              readOnly
+              name="bucketId"
+              value={bucket.id}
             />
             <QuickInsertForm.Button title="add column" />
           </QuickInsertForm>

@@ -1,3 +1,7 @@
+import type { Values } from "~/modules/common/types"
+
+export type HttpCode = Values<typeof httpCodes>
+
 export const httpCodes = {
   // 2xx Success
   ok: 200,
@@ -28,4 +32,12 @@ export const httpCodes = {
   unsupportedMediaType: 415,
   rangeNotSatisfiable: 416,
   expectationFailed: 417,
+
+  // 5xx Server Error
+  internalServerError: 500,
+  notImplemented: 501,
+  badGateway: 502,
+  serviceUnavailable: 503,
+  gatewayTimeout: 504,
+  httpVersionNotSupported: 505,
 } as const

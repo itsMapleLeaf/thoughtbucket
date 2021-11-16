@@ -1,35 +1,51 @@
-import type { ComponentProps, ElementType } from "react"
-import type { JsonValue } from "type-fest"
+import type { ComponentPropsWithoutRef, ComponentType } from "react"
+import { useFetcher } from "remix"
 import type { ZodType, ZodTypeDef } from "zod"
 import { getRequestBody } from "~/modules/common/getRequestBody"
-import { responseTyped } from "~/modules/remix/data"
-import { errorResponse } from "~/modules/remix/error-response"
+import { httpCodes } from "~/modules/network/http-codes"
+import { HttpError } from "~/modules/network/HttpError"
 import { flattenZodErrorIssues } from "../common/flattenZodErrorIssues"
 
-type InputProps = ComponentProps<"input">
-
-export function createFormHelpers<Input extends JsonValue, Output>(
+export function createFormHelpers<Input extends Record<string, string>, Output>(
   schema: ZodType<Output, ZodTypeDef, Input>,
 ) {
   return {
+    schema,
+
     getBody: async (request: Request) => {
       const result = schema.safeParse(await getRequestBody(request))
 
-      if (result.success) {
-        return [result.data, responseTyped<never>()] as const
+      if (!result.success) {
+        throw new HttpError(
+          flattenZodErrorIssues(result.error),
+          httpCodes.badRequest,
+        )
       }
 
-      const errorMessage = flattenZodErrorIssues<Input>(result.error)
-      return [undefined, errorResponse(errorMessage)] as const
+      return result.data
     },
 
-    Field: <Props extends InputProps>({
-      // @ts-expect-error typescript is not nice here
-      as: Component = "input",
+    Field: <
+      AsProps extends { name?: string } = ComponentPropsWithoutRef<"input">,
+    >({
+      as: Component,
       ...props
-    }: Props & { name: keyof Input; as?: ElementType<Props> }) => {
-      // @ts-expect-error typescript is not nice here
-      return <Component {...props} />
+    }: { name: keyof Input; as?: ComponentType<AsProps> } & AsProps) => {
+      if (Component) {
+        // @ts-expect-error: don't know how to fix this type error
+        return <Component {...props} />
+      }
+      return <input {...props} />
+    },
+
+    useFetcher() {
+      const fetcher = useFetcher()
+      return {
+        ...fetcher,
+        submit(body: Input) {
+          fetcher.submit(body)
+        },
+      }
     },
   }
 }

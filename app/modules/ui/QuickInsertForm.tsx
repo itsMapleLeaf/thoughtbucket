@@ -1,5 +1,7 @@
 import { PlusIcon } from "@heroicons/react/solid"
+import type { FormEvent } from "react"
 import React, { useState } from "react"
+import { Form } from "remix"
 import { Button } from "../dom/Button"
 import { fadedButtonClass } from "../ui/button"
 import { inlineIconClass } from "../ui/icon"
@@ -14,26 +16,31 @@ const Context = React.createContext<{
 })
 
 export function QuickInsertForm({
+  action,
+  method,
   onSubmit,
   children,
 }: {
-  onSubmit: (value: string) => void
+  action?: string
+  method?: "post" | "put" | "patch" | "delete"
   children: React.ReactNode
+  onSubmit?: (value: string, event: FormEvent) => void
 }) {
   const [value, setValue] = useState("")
   return (
-    <form
+    <Form
+      action={action}
+      method={method}
       className="flex gap-2"
       onSubmit={(event) => {
-        event.preventDefault()
+        onSubmit?.(value, event)
         setValue("")
-        onSubmit(value)
       }}
     >
       <Context.Provider value={{ value, onChange: setValue }}>
         {children}
       </Context.Provider>
-    </form>
+    </Form>
   )
 }
 

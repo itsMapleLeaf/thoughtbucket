@@ -1,10 +1,11 @@
 import { CheckIcon, PencilAltIcon, TrashIcon } from "@heroicons/react/solid"
 import clsx from "clsx"
 import React from "react"
-import type { ClientColumn } from "~/modules/bucket/ClientBucket"
-import { useUpdateBucketFetcher } from "~/modules/bucket/UpdateBucket"
+import { Form } from "remix"
+import { useUpdateColumnSubmit } from "~/modules/column/useUpdateColumnSubmit"
 import { InlineInputForm } from "~/modules/ui/InlineInputForm"
 import { Button } from "../dom/Button"
+import type { ThoughtCardThought } from "../thought/ThoughtCard"
 import { ThoughtCard, ThoughtDndHooks } from "../thought/ThoughtCard"
 import { fadedButtonClass } from "../ui/button"
 import { cardClass } from "../ui/card"
@@ -14,14 +15,20 @@ import { QuickInsertForm } from "../ui/QuickInsertForm"
 
 const ColumnDndHooks = createDndHooks<{ columnId: string }>({ type: "column" })
 
+export type ColumnCardColumn = {
+  id: string
+  name: string
+  thoughts: Array<ThoughtCardThought & { id: string }>
+}
+
 export function ColumnCard({
   column,
   index,
 }: {
-  column: ClientColumn
+  column: ColumnCardColumn
   index: number
 }) {
-  const fetcher = useUpdateBucketFetcher(column.bucketId)
+  const submit = useUpdateColumnSubmit()
 
   const [thoughtDropState, thoughtDropRef] = ThoughtDndHooks.useDrop({
     onDrop() {
@@ -34,10 +41,7 @@ export function ColumnCard({
 
   const [columnDropState, columnDropRef] = ColumnDndHooks.useDrop({
     onDrop({ columnId }) {
-      fetcher.submit({
-        reorderColumnId: columnId,
-        reorderColumnOrder: String(index),
-      })
+      submit(columnId, { order: String(index) })
     },
   })
 
@@ -66,7 +70,7 @@ export function ColumnCard({
                   initialValue={column.name}
                   onSubmit={(name) => {
                     setEditing(false)
-                    // store.renameColumn(column.id, name)
+                    submit(column.id, { name })
                   }}
                 />
               </div>
@@ -98,23 +102,22 @@ export function ColumnCard({
                 </Button>
               )}
 
-              <Button
-                title="delete this column"
-                className={fadedButtonClass}
-                onClick={() => {
-                  fetcher.submit({
-                    deleteColumnId: column.id,
-                  })
-                }}
-              >
-                <TrashIcon className={inlineIconClass} />
-              </Button>
+              <Form action={`/columns/${column.id}`} method="delete">
+                <Button
+                  title="delete this column"
+                  type="submit"
+                  className={fadedButtonClass}
+                >
+                  <TrashIcon className={inlineIconClass} />
+                </Button>
+              </Form>
             </div>
           </div>
 
           <div className="px-3 pb-3">
             <QuickInsertForm
-              onSubmit={(text) => {
+              onSubmit={(text, event) => {
+                event.preventDefault() // temporary
                 // store.addThought(column.id, text)
               }}
             >
