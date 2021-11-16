@@ -5,11 +5,11 @@ import type { MaybePromise } from "~/modules/common/types"
 
 export type ResponseTyped<Data> = Response & { __type: Data }
 
-export type DataFunction<Data> = (
+type DataFunction<Data> = (
   args: DataFunctionArgs,
 ) => MaybePromise<ResponseTyped<Data> | Data | Response>
 
-export type DataFunctionData<Fn> = Fn extends DataFunction<infer Data>
+type DataFunctionData<Fn> = Fn extends DataFunction<infer Data>
   ? // if the actual data is a Response object (lol), we should un-infer it
     Response extends Data
     ? unknown

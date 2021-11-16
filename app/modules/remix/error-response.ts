@@ -1,7 +1,7 @@
 import type { ResponseTyped } from "~/modules/remix/data"
 import { jsonTyped } from "~/modules/remix/data"
 
-export type ErrorResponse = ResponseTyped<{ errorMessage: string }>
+type ErrorResponse = ResponseTyped<{ errorMessage: string }>
 
 export function errorResponse(
   ...args: [message: string, status: number] | [response: Response]

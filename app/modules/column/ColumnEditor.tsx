@@ -6,7 +6,7 @@ import { QuickInsertForm } from "../ui/QuickInsertForm"
 import type { ColumnCardColumn } from "./ColumnCard"
 import { ColumnCard } from "./ColumnCard"
 
-export type ColumnEditorProps = {
+type ColumnEditorProps = {
   bucket: {
     id: string
     columns: ColumnCardColumn[]

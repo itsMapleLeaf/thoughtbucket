@@ -6,7 +6,7 @@ import type { ReactNode } from "react"
 import { FocusOn } from "react-focus-on"
 import { cardClass } from "./card"
 
-export type ModalProps = {
+type ModalProps = {
   title: ReactNode
   children: ReactNode
   open?: boolean

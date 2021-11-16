@@ -1,3 +1,4 @@
+// ts-unused-exports:disable-next-line
 export type Serialized<Value> = Value extends Date
   ? string
   : Value extends Array<infer Element>

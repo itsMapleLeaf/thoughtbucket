@@ -15,6 +15,7 @@ type PickFn = <
 export const pick: PickFn = (subject, keys) =>
   Object.fromEntries(keys.map((key) => [key, subject[key]])) as any
 
+// ts-unused-exports:disable-next-line
 export const isTruthy = <T>(value: T | Falsy): value is T => Boolean(value)
 
 export const toError = (value: unknown): Error =>

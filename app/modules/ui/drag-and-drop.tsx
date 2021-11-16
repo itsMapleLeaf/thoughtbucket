@@ -32,7 +32,7 @@ export function ScrollingDndProvider({
 const scrollThreshold = 80
 const scrollSpeed = 350
 
-export function DragScroller() {
+function DragScroller() {
   const manager = useDragDropManager()
 
   useEffect(() => {

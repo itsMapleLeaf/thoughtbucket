@@ -7,7 +7,7 @@ import { fadedButtonClass } from "../ui/button"
 import { createDndHooks, DragPreview } from "../ui/drag-and-drop"
 import { inlineIconClass } from "../ui/icon"
 
-export type ThoughtDragInfo = {
+type ThoughtDragInfo = {
   index: number
   columnId: string
 }
