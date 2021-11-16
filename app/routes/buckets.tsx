@@ -57,7 +57,6 @@ export async function action({ request }: DataFunctionArgs) {
         data: {
           name: body.name,
           ownerId: user.id,
-          columns: [],
         },
         select: {
           id: true,
