@@ -1,7 +1,7 @@
 import type { DataFunctionArgs } from "@remix-run/server-runtime"
 import { json, redirect, useActionData, useLoaderData } from "remix"
 import type { JsonValue } from "type-fest"
-import type { MaybePromise } from "~/modules/common/types"
+import type { Awaited, MaybePromise } from "~/modules/common/types"
 
 export type ResponseTyped<Data> = Response & { __type: Data }
 
@@ -9,12 +9,13 @@ type DataFunction<Data> = (
   args: DataFunctionArgs,
 ) => MaybePromise<ResponseTyped<Data> | Data | Response>
 
-type DataFunctionData<Fn> = Fn extends DataFunction<infer Data>
-  ? // if the actual data is a Response object (lol), we should un-infer it
-    Response extends Data
-    ? unknown
-    : Data
+type DataFunctionResult<Fn> = Fn extends DataFunction<infer Data>
+  ? TypeOfResponse<Awaited<Data>>
   : unknown
+
+type TypeOfResponse<Value> = Value extends ResponseTyped<infer Data>
+  ? Data
+  : Value
 
 export function responseTyped<Data = never>(
   data?: BodyInit,
@@ -41,9 +42,9 @@ export function redirectTyped(
 }
 
 export function useLoaderDataTyped<Fn extends DataFunction<unknown>>() {
-  return useLoaderData<DataFunctionData<Fn>>()
+  return useLoaderData<DataFunctionResult<Fn>>()
 }
 
 export function useActionDataTyped<Fn extends DataFunction<unknown>>() {
-  return useActionData<DataFunctionData<Fn>>()
+  return useActionData<DataFunctionResult<Fn>>()
 }

@@ -1,13 +1,74 @@
+import type { DataFunctionArgs, MetaFunction } from "@remix-run/server-runtime"
 import { Outlet } from "react-router-dom"
 import type { LinksFunction } from "remix"
 import { Links, LiveReload, Meta, Scripts, useCatch } from "remix"
-import { SystemMessageLayout } from "~/modules/app/SystemMessageLayout"
+import { AppLayout } from "~/modules/app/AppLayout"
+import { getAppMeta } from "~/modules/app/getAppMeta"
+import { SystemMessage } from "~/modules/app/SystemMessage"
+import { sessionHelpers } from "~/modules/auth/session"
 import { toError } from "~/modules/common/helpers"
+import { useLoaderDataTyped } from "~/modules/remix/data"
 import { NavigationIndicator } from "~/modules/routing/NavigationIndicator"
 import stylesUrl from "~/styles/tailwind.css"
 
+export async function loader({ request }: DataFunctionArgs) {
+  const user = await sessionHelpers(request).getUser()
+  return { user }
+}
+
 export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: stylesUrl }]
+}
+
+export const meta: MetaFunction = () => getAppMeta()
+
+export default function Root() {
+  const { user } = useLoaderDataTyped<typeof loader>()
+  return (
+    <Document>
+      <AppLayout user={user}>
+        <Outlet />
+      </AppLayout>
+    </Document>
+  )
+}
+
+export function CatchBoundary() {
+  const caught = useCatch()
+  const { user } = useLoaderDataTyped<typeof loader>() ?? {}
+
+  if (caught.status === 404) {
+    return (
+      <Document title={`not found`}>
+        <AppLayout user={user}>
+          <SystemMessage title="oops">
+            {"couldn't find what you were looking for :("}
+          </SystemMessage>
+        </AppLayout>
+      </Document>
+    )
+  }
+
+  throw new Error(`Unexpected caught response with status ${caught.status}`)
+}
+
+export function ErrorBoundary({ error }: { error: unknown }) {
+  const { user } = useLoaderDataTyped<typeof loader>() ?? {}
+  const { stack, message } = toError(error)
+
+  console.error(error)
+
+  return (
+    <Document title="oops">
+      <AppLayout user={user}>
+        <SystemMessage title="oops">
+          <pre className="p-3 overflow-x-auto rounded-md shadow-inner bg-black/50">
+            {stack || message}
+          </pre>
+        </SystemMessage>
+      </AppLayout>
+    </Document>
+  )
 }
 
 function Document({
@@ -48,45 +109,5 @@ function Document({
         {process.env.NODE_ENV !== "production" && <LiveReload />}
       </body>
     </html>
-  )
-}
-
-export default function App() {
-  return (
-    <Document>
-      <Outlet />
-    </Document>
-  )
-}
-
-export function CatchBoundary() {
-  const caught = useCatch()
-
-  if (caught.status === 404) {
-    return (
-      <Document title={`${caught.status} ${caught.statusText}`}>
-        <SystemMessageLayout title="oops">
-          {"couldn't find what you were looking for :("}
-        </SystemMessageLayout>
-      </Document>
-    )
-  }
-
-  throw new Error(`Unexpected caught response with status ${caught.status}`)
-}
-
-export function ErrorBoundary({ error }: { error: unknown }) {
-  const errorInfo = toError(error)
-
-  console.error(error)
-
-  return (
-    <Document title="oops">
-      <SystemMessageLayout title="oops">
-        <pre className="p-3 overflow-x-auto rounded-md shadow-inner bg-black/50">
-          {errorInfo.stack || errorInfo.message}
-        </pre>
-      </SystemMessageLayout>
-    </Document>
   )
 }

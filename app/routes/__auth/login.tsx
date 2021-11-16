@@ -1,11 +1,12 @@
 import type { DataFunctionArgs } from "@remix-run/server-runtime"
 import type { MetaFunction } from "remix"
-import { Form, Link, redirect } from "remix"
+import { Form, Link } from "remix"
 import { z } from "zod"
 import { getAppMeta } from "~/modules/app/getAppMeta"
-import { AuthPageLayout } from "~/modules/auth/AuthPageLayout"
 import { sessionHelpers } from "~/modules/auth/session"
+import { raise } from "~/modules/common/helpers"
 import { httpCodes } from "~/modules/network/http-codes"
+import { catchErrorResponse } from "~/modules/remix/catchErrorResponse"
 import { redirectTyped, useActionDataTyped } from "~/modules/remix/data"
 import { errorResponse } from "~/modules/remix/error-response"
 import { createFormHelpers } from "~/modules/remix/form"
@@ -14,6 +15,7 @@ import { anchorClass } from "~/modules/ui/anchor"
 import { solidButtonClass } from "~/modules/ui/button"
 import { TextInputField } from "~/modules/ui/TextInputField"
 import { loginUser } from "~/modules/user"
+import AuthPageLayout from "~/routes/__auth"
 
 const { getBody, Field } = createFormHelpers(
   z.object({
@@ -24,25 +26,20 @@ const { getBody, Field } = createFormHelpers(
 
 export const meta: MetaFunction = () => getAppMeta("log in")
 
-export async function loader({ request }: DataFunctionArgs) {
-  const user = await sessionHelpers(request).getUser()
-  return user ? redirect("/buckets") : new Response()
-}
-
 export async function action({ request }: DataFunctionArgs) {
-  const [body, bodyError] = await getBody(request)
-  if (!body) return bodyError
+  return catchErrorResponse(async () => {
+    const body = await getBody(request)
 
-  const user = await loginUser(body)
-  if (!user) {
-    return errorResponse("invalid email or password", httpCodes.unauthorized)
-  }
+    const user =
+      (await loginUser(body)) ??
+      raise(errorResponse("invalid email or password", httpCodes.unauthorized))
 
-  const { responseHeaders } = await sessionHelpers(request).create(user)
+    const { responseHeaders } = await sessionHelpers(request).create(user)
 
-  return redirectTyped("/buckets", {
-    status: httpCodes.seeOther,
-    headers: responseHeaders,
+    return redirectTyped("/buckets", {
+      status: httpCodes.seeOther,
+      headers: responseHeaders,
+    })
   })
 }
 
@@ -50,7 +47,9 @@ export default function LoginPage() {
   const { errorMessage } = useActionDataTyped<typeof action>() ?? {}
 
   return (
-    <AuthPageLayout title="log in">
+    <>
+      <h1 className={AuthPageLayout.titleClass}>log in</h1>
+
       <Form method="post" className={AuthPageLayout.formClass}>
         <Field as={TextInputField.Email} name="email" required />
         <Field
@@ -74,6 +73,6 @@ export default function LoginPage() {
           sign up
         </Link>
       </AuthPageLayout.Paragraph>
-    </AuthPageLayout>
+    </>
   )
 }

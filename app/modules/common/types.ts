@@ -4,4 +4,4 @@ export type Falsy = false | 0 | "" | null | undefined
 
 export type Values<T> = T extends ArrayLike<infer Value> ? Value : T[keyof T]
 
-type Primitive = string | number | boolean | symbol | undefined | null
+export type Awaited<T> = T extends Promise<infer V> ? Promise<V> : T

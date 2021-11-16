@@ -1,11 +1,9 @@
 import type { DataFunctionArgs } from "@remix-run/server-runtime"
 import clsx from "clsx"
-import { AppLayout } from "~/modules/app/AppLayout"
 import { requireUserOrError } from "~/modules/auth/requireUserOrError"
 import { requireUserOrRedirect } from "~/modules/auth/requireUserOrRedirect"
 import { BucketSummaryCard } from "~/modules/bucket/BucketSummaryCard"
 import { CreateBucketForm } from "~/modules/bucket/CreateBucketForm"
-import { pick } from "~/modules/common/helpers"
 import { serialize } from "~/modules/common/serialize"
 import { getClient } from "~/modules/db"
 import { catchErrorResponse } from "~/modules/remix/catchErrorResponse"
@@ -30,12 +28,7 @@ export async function loader({ request }: DataFunctionArgs) {
     },
   })
 
-  return jsonTyped(
-    serialize({
-      user: pick(user, ["name"]),
-      buckets,
-    }),
-  )
+  return jsonTyped(serialize({ buckets }))
 }
 
 export async function action({ request }: DataFunctionArgs) {
@@ -62,19 +55,17 @@ export async function action({ request }: DataFunctionArgs) {
 }
 
 export default function BucketListPage() {
-  const { user, buckets } = useLoaderDataTyped<typeof loader>()
+  const { buckets } = useLoaderDataTyped<typeof loader>()
   return (
-    <AppLayout user={user}>
-      <div
-        className={clsx(
-          containerClass,
-          "grid gap-4 grid-cols-[repeat(auto-fill,minmax(14rem,1fr))]",
-        )}
-      >
-        {buckets.map((bucket) => (
-          <BucketSummaryCard key={bucket.id} bucket={bucket} />
-        ))}
-      </div>
-    </AppLayout>
+    <div
+      className={clsx(
+        containerClass,
+        "grid gap-4 grid-cols-[repeat(auto-fill,minmax(14rem,1fr))]",
+      )}
+    >
+      {buckets.map((bucket) => (
+        <BucketSummaryCard key={bucket.id} bucket={bucket} />
+      ))}
+    </div>
   )
 }

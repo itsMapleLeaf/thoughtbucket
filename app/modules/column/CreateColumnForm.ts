@@ -7,3 +7,5 @@ export const CreateColumnForm = createFormHelpers(
     name: z.string().nonempty("column name cannot be empty"),
   }),
 )
+
+export type CreateColumnOutput = z.output<typeof CreateColumnForm["schema"]>

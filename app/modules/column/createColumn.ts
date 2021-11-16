@@ -3,12 +3,10 @@ import { raise } from "~/modules/common/helpers"
 import { getClient } from "~/modules/db"
 import { httpCodes } from "~/modules/network/http-codes"
 import { errorResponse } from "~/modules/remix/error-response"
-import { CreateColumnForm } from "./CreateColumnForm"
+import type { CreateColumnOutput } from "./CreateColumnForm"
 
-export async function createColumn(request: Request) {
+export async function createColumn(body: CreateColumnOutput, request: Request) {
   const db = getClient()
-
-  const body = await CreateColumnForm.getBody(request)
 
   const bucket = await db.bucket.findUnique({
     where: { id: body.bucketId },

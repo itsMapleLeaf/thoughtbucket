@@ -29,9 +29,9 @@ export function QuickInsertForm({
   const [value, setValue] = useState("")
   return (
     <Form
+      className="flex gap-2"
       action={action}
       method={method}
-      className="flex gap-2"
       onSubmit={(event) => {
         onSubmit?.(value, event)
         setValue("")

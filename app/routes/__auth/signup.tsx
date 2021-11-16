@@ -2,20 +2,17 @@ import type { DataFunctionArgs } from "@remix-run/server-runtime"
 import { Form, Link } from "remix"
 import { z } from "zod"
 import { getAppMeta } from "~/modules/app/getAppMeta"
-import { AuthPageLayout } from "~/modules/auth/AuthPageLayout"
 import { sessionHelpers } from "~/modules/auth/session"
 import { httpCodes } from "~/modules/network/http-codes"
-import {
-  jsonTyped,
-  redirectTyped,
-  useActionDataTyped,
-} from "~/modules/remix/data"
+import { catchErrorResponse } from "~/modules/remix/catchErrorResponse"
+import { redirectTyped, useActionDataTyped } from "~/modules/remix/data"
 import { createFormHelpers } from "~/modules/remix/form"
 import { FormSubmitButton } from "~/modules/remix/FormSubmitButton"
 import { anchorClass } from "~/modules/ui/anchor"
 import { solidButtonClass } from "~/modules/ui/button"
 import { TextInputField } from "~/modules/ui/TextInputField"
 import { createUser } from "~/modules/user"
+import AuthPageLayout from "~/routes/__auth"
 
 const { getBody, Field } = createFormHelpers(
   z.object({
@@ -27,30 +24,26 @@ const { getBody, Field } = createFormHelpers(
 
 export const meta = () => getAppMeta("sign up")
 
-export async function loader({ request }: DataFunctionArgs) {
-  const user = await sessionHelpers(request).getUser()
-  return user ? redirectTyped("/buckets") : jsonTyped({})
-}
-
 export async function action({ request }: DataFunctionArgs) {
-  const [body, bodyError] = await getBody(request)
-  if (!body) return bodyError
+  return catchErrorResponse(async () => {
+    const body = await getBody(request)
+    const user = await createUser(body)
+    const { responseHeaders } = await sessionHelpers(request).create(user)
 
-  const user = await createUser(body)
-
-  const session = sessionHelpers(request)
-  const { responseHeaders } = await session.create(user)
-
-  return redirectTyped("/buckets", {
-    status: httpCodes.seeOther,
-    headers: responseHeaders,
+    return redirectTyped("/buckets", {
+      status: httpCodes.seeOther,
+      headers: responseHeaders,
+    })
   })
 }
 
 export default function SignupPage() {
   const { errorMessage } = useActionDataTyped<typeof action>() ?? {}
+
   return (
-    <AuthPageLayout title="sign up">
+    <>
+      <h1 className={AuthPageLayout.titleClass}>sign up</h1>
+
       <Form className={AuthPageLayout.formClass} method="post">
         <Field as={TextInputField.Username} name="name" required />
         <Field as={TextInputField.Email} name="email" required />
@@ -77,6 +70,6 @@ export default function SignupPage() {
           log in
         </Link>
       </AuthPageLayout.Paragraph>
-    </AuthPageLayout>
+    </>
   )
 }

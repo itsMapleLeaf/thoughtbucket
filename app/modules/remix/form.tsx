@@ -3,7 +3,7 @@ import { useFetcher } from "remix"
 import type { ZodType, ZodTypeDef } from "zod"
 import { getRequestBody } from "~/modules/common/getRequestBody"
 import { httpCodes } from "~/modules/network/http-codes"
-import { HttpError } from "~/modules/network/HttpError"
+import { errorResponse } from "~/modules/remix/error-response"
 import { flattenZodErrorIssues } from "../common/flattenZodErrorIssues"
 
 export function createFormHelpers<Input extends Record<string, string>, Output>(
@@ -16,7 +16,7 @@ export function createFormHelpers<Input extends Record<string, string>, Output>(
       const result = schema.safeParse(await getRequestBody(request))
 
       if (!result.success) {
-        throw new HttpError(
+        throw errorResponse(
           flattenZodErrorIssues(result.error),
           httpCodes.badRequest,
         )
