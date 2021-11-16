@@ -1,5 +1,6 @@
 import type { LinkProps } from "remix"
 import { Form, Link } from "remix"
+import { UpdateBucketForm } from "~/modules/bucket/UpdateBucket"
 import { FormSubmitButton } from "~/modules/remix/FormSubmitButton"
 import { BackButton } from "../remix/BackButton"
 import { SearchParamModal } from "../remix/SearchParamModal"
@@ -21,7 +22,8 @@ export function EditBucketButton({
           className="grid gap-4"
           data-testid="edit-bucket-form"
         >
-          <TextInputField
+          <UpdateBucketForm.Field
+            as={TextInputField}
             name="name"
             label="name"
             defaultValue={bucket.name}

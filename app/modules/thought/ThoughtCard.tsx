@@ -1,17 +1,12 @@
 import { CheckIcon, PencilAltIcon, TrashIcon } from "@heroicons/react/solid"
 import clsx from "clsx"
 import React from "react"
+import type { ClientThought } from "~/modules/bucket/ClientBucket"
 import { InlineInputForm } from "~/modules/ui/InlineInputForm"
-import type { ColumnEditorStore } from "../column/ColumnEditorStore"
 import { Button } from "../dom/Button"
 import { fadedButtonClass } from "../ui/button"
 import { createDndHooks, DragPreview } from "../ui/drag-and-drop"
 import { inlineIconClass } from "../ui/icon"
-
-type ClientThought = {
-  id: string
-  text: string
-}
 
 export type ThoughtDragInfo = {
   index: number
@@ -24,25 +19,21 @@ export const ThoughtDndHooks = createDndHooks<ThoughtDragInfo>({
 
 export function ThoughtCard({
   thought,
-  columnId,
   index,
-  store,
 }: {
   thought: ClientThought
-  columnId: string
   index: number
-  store: ColumnEditorStore
 }) {
   const [dragState, dragRef] = ThoughtDndHooks.useDrag({
-    item: { index, columnId },
+    item: { index, columnId: thought.columnId },
   })
 
   const [dropState, dropRef] = ThoughtDndHooks.useDrop({
     onDrop: (info) => {
-      store.moveThought({
-        from: info,
-        to: { index, columnId },
-      })
+      // store.moveThought({
+      //   from: info,
+      //   to: { index, columnId },
+      // })
     },
   })
 
@@ -50,7 +41,7 @@ export function ThoughtCard({
 
   function submitEdit(newText: string) {
     setEditing(false)
-    store.editThought(columnId, thought.id, newText)
+    // store.editThought(columnId, thought.id, newText)
   }
 
   return (
@@ -76,7 +67,7 @@ export function ThoughtCard({
                 textAreaClass="block w-full p-2 transition bg-transparent resize-none hover:bg-black/30 focus:bg-black/30 focus:outline-none"
                 onSubmit={(newText) => {
                   setEditing(false)
-                  store.editThought(columnId, thought.id, newText)
+                  // store.editThought(columnId, thought.id, newText)
                 }}
               />
             </div>
@@ -110,7 +101,9 @@ export function ThoughtCard({
             <Button
               className={fadedButtonClass}
               title="delete thought"
-              onClick={() => store.removeThought(columnId, thought.id)}
+              onClick={() => {
+                // store.removeThought(columnId, thought.id)
+              }}
             >
               <TrashIcon className={inlineIconClass} />
             </Button>

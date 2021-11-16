@@ -1,13 +1,16 @@
 import type { ComponentProps, ElementType } from "react"
 import type { JsonValue } from "type-fest"
-import type { ZodType } from "zod"
+import type { ZodType, ZodTypeDef } from "zod"
 import { getRequestBody } from "~/modules/common/getRequestBody"
 import { responseTyped } from "~/modules/remix/data"
 import { errorResponse } from "~/modules/remix/error-response"
+import { flattenZodErrorIssues } from "../common/flattenZodErrorIssues"
 
 type InputProps = ComponentProps<"input">
 
-export function createFormHelpers<T extends JsonValue>(schema: ZodType<T>) {
+export function createFormHelpers<Input extends JsonValue, Output>(
+  schema: ZodType<Output, ZodTypeDef, Input>,
+) {
   return {
     getBody: async (request: Request) => {
       const result = schema.safeParse(await getRequestBody(request))
@@ -16,10 +19,7 @@ export function createFormHelpers<T extends JsonValue>(schema: ZodType<T>) {
         return [result.data, responseTyped<never>()] as const
       }
 
-      const errorMessage = result.error.issues
-        .map((issue) => issue.message)
-        .join("\n")
-
+      const errorMessage = flattenZodErrorIssues<Input>(result.error)
       return [undefined, errorResponse(errorMessage)] as const
     },
 
@@ -27,7 +27,7 @@ export function createFormHelpers<T extends JsonValue>(schema: ZodType<T>) {
       // @ts-expect-error typescript is not nice here
       as: Component = "input",
       ...props
-    }: Props & { name: keyof T; as?: ElementType<Props> }) => {
+    }: Props & { name: keyof Input; as?: ElementType<Props> }) => {
       // @ts-expect-error typescript is not nice here
       return <Component {...props} />
     },
