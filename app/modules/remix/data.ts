@@ -9,8 +9,8 @@ type DataFunction<Data> = (
   args: DataFunctionArgs,
 ) => MaybePromise<ResponseTyped<Data> | Data | Response>
 
-type DataFunctionResult<Fn> = Fn extends DataFunction<infer Data>
-  ? TypeOfResponse<Awaited<Data>>
+type DataFunctionResult<Fn> = Fn extends DataFunction<infer Result>
+  ? TypeOfResponse<Awaited<Result>>
   : unknown
 
 type TypeOfResponse<Value> = Value extends ResponseTyped<infer Data>
