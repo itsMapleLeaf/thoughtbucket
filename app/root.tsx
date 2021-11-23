@@ -4,10 +4,9 @@ import { Links, LiveReload, Meta, Scripts, useCatch } from "remix"
 import { SystemMessageLayout } from "~/modules/app/SystemMessageLayout"
 import { toError } from "~/modules/common/helpers"
 import { NavigationIndicator } from "~/modules/routing/NavigationIndicator"
-import stylesUrl from "~/styles/tailwind.css"
 
 export const links: LinksFunction = () => {
-  return [{ rel: "stylesheet", href: stylesUrl }]
+  return [{ rel: "stylesheet", href: "/tailwindcss" }]
 }
 
 function Document({
