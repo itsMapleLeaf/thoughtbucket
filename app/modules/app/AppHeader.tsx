@@ -5,7 +5,8 @@ import {
 } from "@heroicons/react/solid"
 import clsx from "clsx"
 import React from "react"
-import { Link } from "remix"
+import { Form, Link } from "remix"
+import { Button } from "~/modules/dom/Button"
 import { CreateBucketButton } from "../bucket/CreateBucketButton"
 import { fadedButtonClass, solidButtonClass } from "../ui/button"
 import { containerClass } from "../ui/container"
@@ -31,9 +32,11 @@ export function AppHeader({ user }: { user: { name: string } | undefined }) {
           <nav className="flex flex-wrap items-baseline gap-x-5 gap-y-2">
             <p>hi, {user.name}!</p>
             <div className="flex flex-wrap items-baseline gap-x-5 gap-y-2">
-              <Link to="/logout" className={fadedButtonClass}>
-                <LogoutIcon className={inlineIconClass} /> log out
-              </Link>
+              <Form action="/logout" method="post">
+                <Button type="submit" className={fadedButtonClass}>
+                  <LogoutIcon className={inlineIconClass} /> log out
+                </Button>
+              </Form>
               <CreateBucketButton className={solidButtonClass}>
                 <ViewGridAddIcon className={leftButtonIconClass} /> new bucket
               </CreateBucketButton>
