@@ -41,7 +41,7 @@ specifiers:
   react-focus-on: 3.5.4
   react-router-dom: 6.0.2
   remix: ^1.0.4
-  remix-tailwind: ^0.1.1
+  remix-tailwind: file:/home/maple/dev/remix-tailwind
   rxjs: 7.4.0
   tailwindcss: 3.0.0-alpha.2
   type-fest: 2.6.0
@@ -68,7 +68,7 @@ dependencies:
   react-focus-on: 3.5.4_bb8e79a4a12a744c3dc48cdef194d579
   react-router-dom: 6.0.2_react-dom@17.0.2+react@17.0.2
   remix: 1.0.4
-  remix-tailwind: 0.1.1_6ee009a9ee599c128c6aa8d79539c78f
+  remix-tailwind: link:../../../../../../home/maple/dev/remix-tailwind
   rxjs: 7.4.0
   zod: 3.11.6
 
@@ -667,6 +667,7 @@ packages:
 
   /@types/tailwindcss/2.2.4:
     resolution: {integrity: sha512-8mIk+0BoReKiaBI4e3hjaz9YDQto+rdZ2eEExHf6AfS38FZcALQ6s8mTd+74N8BtBaLnTzLdNe5GbkzObWlSXw==}
+    dev: true
 
   /@types/unist/2.0.6:
     resolution: {integrity: sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==}
@@ -5421,23 +5422,6 @@ packages:
       mdast-util-to-hast: 11.3.0
       unified: 10.1.1
     dev: true
-
-  /remix-tailwind/0.1.1_6ee009a9ee599c128c6aa8d79539c78f:
-    resolution: {integrity: sha512-J5q7UVBMreBAwAqNqTouBw5wkWY2JhCFMudWEE9HkE/7XQRe5P4Sb5dv5jI3k8aL+mZjVTDlvdkm6RKwiU+lYA==}
-    peerDependencies:
-      postcss: '>=8'
-      tailwindcss: '>=2'
-    dependencies:
-      '@remix-run/node': 1.0.4_react-dom@17.0.2+react@17.0.2
-      '@remix-run/server-runtime': 1.0.4_react-dom@17.0.2+react@17.0.2
-      '@types/node': 16.11.9
-      '@types/tailwindcss': 2.2.4
-      postcss: 8.3.11
-      tailwindcss: 3.0.0-alpha.2_postcss@8.3.11
-    transitivePeerDependencies:
-      - react
-      - react-dom
-    dev: false
 
   /remix/1.0.4:
     resolution: {integrity: sha512-yjED3VIxmNn/gU1KjpUbAJ2LQnsXNbB1GDm5//Kq/Z1/Ba0W4JE6dFqoXdG0oHL6o+jQct9S020vXZVHQPKJ8A==}

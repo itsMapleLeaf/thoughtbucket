@@ -1,3 +1,3 @@
-import { createLoader } from "remix-tailwind"
+import { serveTailwindCss } from "remix-tailwind"
 
-export const loader = createLoader("app/tailwind.css")
+export const loader = () => serveTailwindCss("app/tailwind.css")
