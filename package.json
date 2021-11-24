@@ -6,11 +6,11 @@
   "scripts": {
     "prepare": "remix setup && prisma generate",
     "dev": "remix dev",
-    "dev-test": "cross-env TEST=1 npm-run-all --parallel --print-label --race dev dev-cypress",
+    "dev-test": "cross-env NODE_ENV=test TEST=1 npm-run-all --parallel --print-label --race dev dev-cypress",
     "dev-cypress": "cypress open",
     "build": "remix build",
     "start": "remix-serve build",
-    "test": "cross-env TEST=1 npm-run-all --parallel --race test-app test-cypress",
+    "test": "cross-env NODE_ENV=test TEST=1 npm-run-all --parallel --race test-app test-cypress",
     "test-app": "pnpm build && pnpm start",
     "test-cypress": "wait-on http-get://localhost:3000 && cypress run --browser chrome",
     "lint": "eslint --ext js,ts,tsx .",
