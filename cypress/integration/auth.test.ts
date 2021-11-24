@@ -50,7 +50,7 @@ describe("auth", () => {
     }
 
     cy.request("POST", "/signup", user)
-    cy.visit("/logout") // ensure we're logged out
+    cy.visit("/logout", { method: "POST" }) // ensure we're logged out
 
     cy.findByRole("heading", { name: /log\s*in/i }).should("be.visible")
 

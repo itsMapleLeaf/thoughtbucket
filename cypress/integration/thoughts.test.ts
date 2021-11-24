@@ -87,7 +87,7 @@ describe("thoughts", () => {
         cy.root().should("contain", "hello space")
       })
 
-    cy.findByTestId("fetch-status-success").should("exist")
+    cy.wait(300) // temporary until we can wait for a response
     cy.reload()
     cy.findByText("hello space")
   })

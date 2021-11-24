@@ -1,7 +1,7 @@
 import "@testing-library/cypress/add-commands"
 
 before(() => {
-  cy.exec("pnpx prisma migrate reset --force")
+  cy.exec("pnpx prisma db push")
 })
 
 beforeEach(() => {

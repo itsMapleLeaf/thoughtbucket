@@ -132,6 +132,8 @@ describe("buckets", () => {
       .first()
       .click()
 
+    cy.wait(300) // temporary until we can wait for response
+
     runWithReload(() => {
       cy.findByRole("heading", { name: columnName3 }).should("exist")
     })
@@ -147,8 +149,7 @@ describe("buckets", () => {
       .type(columnName4)
       .blur()
 
-    // wait until the data is saved
-    cy.findByTestId("fetch-status-success").should("exist")
+    cy.wait(300) // temporary until we can wait for response
 
     runWithReload(() => {
       cy.findByRole("heading", { name: columnName4 }).should("exist")
@@ -158,6 +159,8 @@ describe("buckets", () => {
     cy.findAllByRole("button", { name: /delete.*column/i }).click({
       multiple: true,
     })
+
+    cy.wait(300) // temporary until we can wait for response
 
     runWithReload(() => {
       cy.findByRole("heading", { name: columnName1 }).should("not.exist")
