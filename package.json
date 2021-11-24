@@ -12,7 +12,7 @@
     "start": "remix-serve build",
     "test": "cross-env TEST=1 npm-run-all --parallel --race test-app test-cypress",
     "test-app": "pnpm build && pnpm start",
-    "test-cypress": "wait-on http-get://localhost:3000 && cypress run",
+    "test-cypress": "wait-on http-get://localhost:3000 && cypress run --browser chrome",
     "lint": "eslint --ext js,ts,tsx .",
     "lint-fix": "npm run lint -- --fix",
     "typecheck": "tsc -b ./tsconfig.base.json",
