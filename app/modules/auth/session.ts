@@ -3,20 +3,20 @@ import type { CookieOptions } from "remix"
 import { createCookie } from "remix"
 import { getClient } from "../db"
 
-const cookieOptions: CookieOptions = {
-  httpOnly: true,
-  maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
-  secure:
-    process.env.NODE_ENV === "production" &&
-    // the app is built with production even when setting the node env to test,
-    // so we need this extra env variable to explicitly disable https cookies during tests
-    process.env.COOKIE_SECURE !== "false",
-}
-
-const sessionCookieName = "remix-session"
-const sessionCookie = createCookie(sessionCookieName, cookieOptions)
-
 export function sessionHelpers(request: Request) {
+  const cookieOptions: CookieOptions = {
+    httpOnly: true,
+    maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
+    secure:
+      process.env.NODE_ENV === "production" &&
+      // the app is built with production even when setting the node env to test,
+      // so we need this extra env variable to explicitly disable https cookies during tests
+      process.env.COOKIE_SECURE !== "false",
+  }
+
+  const sessionCookieName = "remix-session"
+  const sessionCookie = createCookie(sessionCookieName, cookieOptions)
+
   const db = getClient()
 
   const helpers = {
