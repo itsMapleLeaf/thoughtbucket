@@ -21,6 +21,7 @@ specifiers:
   cross-env: 7.0.3
   cypress: 9.1.0
   cypress-esbuild-preprocessor: 1.0.2
+  dotenv: ^10.0.0
   eslint: 8.3.0
   eslint-config-prettier: 8.3.0
   eslint-plugin-jsx-a11y: 6.5.1
@@ -56,6 +57,7 @@ dependencies:
   '@remix-run/serve': 1.0.4_react-dom@17.0.2+react@17.0.2
   bcryptjs: 2.4.3
   clsx: 1.1.1
+  dotenv: 10.0.0
   immer: 9.0.6
   nanoid: 3.1.30
   react: 17.0.2
@@ -1938,6 +1940,11 @@ packages:
   /dom-accessibility-api/0.5.10:
     resolution: {integrity: sha512-Xu9mD0UjrJisTmv7lmVSDMagQcU9R5hwAbxsaAE/35XPnPLJobbuREfV/rraiSaEj/UOvgrzQs66zyTWTlyd+g==}
     dev: true
+
+  /dotenv/10.0.0:
+    resolution: {integrity: sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==}
+    engines: {node: '>=10'}
+    dev: false
 
   /ecc-jsbn/0.1.2:
     resolution: {integrity: sha1-OoOpBOVDUyh4dMVkt1SThoSamMk=}

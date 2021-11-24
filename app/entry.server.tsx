@@ -1,6 +1,14 @@
+import { config } from "dotenv"
 import ReactDOMServer from "react-dom/server"
 import type { EntryContext } from "remix"
 import { RemixServer } from "remix"
+
+config({ path: ".env" })
+
+if (process.env.TEST) {
+  console.info("Loaded test env")
+  config({ path: ".env.test" })
+}
 
 export default function handleRequest(
   request: Request,
